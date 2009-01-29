@@ -30,44 +30,67 @@ if exists('g:loaded_EditSimilar') || (v:version < 700)
 endif
 let g:loaded_EditSimilar = 1
 
+function! s:ErrorMsg( text )
+    echohl ErrorMsg
+    let v:errmsg = a:text
+    echomsg v:errmsg
+    echohl None
+endfunction 
+
+function! s:Open( opencmd, filespecs )
+    if empty(a:filespecs)
+	return
+    endif
+
+    let [l:originalFilespec, l:replacementFilespec] = a:filespecs
+    if l:replacementFilespec ==# l:originalFilespec
+	call s:ErrorMsg('Nothing substituted')
+	return
+    endif
+
+"****D echomsg '****' . a:opencmd . ' ' . l:replacementFilespec | return
+    execute a:opencmd escapings#fnameescape(l:replacementFilespec)
+endfunction
+
 let s:patternPattern = '\(^.\+\)=\(.*$\)'
-function! s:OpenSubstitute( opencmd, ... )
-    let l:original = expand('%:p')
-    let l:replacement = l:original
+function! s:Substitute( filespec, ... )
+    let l:replacement = a:filespec
 
     for l:pattern in a:000
 	if l:pattern !~# s:patternPattern
-	    echohl ErrorMsg
-	    let v:errmsg = 'Not a substitution: ' . l:pattern
-	    echomsg v:errmsg
-	    echohl NONE
-	    return
+	    call s:ErrorMsg('Not a substitution: ' . l:pattern)
+	    return []
 	endif
 	let [l:match, l:from, l:to; l:rest] = matchlist( l:pattern, s:patternPattern )
 	if empty(l:match) || empty(l:from) | throw 'ASSERT: Pattern can be applied. ' | endif
 	let l:replacement = substitute( l:replacement, '\V' . escape(l:from, '\'), escape(l:to, '\&~'), 'g' )
     endfor
 
-    if l:replacement ==# l:original
-	echohl ErrorMsg
-	let v:errmsg = 'Nothing substituted'
-	echomsg v:errmsg
-	echohl NONE
-	return
+    return [a:filespec, l:replacement]
+endfunction
+
+let s:digitPattern = '\d\+\ze\D*$'
+function! s:Offset( filespec, offset )
+    let l:number = matchstr(a:filespec, s:digitPattern)
+    if empty(l:number)
+	call s:ErrorMsg('No number in filespec')
+	return []
     endif
+    let l:nextNumber = max([l:number + a:offset, (a:offset < -1 ? 1 : 0)])
+    let l:nextNumberString = printf('%0' . strlen(l:number) . 'd', l:nextNumber)
 
-"****D echomsg '****' . a:opencmd . ' ' . l:replacement | return
-    execute a:opencmd escapings#fnameescape(l:replacement)
+    return [a:filespec, substitute(a:filespec, s:digitPattern, l:nextNumberString, '')]
 endfunction
-command! -bar -nargs=+ Esubstitute	call <SID>OpenSubstitute('edit', <f-args>)
-command! -bar -nargs=+ Spsubstitute	call <SID>OpenSubstitute('split', <f-args>)
-command! -bar -nargs=+ Vspsubstitute	call <SID>OpenSubstitute('vsplit', <f-args>)
 
-function! s:OpenOffset( opencmd, offset )
-    let l:original = expand('%:p')
-    let l:replacement = l:original
-endfunction
-command! -bar -count=1 Enext	    call <SID>OpenOffset('edit', <count>)
-command! -bar -count=1 Eprevious    call <SID>OpenOffset('edit', -<count>)
+command! -bar -nargs=+ Esubstitute	call <SID>Open('edit', <SID>Substitute(expand('%:p'), <f-args>))
+command! -bar -nargs=+ Spsubstitute	call <SID>Open('split', <SID>Substitute(expand('%:p'), <f-args>))
+command! -bar -nargs=+ Vspsubstitute	call <SID>Open('vsplit', <SID>Substitute(expand('%:p'), <f-args>))
+
+command! -bar -count=1 Enext		call <SID>Open('edit', <SID>Offset(expand('%:p'), <count>))
+command! -bar -count=1 Eprevious	call <SID>Open('edit', <SID>Offset(expand('%:p'), -<count>))
+command! -bar -count=1 Spnext		call <SID>Open('split', <SID>Offset(expand('%:p'), <count>))
+command! -bar -count=1 Spprevious	call <SID>Open('split', <SID>Offset(expand('%:p'), -<count>))
+command! -bar -count=1 Vspnext		call <SID>Open('vsplit', <SID>Offset(expand('%:p'), <count>))
+command! -bar -count=1 Vspprevious	call <SID>Open('vsplit', <SID>Offset(expand('%:p'), -<count>))
 
 " vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
