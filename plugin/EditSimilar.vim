@@ -54,7 +54,7 @@ endfunction
 let s:patternPattern = '\(^.\+\)=\(.*$\)'
 function! s:Substitute( text, patterns )
     let l:replacement = a:text
-    let l:replacementCnt = 0
+    let l:failedPatterns = []
 
     for l:pattern in a:patterns
 	if l:pattern !~# s:patternPattern
@@ -64,24 +64,23 @@ function! s:Substitute( text, patterns )
 	if empty(l:match) || empty(l:from) | throw 'ASSERT: Pattern can be applied. ' | endif
 	let l:beforeReplacement = l:replacement
 	let l:replacement = substitute( l:replacement, '\V' . escape(l:from, '\'), escape(l:to, '\&~'), 'g' )
-	let l:replacementCnt += (l:replacement ==# l:beforeReplacement ? 0 : 1)
+	if l:replacement ==# l:beforeReplacement
+	    call add(l:failedPatterns, l:pattern)
+	endif
     endfor
 
-    return [l:replacement, (l:replacementCnt == len(a:patterns))]
+    return [l:replacement, l:failedPatterns]
 endfunction
 function! s:OpenSubstitute( opencmd, isCreateNew, filespec, ... )
     let l:originalPathspec = fnamemodify(a:filespec, ':p:h') . '/'
     let l:originalFilename = fnamemodify(a:filespec, ':t')
     let l:originalFilespec = l:originalPathspec . l:originalFilename
     try
-	let [l:replacementFilename, l:isAllPatternsReplaced] = s:Substitute(l:originalFilename, a:000)
+	let [l:replacementFilename, l:failedPatterns] = s:Substitute(l:originalFilename, a:000)
 	let l:replacementFilespec = l:originalPathspec . l:replacementFilename
-	if ! l:isAllPatternsReplaced
-echomsg '**** ' . l:replacementFilespec
-	    let [l:replacementPathspec, l:isAllPatternsReplaced] = s:Substitute(l:originalPathspec, a:000)
-echomsg '**** ' . l:replacementPathspec
+	if ! empty(l:failedPatterns)
+	    let [l:replacementPathspec, l:failedPatterns] = s:Substitute(l:originalPathspec, l:failedPatterns)
 	    let l:replacementFilespec = l:replacementPathspec . l:replacementFilename
-echomsg '**** ' . l:replacementFilespec
 	endif
 	call s:Open(a:opencmd, a:isCreateNew, l:originalFilespec, l:replacementFilespec)
     catch /^EditSimilar:/
@@ -108,7 +107,22 @@ endfunction
 "			resulting file. If all substitutions can be made on the
 "			filename, the pathspec is left alone (so you don't get
 "			any false replacements on a long filespec). Otherwise,
-"			the substitution is done on the full absolute filespec. 
+"			the substitutions that weren't applicable to the
+"			filename are done to the full absolute pathspec.  
+"
+"			This way, you can substitute an the entire path by
+"			specifying the same substitution twice: 
+"			    /etc/test/superapp/test001.cfg
+"			    :Esubstitute test=prod
+"			    /etc/test/superapp/prod001.cfg
+"			    :Esubstitute test=prod test=prod
+"			    /etc/prod/superapp/prod001.cfg
+"			Or perform different substitutions on filename and
+"			pathspec: 
+"			    /etc/test/superapp/test001.cfg
+"			    :Esubstitute test=prod test=production
+"			    /etc/production/superapp/prod001.cfg
+"
 "			Add [!] to create a new file when the substituted file
 "			does not exist. 
 "
