@@ -47,25 +47,46 @@ function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec )
 	return
     endif
 
-"****D echomsg '****' . a:opencmd . ' ' . a:replacementFilespec | return
+echomsg '****' . a:opencmd . ' ' . a:replacementFilespec | return
     execute a:opencmd escapings#fnameescape(a:replacementFilespec)
 endfunction
 
 let s:patternPattern = '\(^.\+\)=\(.*$\)'
-function! s:OpenSubstitute( opencmd, isCreateNew, filespec, ... )
-    let l:replacement = a:filespec
+function! s:Substitute( text, patterns )
+    let l:replacement = a:text
+    let l:replacementCnt = 0
 
-    for l:pattern in a:000
+    for l:pattern in a:patterns
 	if l:pattern !~# s:patternPattern
-	    call s:ErrorMsg('Not a substitution: ' . l:pattern)
-	    return
+	    throw 'EditSimilar: Not a substitution: ' . l:pattern
 	endif
 	let [l:match, l:from, l:to; l:rest] = matchlist( l:pattern, s:patternPattern )
 	if empty(l:match) || empty(l:from) | throw 'ASSERT: Pattern can be applied. ' | endif
+	let l:beforeReplacement = l:replacement
 	let l:replacement = substitute( l:replacement, '\V' . escape(l:from, '\'), escape(l:to, '\&~'), 'g' )
+	let l:replacementCnt += (l:replacement ==# l:beforeReplacement ? 0 : 1)
     endfor
 
-    call s:Open(a:opencmd, a:isCreateNew, a:filespec, l:replacement)
+    return [l:replacement, (l:replacementCnt == len(a:patterns))]
+endfunction
+function! s:OpenSubstitute( opencmd, isCreateNew, filespec, ... )
+    let l:originalPathspec = fnamemodify(a:filespec, ':p:h') . '/'
+    let l:originalFilename = fnamemodify(a:filespec, ':t')
+    let l:originalFilespec = l:originalPathspec . l:originalFilename
+    try
+	let [l:replacementFilename, l:isAllPatternsReplaced] = s:Substitute(l:originalFilename, a:000)
+	let l:replacementFilespec = l:originalPathspec . l:replacementFilename
+	if ! l:isAllPatternsReplaced
+echomsg '**** ' . l:replacementFilespec
+	    let [l:replacementPathspec, l:isAllPatternsReplaced] = s:Substitute(l:originalPathspec, a:000)
+echomsg '**** ' . l:replacementPathspec
+	    let l:replacementFilespec = l:replacementPathspec . l:replacementFilename
+echomsg '**** ' . l:replacementFilespec
+	endif
+	call s:Open(a:opencmd, a:isCreateNew, l:originalFilespec, l:replacementFilespec)
+    catch /^EditSimilar:/
+	call s:ErrorMsg(substitute(v:exception, '^EditSimilar:\s*', '', ''))
+    endtry
 endfunction
 
 let s:digitPattern = '\d\+\ze\D*$'
