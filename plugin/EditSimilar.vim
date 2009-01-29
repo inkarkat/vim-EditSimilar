@@ -1,4 +1,5 @@
-" TODO: summary
+" EditSimilar.vim: Commands to edit files that have a filename similar to the
+" current file's. 
 "
 " DESCRIPTION:
 " USAGE:
@@ -47,7 +48,7 @@ function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec )
 	return
     endif
 
-echomsg '****' . a:opencmd . ' ' . a:replacementFilespec | return
+"****D echomsg '****' . a:opencmd . ' ' . a:replacementFilespec | return
     execute a:opencmd escapings#fnameescape(a:replacementFilespec)
 endfunction
 
@@ -89,16 +90,36 @@ function! s:OpenSubstitute( opencmd, isCreateNew, filespec, ... )
 endfunction
 
 let s:digitPattern = '\d\+\ze\D*$'
-function! s:OpenOffset( opencmd, isCreateNew, filespec, offset )
-    let l:number = matchstr(a:filespec, s:digitPattern)
-    if empty(l:number)
+function! s:Offset( text, offset, minimum )
+    let l:currentNumber = matchstr(a:text, s:digitPattern)
+    let l:nextNumber = max([l:currentNumber + a:offset, a:minimum])
+    let l:nextNumberString = printf('%0' . strlen(l:currentNumber) . 'd', l:nextNumber)
+    return [l:nextNumber, substitute(a:text, s:digitPattern, l:nextNumberString, '')]
+endfunction
+function! s:OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
+    let l:originalNumber = matchstr(a:filespec, s:digitPattern)
+    if empty(l:originalNumber)
 	call s:ErrorMsg('No number in filespec')
 	return
     endif
-    let l:nextNumber = max([l:number + a:offset, (a:offset < -1 ? 1 : 0)])
-    let l:nextNumberString = printf('%0' . strlen(l:number) . 'd', l:nextNumber)
 
-    call s:Open(a:opencmd, a:isCreateNew, a:filespec, substitute(a:filespec, s:digitPattern, l:nextNumberString, ''))
+    if a:isCreateNew
+	let [l:replacementNumber, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 0)
+	if l:replacementNumber == 0 && a:direction == -1 && a:difference > 1 && ! filereadable(l:replacement)
+	    let [l:replacementNumber, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 1)
+	endif
+    else
+	let l:difference = a:difference
+	while l:difference > 0
+	    let [l:replacementNumber, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
+	    if filereadable(l:replacement)
+		break
+	    endif
+	    let l:difference -= 1
+	endwhile
+    endif
+
+    call s:Open(a:opencmd, a:isCreateNew, a:filespec, l:replacement)
 endfunction
 
 " :Esubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
@@ -106,9 +127,9 @@ endfunction
 "			currently edited file with <replacement>, and opens the
 "			resulting file. If all substitutions can be made on the
 "			filename, the pathspec is left alone (so you don't get
-"			any false replacements on a long filespec). Otherwise,
+"			any false replacements on a long pathspec). Otherwise,
 "			the substitutions that weren't applicable to the
-"			filename are done to the full absolute pathspec.  
+"			filename are done to the full absolute pathspec. 
 "
 "			This way, you can substitute an the entire path by
 "			specifying the same substitution twice: 
@@ -139,15 +160,21 @@ command! -bar -bang -nargs=+ Vspsubstitute	call <SID>OpenSubstitute('vsplit', <b
 "			is specified. With [!], a new file is created when the
 "			substituted file does not exist. 
 "			When jumping to previous numbers, the resulting number
-"			will never be negative. A jump with [N] > 1 will stop at
-"			number 1 (with [!], or the lowest existing numbered file
-"			without it), but you can still jump to number 0 if [N] =
-"			1. 
-command! -bar -bang -count=1 Enext		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>)
-command! -bar -bang -count=1 Eprevious		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), -<count>)
-command! -bar -bang -count=1 Spnext		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>)
-command! -bar -bang -count=1 Spprevious		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), -<count>)
-command! -bar -bang -count=1 Vspnext		call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>)
-command! -bar -bang -count=1 Vspprevious	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), -<count>)
+"			will never be negative. A jump with [!] and [N] > 1 will
+"			create a file with number 1, not 0, but you can still
+"			create number 0 by repeating the command with [N] = 1. 
+"			Examples: 
+"			test007.txt in a directory also containing 003-013. 
+"			:Enext	    -> test008.txt
+"			:99Enext    -> test013.txt
+"			:99Enext!   -> test106.txt [New File]
+"			:99Eprev    -> test003.txt
+"			:99Eprev!   -> test001.txt [New File]
+command! -bar -bang -count=1 Enext		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>,  1)
+command! -bar -bang -count=1 Eprevious		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 Spnext		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>,  1)
+command! -bar -bang -count=1 Spprevious		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 Vspnext		call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>,  1)
+command! -bar -bang -count=1 Vspprevious	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>, -1)
 
 " vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
