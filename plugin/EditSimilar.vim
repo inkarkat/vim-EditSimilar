@@ -92,7 +92,7 @@ endfunction
 let s:digitPattern = '\d\+\ze\D*$'
 function! s:Offset( text, offset, minimum )
     let l:currentNumber = matchstr(a:text, s:digitPattern)
-    let l:nextNumber = max([l:currentNumber + a:offset, a:minimum])
+    let l:nextNumber = max([str2nr(l:currentNumber, 10) + a:offset, a:minimum])
     let l:nextNumberString = printf('%0' . strlen(l:currentNumber) . 'd', l:nextNumber)
     return [l:nextNumber, substitute(a:text, s:digitPattern, l:nextNumberString, '')]
 endfunction
