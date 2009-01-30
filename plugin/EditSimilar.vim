@@ -23,6 +23,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	002	31-Jan-2009	Moved :Sproot and :Sppattern commands from
+"				ingocommands.vim. 
 "	001	29-Jan-2009	file creation
 
 " Avoid installing twice or when in unsupported VIM version. 
@@ -49,7 +51,17 @@ function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec, c
     endif
 
 "****D echomsg '****' . a:opencmd . ' ' . a:replacementFilespec | return
-    execute a:opencmd escapings#fnameescape(a:replacementFilespec)
+    try
+	execute a:opencmd escapings#fnameescape(a:replacementFilespec)
+    catch /^Vim\%((\a\+)\)\=:E37/	" catch error E37: No write since last change (add ! to override)
+	" The "add ! to override" is wrong here, we use the ! for another
+	" purpose. 
+	call s:ErrorMsg('No write since last change')
+    catch /^Vim\%((\a\+)\)\=:E/
+	" v:exception contains what is normally in v:errmsg, but with extra
+	" exception source info prepended, which we cut away. 
+	call s:ErrorMsg(substitute(v:exception, '^Vim\%((\a\+)\)\=:', '', ''))
+    endtry
 endfunction
 
 let s:patternPattern = '\(^.\+\)=\(.*$\)'
@@ -127,7 +139,9 @@ function! s:OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
     call s:Open(a:opencmd, a:isCreateNew, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumber . ')')
 endfunction
 
-" :Esubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+":Esubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+":Spsubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+":Vspsubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
 "			Replaces all literal occurrences of <text> in the
 "			currently edited file with <replacement>, and opens the
 "			resulting file. If all substitutions can be made on the
@@ -156,7 +170,14 @@ command! -bar -bang -nargs=+ Esubstitute	call <SID>OpenSubstitute('edit',   <ban
 command! -bar -bang -nargs=+ Spsubstitute	call <SID>OpenSubstitute('split',  <bang>0, expand('%:p'), <f-args>)
 command! -bar -bang -nargs=+ Vspsubstitute	call <SID>OpenSubstitute('vsplit', <bang>0, expand('%:p'), <f-args>)
 
-" :[N]Enext[!] [N]
+
+
+":[N]Enext[!] [N]
+":[N]Eprevious[!] [N]
+":[N]Spnext[!] [N]
+":[N]Spprevious[!] [N]
+":[N]Vspnext[!] [N]
+":[N]Vspprevious[!] [N]
 "			Increases the last number found inside the full absolute
 "			filespec of the currently edited file by [N]. (A fixed
 "			number width via padding with leading zeros is maintained.) 
@@ -181,5 +202,49 @@ command! -bar -bang -count=1 Spnext		call <SID>OpenOffset('split',  <bang>0, exp
 command! -bar -bang -count=1 Spprevious		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>, -1)
 command! -bar -bang -count=1 Vspnext		call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>,  1)
 command! -bar -bang -count=1 Vspprevious	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>, -1)
+
+
+
+":Eroot <extension>
+":Sproot <extension>
+":Vsproot <extension>
+"			Switches the current file's extension: 
+"			Edits a file with the current file's path and name, but
+"			replaces the file extension with the passed one. 
+command! -bar -nargs=1 Eroot     edit %:p:r.<args>
+command! -bar -nargs=1 Sproot   split %:p:r.<args>
+command! -bar -nargs=1 Vsproot vsplit %:p:r.<args>
+
+
+
+":Sppattern <file_pattern>
+":Vsppattern <file_pattern>
+"			Open all files matching <file_pattern> in split windows.
+"			If one of the files is already open, no second split is
+"			generated. 
+function! s:SplitPattern( splitcmd, pattern )
+    let l:openCnt = 0
+    " Expand all files to their absolute path, because the CWD may change when a
+    " file is opened (e.g. due to autocmds or :set autochdir). 
+    for l:filespec in map( split(glob(a:pattern), "\n"), "fnamemodify(v:val, ':p')" )
+	if bufwinnr(l:filespec) == -1
+	    " Convert filespec returned by glob() into filespec suitable for ex
+	    " command: Escape space, % and #. 
+	    execute a:splitcmd . ' ' . substitute( l:filespec, '[ %#]', '\\\0', 'g' )
+	    let l:openCnt += 1
+	endif
+    endfor
+
+    " Make all windows the same size if more than one has been opened. 
+    if l:openCnt > 1
+	wincmd =
+    endif
+endfunction
+
+" Note: We cannot use -complete=file; it results in E77: too many files error
+" when using a pattern. 
+command! -bar -nargs=1 Sppattern    call <SID>SplitPattern('split', <f-args>)
+command! -bar -nargs=1 Vsppattern   call <SID>SplitPattern('vsplit', <f-args>)
+
 
 " vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
