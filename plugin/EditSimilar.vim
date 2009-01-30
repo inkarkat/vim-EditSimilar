@@ -38,13 +38,13 @@ function! s:ErrorMsg( text )
     echohl None
 endfunction 
 
-function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec )
+function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec, createNewNotAllowedMsg )
     if a:replacementFilespec ==# a:originalFilespec
 	call s:ErrorMsg('Nothing substituted')
 	return
     endif
     if ! a:isCreateNew && ! filereadable(a:replacementFilespec) && ! isdirectory(a:replacementFilespec)
-	call s:ErrorMsg('Substituted file does not exist (add ! to create)')
+	call s:ErrorMsg('Substituted file does not exist (add ! to create)' . (empty(a:createNewNotAllowedMsg) ? '' : ': ' . a:createNewNotAllowedMsg))
 	return
     endif
 
@@ -79,11 +79,13 @@ function! s:OpenSubstitute( opencmd, isCreateNew, filespec, ... )
     try
 	let [l:replacementFilename, l:failedPatterns] = s:Substitute(l:originalFilename, a:000)
 	let l:replacementFilespec = l:originalPathspec . l:replacementFilename
+	let l:replacementMsg = l:replacementFilename
 	if ! empty(l:failedPatterns)
 	    let [l:replacementPathspec, l:failedPatterns] = s:Substitute(l:originalPathspec, l:failedPatterns)
 	    let l:replacementFilespec = l:replacementPathspec . l:replacementFilename
+	    let l:replacementMsg = fnamemodify(l:replacementFilespec, ':~:.')
 	endif
-	call s:Open(a:opencmd, a:isCreateNew, l:originalFilespec, l:replacementFilespec)
+	call s:Open(a:opencmd, a:isCreateNew, l:originalFilespec, l:replacementFilespec, l:replacementMsg)
     catch /^EditSimilar:/
 	call s:ErrorMsg(substitute(v:exception, '^EditSimilar:\s*', '', ''))
     endtry
@@ -94,7 +96,7 @@ function! s:Offset( text, offset, minimum )
     let l:currentNumber = matchstr(a:text, s:digitPattern)
     let l:nextNumber = max([str2nr(l:currentNumber, 10) + a:offset, a:minimum])
     let l:nextNumberString = printf('%0' . strlen(l:currentNumber) . 'd', l:nextNumber)
-    return [l:nextNumber, substitute(a:text, s:digitPattern, l:nextNumberString, '')]
+    return [l:nextNumberString, substitute(a:text, s:digitPattern, l:nextNumberString, '')]
 endfunction
 function! s:OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
     let l:originalNumber = matchstr(a:filespec, s:digitPattern)
@@ -104,14 +106,17 @@ function! s:OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
     endif
 
     if a:isCreateNew
-	let [l:replacementNumber, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 0)
-	if l:replacementNumber == 0 && a:direction == -1 && a:difference > 1 && ! filereadable(l:replacement)
-	    let [l:replacementNumber, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 1)
+	let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 0)
+	if str2nr(l:replacementNumberString, 10) == 0 && a:direction == -1 && a:difference > 1 && ! filereadable(l:replacement)
+	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 1)
 	endif
+	let l:replacementMsg = '#' . l:replacementNumberString
     else
 	let l:difference = a:difference
+	let l:replacementMsg = ''
 	while l:difference > 0
-	    let [l:replacementNumber, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
+	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
+	    if empty(l:replacementMsg) | let l:replacementMsg = '#' . l:replacementNumberString | endif
 	    if filereadable(l:replacement)
 		break
 	    endif
@@ -119,7 +124,7 @@ function! s:OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
 	endwhile
     endif
 
-    call s:Open(a:opencmd, a:isCreateNew, a:filespec, l:replacement)
+    call s:Open(a:opencmd, a:isCreateNew, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumber . ')')
 endfunction
 
 " :Esubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
