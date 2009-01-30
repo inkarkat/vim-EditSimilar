@@ -171,6 +171,7 @@ endfunction
 command! -bar -bang -nargs=+ Esubstitute	call <SID>OpenSubstitute('edit',   <bang>0, expand('%:p'), <f-args>)
 command! -bar -bang -nargs=+ Spsubstitute	call <SID>OpenSubstitute('split',  <bang>0, expand('%:p'), <f-args>)
 command! -bar -bang -nargs=+ Vspsubstitute	call <SID>OpenSubstitute('vsplit', <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ SaveSubstitute	call <SID>OpenSubstitute('saveas<bang>', 1, expand('%:p'), <f-args>)
 
 
 
@@ -204,7 +205,8 @@ command! -bar -bang -count=1 Spnext		call <SID>OpenOffset('split',  <bang>0, exp
 command! -bar -bang -count=1 Spprevious		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>, -1)
 command! -bar -bang -count=1 Vspnext		call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>,  1)
 command! -bar -bang -count=1 Vspprevious	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>, -1)
-
+command! -bar -bang -count=1 SaveNext		call <SID>OpenOffset('saveas<bang>', 1, expand('%:p'), <count>,  1)
+command! -bar -bang -count=1 SavePrevious	call <SID>OpenOffset('saveas<bang>', 1, expand('%:p'), <count>, -1)
 
 
 ":Eroot <extension>
@@ -216,6 +218,7 @@ command! -bar -bang -count=1 Vspprevious	call <SID>OpenOffset('vsplit', <bang>0,
 command! -bar -nargs=1 Eroot     edit %:p:r.<args>
 command! -bar -nargs=1 Sproot   split %:p:r.<args>
 command! -bar -nargs=1 Vsproot vsplit %:p:r.<args>
+command! -bar -bang -nargs=1 SaveRoot saveas<bang> %:p:r.<args>
 
 
 
