@@ -25,6 +25,8 @@
 " REVISION	DATE		REMARKS 
 "	002	31-Jan-2009	Moved :Sproot and :Sppattern commands from
 "				ingocommands.vim. 
+"				ENH: :Sppattern now notifies when no new windows
+"				have been opened. 
 "	001	29-Jan-2009	file creation
 
 " Avoid installing twice or when in unsupported VIM version. 
@@ -226,7 +228,9 @@ function! s:SplitPattern( splitcmd, pattern )
     let l:openCnt = 0
     " Expand all files to their absolute path, because the CWD may change when a
     " file is opened (e.g. due to autocmds or :set autochdir). 
-    for l:filespec in map( split(glob(a:pattern), "\n"), "fnamemodify(v:val, ':p')" )
+
+    let l:filespecs = map( split(glob(a:pattern), "\n"), "fnamemodify(v:val, ':p')" )
+    for l:filespec in l:filespecs
 	if bufwinnr(l:filespec) == -1
 	    " Convert filespec returned by glob() into filespec suitable for ex
 	    " command: Escape space, % and #. 
@@ -238,6 +242,10 @@ function! s:SplitPattern( splitcmd, pattern )
     " Make all windows the same size if more than one has been opened. 
     if l:openCnt > 1
 	wincmd =
+    elseif len(l:filespecs) == 0
+	call s:ErrorMsg('No matches')
+    elseif l:openCnt == 0
+	echomsg 'No new matches that haven''t yet been opened'
     endif
 endfunction
 
