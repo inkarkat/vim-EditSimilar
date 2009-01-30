@@ -87,7 +87,8 @@ function! s:Substitute( text, patterns )
     return [l:replacement, l:failedPatterns]
 endfunction
 function! s:OpenSubstitute( opencmd, isCreateNew, filespec, ... )
-    let l:originalPathspec = fnamemodify(a:filespec, ':p:h') . '/'
+    let l:pathSeparator = (exists('+shellslash') && ! &shellslash ? '\' : '/')
+    let l:originalPathspec = fnamemodify(a:filespec, ':p:h') . l:pathSeparator
     let l:originalFilename = fnamemodify(a:filespec, ':t')
     let l:originalFilespec = l:originalPathspec . l:originalFilename
     try
@@ -171,6 +172,16 @@ endfunction
 command! -bar -bang -nargs=+ Esubstitute	call <SID>OpenSubstitute('edit',   <bang>0, expand('%:p'), <f-args>)
 command! -bar -bang -nargs=+ Spsubstitute	call <SID>OpenSubstitute('split',  <bang>0, expand('%:p'), <f-args>)
 command! -bar -bang -nargs=+ Vspsubstitute	call <SID>OpenSubstitute('vsplit', <bang>0, expand('%:p'), <f-args>)
+
+":FileSubstitute <text>=<replacement> [<text>=<replacement> [...]] 
+":WriteSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]] 
+":SaveSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]] 
+"			Replaces all literal occurrences of <text> in the
+"			currently edited file with <replacement>, and sets /
+"			writes the resulting file. 
+"			The [!] is needed to overwrite an existing file.
+command! -bar	    -nargs=+ FileSubstitute	call <SID>OpenSubstitute('file', 1, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ WriteSubstitute	call <SID>OpenSubstitute('write<bang>', 1, expand('%:p'), <f-args>)
 command! -bar -bang -nargs=+ SaveSubstitute	call <SID>OpenSubstitute('saveas<bang>', 1, expand('%:p'), <f-args>)
 
 
@@ -205,6 +216,22 @@ command! -bar -bang -count=1 Spnext		call <SID>OpenOffset('split',  <bang>0, exp
 command! -bar -bang -count=1 Spprevious		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>, -1)
 command! -bar -bang -count=1 Vspnext		call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>,  1)
 command! -bar -bang -count=1 Vspprevious	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>, -1)
+
+":[N]FileNext [N]
+":[N]FilePrevious [N]
+":[N]WriteNext[!] [N]
+":[N]WritePrevious[!] [N]
+":[N]SaveNext[!] [N]
+":[N]SavePrevious[!] [N]
+"			Increases the last number found inside the full absolute
+"			filespec of the currently edited file by [N] and sets /
+"			writes that file. (A fixed number width via padding with
+"			leading zeros is maintained.) 
+"			The [!] is needed to overwrite an existing file.
+command! -bar	    -count=1 FileNext		call <SID>OpenOffset('file', 1, expand('%:p'), <count>,  1)
+command! -bar	    -count=1 FilePrevious	call <SID>OpenOffset('file', 1, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 WriteNext		call <SID>OpenOffset('write<bang>', 1, expand('%:p'), <count>,  1)
+command! -bar -bang -count=1 WritePrevious	call <SID>OpenOffset('write<bang>', 1, expand('%:p'), <count>, -1)
 command! -bar -bang -count=1 SaveNext		call <SID>OpenOffset('saveas<bang>', 1, expand('%:p'), <count>,  1)
 command! -bar -bang -count=1 SavePrevious	call <SID>OpenOffset('saveas<bang>', 1, expand('%:p'), <count>, -1)
 
@@ -218,7 +245,16 @@ command! -bar -bang -count=1 SavePrevious	call <SID>OpenOffset('saveas<bang>', 1
 command! -bar -nargs=1 Eroot     edit %:p:r.<args>
 command! -bar -nargs=1 Sproot   split %:p:r.<args>
 command! -bar -nargs=1 Vsproot vsplit %:p:r.<args>
-command! -bar -bang -nargs=1 SaveRoot saveas<bang> %:p:r.<args>
+
+":FileRoot <extension>
+":WriteRoot[!] <extension>
+":SaveRoot[!] <extension>
+"			Sets / saves a file with the current file's path and
+"			name, but replaces the file extension with the passed
+"			one. 
+command! -bar 	    -nargs=1 FileRoot	file %:p:r.<args>
+command! -bar -bang -nargs=1 WriteRoot	write<bang> %:p:r.<args>
+command! -bar -bang -nargs=1 SaveRoot	saveas<bang> %:p:r.<args>
 
 
 
