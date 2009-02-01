@@ -27,6 +27,10 @@
 "				ingocommands.vim. 
 "				ENH: :Sppattern now notifies when no new windows
 "				have been opened. 
+"				Added overloads for :file, :write and :saveas. 
+"				For the :edit, :split and :vsplit overloads,
+"				there are now a long (:EditPrevious) and a short
+"				(:Eprev) version. 
 "	001	29-Jan-2009	file creation
 
 " Avoid installing twice or when in unsupported VIM version. 
@@ -142,9 +146,12 @@ function! s:OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
     call s:Open(a:opencmd, a:isCreateNew, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumber . ')')
 endfunction
 
-":Esubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
-":Spsubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
-":Vspsubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+":EditSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+":Esubst[!] ...
+":SplitSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+":Spsubst[!] ...
+":VsplitSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+":Vspsubst[!] ...
 "			Replaces all literal occurrences of <text> in the
 "			currently edited file with <replacement>, and opens the
 "			resulting file. If all substitutions can be made on the
@@ -169,9 +176,12 @@ endfunction
 "			Add [!] to create a new file when the substituted file
 "			does not exist. 
 "
-command! -bar -bang -nargs=+ Esubstitute	call <SID>OpenSubstitute('edit',   <bang>0, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=+ Spsubstitute	call <SID>OpenSubstitute('split',  <bang>0, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=+ Vspsubstitute	call <SID>OpenSubstitute('vsplit', <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ EditSubstitute	call <SID>OpenSubstitute('edit',   <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ Esubst		call <SID>OpenSubstitute('edit',   <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ SplitSubstitute	call <SID>OpenSubstitute('split',  <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ Spsubst	    	call <SID>OpenSubstitute('split',  <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ VsplitSubstitute	call <SID>OpenSubstitute('vsplit', <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=+ Vspsubst	    	call <SID>OpenSubstitute('vsplit', <bang>0, expand('%:p'), <f-args>)
 
 ":FileSubstitute <text>=<replacement> [<text>=<replacement> [...]] 
 ":WriteSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]] 
@@ -186,12 +196,18 @@ command! -bar -bang -nargs=+ SaveSubstitute	call <SID>OpenSubstitute('saveas<ban
 
 
 
+":[N]EditNext[!] [N]
 ":[N]Enext[!] [N]
-":[N]Eprevious[!] [N]
+":[N]EditPrevious[!] [N]
+":[N]Eprev[!] [N]
+":[N]SplitNext[!] [N]
 ":[N]Spnext[!] [N]
-":[N]Spprevious[!] [N]
+":[N]SplitPrevious[!] [N]
+":[N]Spprev[!] [N]
+":[N]VsplitNext[!] [N]
 ":[N]Vspnext[!] [N]
-":[N]Vspprevious[!] [N]
+":[N]VsplitPrevious[!] [N]
+":[N]Vspprev[!] [N]
 "			Increases the last number found inside the full absolute
 "			filespec of the currently edited file by [N]. (A fixed
 "			number width via padding with leading zeros is maintained.) 
@@ -210,12 +226,18 @@ command! -bar -bang -nargs=+ SaveSubstitute	call <SID>OpenSubstitute('saveas<ban
 "			:99Enext!   -> test106.txt [New File]
 "			:99Eprev    -> test003.txt
 "			:99Eprev!   -> test001.txt [New File]
+command! -bar -bang -count=1 EditNext		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>,  1)
 command! -bar -bang -count=1 Enext		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>,  1)
-command! -bar -bang -count=1 Eprevious		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 EditPrevious	call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 Eprev		call <SID>OpenOffset('edit',   <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 SplitNext		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>,  1)
 command! -bar -bang -count=1 Spnext		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>,  1)
-command! -bar -bang -count=1 Spprevious		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 SplitPrevious	call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 Spprev		call <SID>OpenOffset('split',  <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 VsplitNext		call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>,  1)
 command! -bar -bang -count=1 Vspnext		call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>,  1)
-command! -bar -bang -count=1 Vspprevious	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 VsplitPrevious	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>, -1)
+command! -bar -bang -count=1 Vspprev	    	call <SID>OpenOffset('vsplit', <bang>0, expand('%:p'), <count>, -1)
 
 ":[N]FileNext [N]
 ":[N]FilePrevious [N]
@@ -236,15 +258,21 @@ command! -bar -bang -count=1 SaveNext		call <SID>OpenOffset('saveas<bang>', 1, e
 command! -bar -bang -count=1 SavePrevious	call <SID>OpenOffset('saveas<bang>', 1, expand('%:p'), <count>, -1)
 
 
-":Eroot <extension>
-":Sproot <extension>
-":Vsproot <extension>
+":EditRoot <extension>
+":Eroot ...
+":SplitRoot <extension>
+":Sproot ...
+":VsplitRoot <extension>
+":Vsproot ...
 "			Switches the current file's extension: 
 "			Edits a file with the current file's path and name, but
 "			replaces the file extension with the passed one. 
-command! -bar -nargs=1 Eroot     edit %:p:r.<args>
-command! -bar -nargs=1 Sproot   split %:p:r.<args>
-command! -bar -nargs=1 Vsproot vsplit %:p:r.<args>
+command! -bar -nargs=1 EditRoot     edit %:p:r.<args>
+command! -bar -nargs=1 Eroot	    edit %:p:r.<args>
+command! -bar -nargs=1 SplitRoot   split %:p:r.<args>
+command! -bar -nargs=1 Sproot	   split %:p:r.<args>
+command! -bar -nargs=1 VsplitRoot vsplit %:p:r.<args>
+command! -bar -nargs=1 Vsproot	  vsplit %:p:r.<args>
 
 ":FileRoot <extension>
 ":WriteRoot[!] <extension>
@@ -258,8 +286,10 @@ command! -bar -bang -nargs=1 SaveRoot	saveas<bang> %:p:r.<args>
 
 
 
-":Sppattern <file_pattern>
-":Vsppattern <file_pattern>
+":SplitPattern <file_pattern>
+":Sppat ...
+":VsplitPattern <file_pattern>
+":Vsppat ...
 "			Open all files matching <file_pattern> in split windows.
 "			If one of the files is already open, no second split is
 "			generated. 
@@ -290,8 +320,10 @@ endfunction
 
 " Note: We cannot use -complete=file; it results in E77: too many files error
 " when using a pattern. 
-command! -bar -nargs=1 Sppattern    call <SID>SplitPattern('split', <f-args>)
-command! -bar -nargs=1 Vsppattern   call <SID>SplitPattern('vsplit', <f-args>)
+command! -bar -nargs=1 SplitPattern    call <SID>SplitPattern('split', <f-args>)
+command! -bar -nargs=1 Sppat	       call <SID>SplitPattern('split', <f-args>)
+command! -bar -nargs=1 VsplitPattern   call <SID>SplitPattern('vsplit', <f-args>)
+command! -bar -nargs=1 Vsppat	       call <SID>SplitPattern('vsplit', <f-args>)
 
 
 " vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
