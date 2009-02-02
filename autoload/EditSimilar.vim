@@ -9,6 +9,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	003	02-Feb-2009	ENH: Implemented EditSimilar#OpenRoot(). 
 "	002	02-Feb-2009	BF: Test for existing buffer name in
 "				EditSimilar#SplitPattern() now properly escapes
 "				and anchors the filespec, so that only full
@@ -127,15 +128,15 @@ endfunction
 
 " Root (i.e. file extension) commands. 
 function! EditSimilar#OpenRoot( opencmd, isCreateNew, filespec, newExtension )
-    let l:newExtension = (a:newExtension =~# '^\.' ? '' : '.') . a:newExtension
-    if a:newExtension ==# '.'
-	" Allow to remove extension by passing a single '.'. 
-	let l:newExtension = ''
-    endif
-    let l:newFilespec = fnamemodify(a:filespec, ':r') . l:newExtension
+    let [l:fullmatch, l:dots, l:newExtension; l:rest] = matchlist(a:newExtension, '\(^\.*\)\(.*$\)')
+
+    " Each leading '.' removes one file extension from the original filename; a
+    " single dot is optional. 
+    let l:rootRemovalNum = (strlen(l:dots) > 1 ? strlen(l:dots) : 1)
+
+    let l:newFilespec = fnamemodify(a:filespec, repeat(':r', l:rootRemovalNum)) . (! empty(l:newExtension) ? '.' . l:newExtension : '')
     call s:Open( a:opencmd, a:isCreateNew, a:filespec, l:newFilespec, fnamemodify(l:newFilespec, ':t'))
 endfunction
-
 
 " Pattern commands. 
 function! EditSimilar#SplitPattern( splitcmd, pattern )
