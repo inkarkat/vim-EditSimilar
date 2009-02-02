@@ -64,16 +64,16 @@ command! -bar -bang -count=1 SavePrevious	call EditSimilar#OpenOffset('saveas<ba
 
 
 " Root (i.e. file extension) commands. 
-command! -bar -nargs=1 EditRoot     edit %:p:r.<args>
-command! -bar -nargs=1 Eroot	    edit %:p:r.<args>
-command! -bar -nargs=1 SplitRoot   split %:p:r.<args>
-command! -bar -nargs=1 Sproot	   split %:p:r.<args>
-command! -bar -nargs=1 VsplitRoot vsplit %:p:r.<args>
-command! -bar -nargs=1 Vsproot	  vsplit %:p:r.<args>
+command! -bar -bang -nargs=1 EditRoot     call EditSimilar#OpenRoot('edit',   <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 Eroot        call EditSimilar#OpenRoot('edit',   <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 SplitRoot    call EditSimilar#OpenRoot('split',  <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 Sproot       call EditSimilar#OpenRoot('split',  <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 VsplitRoot   call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 Vsproot      call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%:p'), <f-args>)
 
-command! -bar 	    -nargs=1 FileRoot	file %:p:r.<args>
-command! -bar -bang -nargs=1 WriteRoot	write<bang> %:p:r.<args>
-command! -bar -bang -nargs=1 SaveRoot	saveas<bang> %:p:r.<args>
+command! -bar       -nargs=1 FileRoot     call EditSimilar#OpenRoot('file',         1, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 WriteRoot    call EditSimilar#OpenRoot('write<bang>',  1, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 SaveRoot     call EditSimilar#OpenRoot('saveas<bang>', 1, expand('%:p'), <f-args>)
 
 
 " Pattern commands. 
