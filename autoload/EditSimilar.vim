@@ -9,6 +9,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	004	04-Feb-2009	Now reducing the filespec to shortest possible
+"				(:~:.) before executing opencmd. This avoids
+"				ugly long buffer names when :set noautochdir. 
 "	003	02-Feb-2009	ENH: Implemented EditSimilar#OpenRoot(). 
 "	002	02-Feb-2009	BF: Test for existing buffer name in
 "				EditSimilar#SplitPattern() now properly escapes
@@ -36,7 +39,7 @@ function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec, c
 
 "****D echomsg '****' . a:opencmd . ' ' . a:replacementFilespec | return
     try
-	execute a:opencmd escapings#fnameescape(a:replacementFilespec)
+	execute a:opencmd escapings#fnameescape(fnamemodify(a:replacementFilespec, ':~:.'))
     catch /^Vim\%((\a\+)\)\=:E37/	" catch error E37: No write since last change (add ! to override)
 	" The "add ! to override" is wrong here, we use the ! for another
 	" purpose. 
@@ -147,9 +150,7 @@ function! EditSimilar#SplitPattern( splitcmd, pattern )
     let l:filespecs = map( split(glob(a:pattern), "\n"), "fnamemodify(v:val, ':p')" )
     for l:filespec in l:filespecs
 	if bufwinnr(escapings#bufnameescape(l:filespec)) == -1
-	    " Convert filespec returned by glob() into filespec suitable for ex
-	    " command: Escape space, % and #. 
-	    execute a:splitcmd . ' ' . escapings#fnameescape(l:filespec)
+	    execute a:splitcmd escapings#fnameescape(fnamemodify(l:filespec, ':~:.'))
 	    let l:openCnt += 1
 	endif
     endfor
