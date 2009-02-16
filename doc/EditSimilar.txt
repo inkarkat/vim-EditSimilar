@@ -1,7 +1,7 @@
 *EditSimilar.txt*       Commands to edit files with a similar filename. 
 
 			EDIT SIMILAR    by Ingo Karkat
-							  *EditSimilar-plugin*
+							     *EditSimilar.vim*
 description			|EditSimilar-description|
 usage	    			|EditSimilar-usage|
 installation   			|EditSimilar-installation|
@@ -16,11 +16,34 @@ history				|EditSimilar-history|
 ==============================================================================
 DESCRIPTION					     *EditSimilar-description*
 
+Files edited in VIM often relate to one another; maybe they just differ in
+file extensions, are numbered sequentially, or contain common patterns. One
+can use the built-in|cmdline-completion| or|filename-modifiers|like %:r to
+quickly edit a similar file, or even use special plugins, e.g. to alternate
+between source and header files (vimscript #31). 
+
+This script provides custom versions of the|:edit|,|:split|,|:vsplit|,|:file|,
+|:write| and|:saveas|commands which facilitate quick and simple editing of
+similarly named files. To quickly edit another file based on the current file,
+one can: 
+- substitute {old} with {new}			   |EditSimilar-substitutions|
+- go to previous/next numbered file or			  |EditSimilar-offset|
+  add any offset to the number
+- change the file extension				    |EditSimilar-root|
+
+To open a set of similar files, it is possible to: 
+- open all files matching a pattern in split windows	 |EditSimilar-pattern|
+
 ==============================================================================
 USAGE							   *EditSimilar-usage*
-
+						   *EditSimilar-substitutions*
 Substitutions: Change all literal occurrences via text=replacement in the
-currently edited file. 
+currently edited file (modeled after the Korn shell's "cd <old> <new>"
+command). This can also be achieved with the built-in|filename-modifiers|: >
+    :edit %:gs?pattern?replacement?
+but the syntax is difficult to memorize (it's subtly different from|:s|) and
+harder to type. 
+
 						   *:Esubst* *:EditSubstitute*
 :EditSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
 :Esubst[!] ...
@@ -66,6 +89,7 @@ currently edited file.
 
 
 ------------------------------------------------------------------------------
+							  *EditSimilar-offset*
 Next / Previous: Add an offset to the last number in the currently edited
 file. 
 				 *:Enext* *:EditNext* *:Eprev* *:EditPrevious*
@@ -119,8 +143,11 @@ file.
 
 
 ------------------------------------------------------------------------------
+							    *EditSimilar-root*
 Root: Change the file extension in the currently edited file. 
-							  *:Eroot* *:EditRoot*
+This is an enhanced version of the built-in: >
+    :edit %:r.<extension>
+<							  *:Eroot* *:EditRoot*
 :EditRoot[!] <extension>
 :Eroot[!] ...
 							*:Sproot* *:SplitRoot*
@@ -157,7 +184,10 @@ Root: Change the file extension in the currently edited file.
 
 
 ------------------------------------------------------------------------------
-Pattern: Open all files matching it in splits. 
+							 *EditSimilar-pattern*
+Pattern: Open all files matching the pattern in split windows, similar to how
+|:argadd|{name} adds all matching files to the argument list. 
+
 						      *:Sppat* *:SplitPattern*
 :SplitPattern <file_pattern>
 :Sppat ...
@@ -167,14 +197,22 @@ Pattern: Open all files matching it in splits.
 			Open all files matching <file_pattern> in split windows.
 			If one of the files is already open, no second split is
 			generated. 
-
+			Makes all windows the same size if more than one has
+			been opened.  
 
 ==============================================================================
 INSTALLATION					    *EditSimilar-installation*
 
-Put the script into your user or system VIM plugin directory
-(e.g. ~/.vim/plugin). 
-						    *EditSimilar-dependencies*
+This script is packaged as a|vimball|. If you have the "gunzip" decompressor
+in your PATH, simply edit the *.vba.gz package in VIM; otherwise, decompress
+the archive first, e.g. using WinZip. Inside VIM, install by sourcing the
+vimball or via the|:UseVimball|command. >
+    vim EditSimilar.vba.gz
+    :so %
+To uninstall, use the|:RmVimball|command. 
+
+DEPENDENCIES					    *EditSimilar-dependencies*
+
 - Requires VIM 7.0 or higher. 
 
 ==============================================================================
@@ -198,6 +236,16 @@ TODO							    *EditSimilar-todo*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
+1.00	15-Feb-2009
+First published version. 
+
+0.01	29-Jan-2009
+Started development. 
+
+==============================================================================
+Copyright: (C) 2009 by Ingo Karkat
+The VIM LICENSE applies to this script; see|copyright|. 
+
+Maintainer:	Ingo Karkat <ingo@karkat.de>
 ==============================================================================
  vim:tw=78:ts=8:ft=help:norl:
-
