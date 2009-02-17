@@ -19,6 +19,7 @@
 "				names match. 
 "	001	02-Feb-2009	Moved functions from plugin to separate autoload
 "				script. 
+"				file creation
 
 function! s:ErrorMsg( text )
     echohl ErrorMsg
@@ -40,10 +41,10 @@ function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec, c
 "****D echomsg '****' . a:opencmd . ' ' . a:replacementFilespec | return
     try
 	execute a:opencmd escapings#fnameescape(fnamemodify(a:replacementFilespec, ':~:.'))
-    catch /^Vim\%((\a\+)\)\=:E37/	" catch error E37: No write since last change (add ! to override)
+    catch /^Vim\%((\a\+)\)\=:E37/	" E37: No write since last change (add ! to override)
 	" The "add ! to override" is wrong here, we use the ! for another
-	" purpose. 
-	call s:ErrorMsg('No write since last change')
+	" purpose, so filter it away. 
+	call s:ErrorMsg(substitute(substitute(v:exception, '^Vim\%((\a\+)\)\=:E37:\s*', '', ''), '\s*(.*)', '', 'g'))
     catch /^Vim\%((\a\+)\)\=:E/
 	" v:exception contains what is normally in v:errmsg, but with extra
 	" exception source info prepended, which we cut away. 
