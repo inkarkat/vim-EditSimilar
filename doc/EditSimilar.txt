@@ -38,23 +38,23 @@ To open a set of similar files, it is possible to:
 USAGE							   *EditSimilar-usage*
 						   *EditSimilar-substitutions*
 Substitutions: Change all literal occurrences via text=replacement in the
-currently edited file (modeled after the Korn shell's "cd <old> <new>"
+currently edited file (modeled after the Korn shell's "cd {old} {new}"
 command). This can also be achieved with the built-in|filename-modifiers|: >
     :edit %:gs?pattern?replacement?
 but the syntax is difficult to memorize (it's subtly different from|:s|) and
 harder to type. 
 
 						   *:Esubst* *:EditSubstitute*
-:EditSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+:EditSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 :Esubst[!] ...
 						   *Spsubst* *SplitSubstitute*
-:SplitSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+:SplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 :Spsubst[!] ...
 					       *:Vspsubst* *:VsplitSubstitute*
-:VsplitSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]]
+:VsplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 :Vspsubst[!] ...
-			Replaces all literal occurrences of <text> in the
-			currently edited file with <replacement>, and opens the
+			Replaces all literal occurrences of {text} in the
+			currently edited file with {replacement}, and opens the
 			resulting file. If all substitutions can be made on the
 			filename, the pathspec is left alone (so you don't get
 			any false replacements on a long pathspec). Otherwise,
@@ -77,13 +77,13 @@ harder to type.
 			Add [!] to create a new file when the substituted file
 			does not exist. 
 							     *:FileSubstitute*
-:FileSubstitute <text>=<replacement> [<text>=<replacement> [...]] 
+:FileSubstitute {text}={replacement} [{text}={replacement} [...]] 
 							    *:WriteSubstitute*
-:WriteSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]] 
+:WriteSubstitute[!] {text}={replacement} [{text}={replacement} [...]] 
 							     *:SaveSubstitute*
-:SaveSubstitute[!] <text>=<replacement> [<text>=<replacement> [...]] 
-			Replaces all literal occurrences of <text> in the
-			currently edited file with <replacement>, and sets /
+:SaveSubstitute[!] {text}={replacement} [{text}={replacement} [...]] 
+			Replaces all literal occurrences of {text} in the
+			currently edited file with {replacement}, and sets /
 			writes the resulting file. 
 			The [!] is needed to overwrite an existing file.
 
@@ -146,20 +146,20 @@ file.
 							    *EditSimilar-root*
 Root: Change the file extension in the currently edited file. 
 This is an enhanced version of the built-in: >
-    :edit %:r.<extension>
+    :edit %:r.{extension}
 <							  *:Eroot* *:EditRoot*
-:EditRoot[!] <extension>
+:EditRoot[!] {extension}
 :Eroot[!] ...
 							*:Sproot* *:SplitRoot*
-:SplitRoot[!] <extension>
+:SplitRoot[!] {extension}
 :Sproot[!] ...
 						      *:Vsproot* *:VsplitRoot*
-:VsplitRoot[!] <extension>
+:VsplitRoot[!] {extension}
 :Vsproot[!] ...
 			Switches the current file's extension: 
 			Edits a file with the current file's path and name, but
 			replaces the file extension with the passed one. The
-			leading '.' in <extension> is optional; use either
+			leading '.' in {extension} is optional; use either
 			.txt or txt. To replace (or remove) multiple
 			extensions, prepend a . for each one: >
 			    myfile.txt.bak
@@ -172,11 +172,11 @@ This is an enhanced version of the built-in: >
 			does not exist. 
 
 								   *:FileRoot*
-:FileRoot <extension>
+:FileRoot {extension}
 								  *:WriteRoot*
-:WriteRoot[!] <extension>
+:WriteRoot[!] {extension}
 								   *:SaveRoot*
-:SaveRoot[!] <extension>
+:SaveRoot[!] {extension}
 			Sets / saves a file with the current file's path and
 			name, but replaces the file extension with the passed
 			one. 
@@ -189,12 +189,12 @@ Pattern: Open all files matching the pattern in split windows, similar to how
 |:argadd|{name} adds all matching files to the argument list. 
 
 						      *:Sppat* *:SplitPattern*
-:SplitPattern <file_pattern>
+:SplitPattern {file-pattern}
 :Sppat ...
 						    *:Vsppat* *:VsplitPattern*
-:VsplitPattern <file_pattern>
+:VsplitPattern {file-pattern}
 :Vsppat ...
-			Open all files matching <file_pattern> in split windows.
+			Open all files matching {file-pattern} in split windows.
 			If one of the files is already open, no second split is
 			generated. 
 			Makes all windows the same size if more than one has
@@ -216,31 +216,37 @@ DEPENDENCIES					    *EditSimilar-dependencies*
 - Requires VIM 7.0 or higher. 
 
 ==============================================================================
-CONFIGURATION					   *EditSimilar-configuration*
+CONFIGURATION					   EditSimilar-configuration
 
 ==============================================================================
-INTEGRATION					     *EditSimilar-integration*
+INTEGRATION					     EditSimilar-integration
 
 ==============================================================================
-LIMITATIONS					     *EditSimilar-limitations*
+LIMITATIONS					     EditSimilar-limitations
 
 ==============================================================================
-ASSUMPTIONS					     *EditSimilar-assumptions*
+ASSUMPTIONS					     EditSimilar-assumptions
 
 ==============================================================================
-KNOWN PROBLEMS					  *EditSimilar-known-problems*
+KNOWN PROBLEMS					  EditSimilar-known-problems
 
 ==============================================================================
-TODO							    *EditSimilar-todo*
+TODO							    EditSimilar-todo
 
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-1.00	15-Feb-2009
+1.00	18-Feb-2009
 First published version. 
 
 0.01	29-Jan-2009
 Started development. 
+
+---	20-Jan-2008
+Initial implementation sketch of :Sppat and :Vsppat commands. 
+
+---	13-Jul-2005
+Initial implementation sketch of :Sproot command. 
 
 ==============================================================================
 Copyright: (C) 2009 by Ingo Karkat
