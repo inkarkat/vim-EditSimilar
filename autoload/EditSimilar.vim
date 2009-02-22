@@ -9,6 +9,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.00.005	18-Feb-2009	Reviewed for publication. 
 "	004	04-Feb-2009	Now reducing the filespec to shortest possible
 "				(:~:.) before executing opencmd. This avoids
 "				ugly long buffer names when :set noautochdir. 
@@ -42,7 +43,7 @@ function! s:Open( opencmd, isCreateNew, originalFilespec, replacementFilespec, c
     try
 	execute a:opencmd escapings#fnameescape(fnamemodify(a:replacementFilespec, ':~:.'))
     catch /^Vim\%((\a\+)\)\=:E37/	" E37: No write since last change (add ! to override)
-	" The "add ! to override" is wrong here, we use the ! for another
+	" The "(add ! to override)" is wrong here, we use the ! for another
 	" purpose, so filter it away. 
 	call s:ErrorMsg(substitute(substitute(v:exception, '^Vim\%((\a\+)\)\=:E37:\s*', '', ''), '\s*(.*)', '', 'g'))
     catch /^Vim\%((\a\+)\)\=:E/
@@ -62,7 +63,7 @@ function! s:Substitute( text, patterns )
 	if l:pattern !~# s:patternPattern
 	    throw 'EditSimilar: Not a substitution: ' . l:pattern
 	endif
-	let [l:match, l:from, l:to; l:rest] = matchlist( l:pattern, s:patternPattern )
+	let [l:match, l:from, l:to; l:rest] = matchlist(l:pattern, s:patternPattern)
 	if empty(l:match) || empty(l:from) | throw 'ASSERT: Pattern can be applied. ' | endif
 	let l:beforeReplacement = l:replacement
 	let l:replacement = substitute( l:replacement, '\V' . escape(l:from, '\'), escape(l:to, '\&~'), 'g' )
