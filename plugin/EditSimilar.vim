@@ -9,6 +9,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.00.005	18-Feb-2009	Reviewed for publication. 
+"	004	04-Feb-2009	Full path '%:p' not needed for root commands. 
 "	003	02-Feb-2009	Moved functions from plugin to separate autoload
 "				script. 
 "				Moved documentation to separate help file. 
@@ -64,16 +66,16 @@ command! -bar -bang -count=1 SavePrevious	call EditSimilar#OpenOffset('saveas<ba
 
 
 " Root (i.e. file extension) commands. 
-command! -bar -bang -nargs=1 EditRoot     call EditSimilar#OpenRoot('edit',   <bang>0, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=1 Eroot        call EditSimilar#OpenRoot('edit',   <bang>0, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=1 SplitRoot    call EditSimilar#OpenRoot('split',  <bang>0, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=1 Sproot       call EditSimilar#OpenRoot('split',  <bang>0, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=1 VsplitRoot   call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=1 Vsproot      call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%:p'), <f-args>)
+command! -bar -bang -nargs=1 EditRoot     call EditSimilar#OpenRoot('edit',   <bang>0, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 Eroot        call EditSimilar#OpenRoot('edit',   <bang>0, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 SplitRoot    call EditSimilar#OpenRoot('split',  <bang>0, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 Sproot       call EditSimilar#OpenRoot('split',  <bang>0, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 VsplitRoot   call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 Vsproot      call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%'), <f-args>)
 
-command! -bar       -nargs=1 FileRoot     call EditSimilar#OpenRoot('file',         1, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=1 WriteRoot    call EditSimilar#OpenRoot('write<bang>',  1, expand('%:p'), <f-args>)
-command! -bar -bang -nargs=1 SaveRoot     call EditSimilar#OpenRoot('saveas<bang>', 1, expand('%:p'), <f-args>)
+command! -bar       -nargs=1 FileRoot     call EditSimilar#OpenRoot('file',         1, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 WriteRoot    call EditSimilar#OpenRoot('write<bang>',  1, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 SaveRoot     call EditSimilar#OpenRoot('saveas<bang>', 1, expand('%'), <f-args>)
 
 
 " Pattern commands. 
