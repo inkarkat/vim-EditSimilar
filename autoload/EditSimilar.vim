@@ -9,6 +9,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.12.007	11-May-2009	ENH: Implemented use of file pattern (? and *,
+"				plus escaped \? and \* literals) in
+"				EditSimilar#OpenSubstitute(). 
 "   1.10.006	23-Feb-2009	ENH: s:Open() now has additional a:isFilePattern
 "				argument and is able to resolve file wildcards. 
 "   1.00.005	18-Feb-2009	Reviewed for publication. 
@@ -96,6 +99,14 @@ function! s:Open( opencmd, isCreateNew, isFilePattern, originalFilespec, replace
 endfunction
 
 " Substitute commands. 
+function! s:WildcardToRegexp( text )
+    let l:text = escape(a:text, '\')
+    let l:text = substitute(l:text, '\\\@<!?', '\\.', 'g')
+    let l:text = substitute(l:text, '\\\\?', '?', 'g')
+    let l:text = substitute(l:text, '\\\@<!\*', '\\.\\*', 'g')
+    let l:text = substitute(l:text, '\\\\\*', '*', 'g')
+    return '\V' . l:text
+endfunction
 let s:patternPattern = '\(^.\+\)=\(.*$\)'
 function! s:Substitute( text, patterns )
     let l:replacement = a:text
@@ -108,7 +119,7 @@ function! s:Substitute( text, patterns )
 	let [l:match, l:from, l:to; l:rest] = matchlist(l:pattern, s:patternPattern)
 	if empty(l:match) || empty(l:from) | throw 'ASSERT: Pattern can be applied. ' | endif
 	let l:beforeReplacement = l:replacement
-	let l:replacement = substitute( l:replacement, '\V' . escape(l:from, '\'), escape(l:to, '\&~'), 'g' )
+	let l:replacement = substitute( l:replacement, s:WildcardToRegexp(l:from), escape(l:to, '\&~'), 'g' )
 	if l:replacement ==# l:beforeReplacement
 	    call add(l:failedPatterns, l:pattern)
 	endif
