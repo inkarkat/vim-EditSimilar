@@ -101,10 +101,21 @@ endfunction
 " Substitute commands. 
 function! s:WildcardToRegexp( text )
     let l:text = escape(a:text, '\')
+
+    " ? wildcards
     let l:text = substitute(l:text, '\\\@<!?', '\\.', 'g')
     let l:text = substitute(l:text, '\\\\?', '?', 'g')
+
+    " * wildcards
     let l:text = substitute(l:text, '\\\@<!\*', '\\.\\*', 'g')
     let l:text = substitute(l:text, '\\\\\*', '*', 'g')
+
+    " [] wildcards
+    " Simpler regexp that doesn't handle \] inside [...]: 
+    "let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?.\{-}\)\]', '\\%(\\[\1]\\|[\1]\\)', 'g')
+    " Handle \] (and other \x special characters) inside [...] by including \] in the inner pattern, then undoing the backslash escaping done first in this function (i.e. recreate \] from the initial \\]). 
+    let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?\(\\\\\]\|[^]]\)*\)\]', '\="\\%(\\[". substitute(submatch(1), "\\\\\\\\", "\\\\", "g") . "]\\|[". substitute(submatch(1), "\\\\\\\\", "\\\\", "g") . "]\\)"', 'g')
+
     return '\V' . l:text
 endfunction
 let s:patternPattern = '\(^.\+\)=\(.*$\)'
