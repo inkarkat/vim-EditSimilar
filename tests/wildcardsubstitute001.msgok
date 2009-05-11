@@ -1,0 +1,8 @@
+Test: fooz*.txt does not exist
+Substituted file does not exist (add ! to create): fooz*.txt
+
+Test: fi[XYZ]e[abc123].txt does not exist
+Substituted file does not exist (add ! to create): fi[XYZ]e[abc123].txt
+
+Test: lala.des* matches multiple files.
+Too many file names
