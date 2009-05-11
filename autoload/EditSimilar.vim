@@ -9,6 +9,10 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.12.008	12-May-2009	ENH: Completed implementation of file patterns
+"				with [...]. 
+"				ENH: On Windows, forward slashes can also be
+"				used as path separators in the wildcard text. 
 "   1.12.007	11-May-2009	ENH: Implemented use of file pattern (? and *,
 "				plus escaped \? and \* literals) in
 "				EditSimilar#OpenSubstitute(). 
@@ -99,22 +103,32 @@ function! s:Open( opencmd, isCreateNew, isFilePattern, originalFilespec, replace
 endfunction
 
 " Substitute commands. 
+let s:notPathSeparatorPattern = (exists('+shellslash') && ! &shellslash ? '\\[^/\\\\]' : '\\[^/]')
 function! s:WildcardToRegexp( text )
     let l:text = escape(a:text, '\')
 
+    if exists('+shellslash') && ! &shellslash
+	" On Windows, when the 'shellslash' option isn't set (i.e. backslashes
+	" are used as path separators), still allow using forward slashes as
+	" path separators, like Vim does. 
+	let l:text = substitute(l:text, '/', '\\\\', 'g')
+    endif
+
+    " [...] wildcards
+    " Simpler regexp that doesn't handle \] inside [...]: 
+    "let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?.\{-}\)\]', '\\%(\\%(\\[\1]\\\&' . s:notPathSeparatorPattern . '\\)\\|[\1]\\)', 'g')
+    " Handle \] inside [...] by including \] in the inner pattern, then undoing the backslash escaping done first in this function (i.e. recreate \] from the initial \\]). 
+    " Vim doesn't seem to support other escaped characters like [\x6f\d122] in a
+    " file pattern. 
+    let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?\(\\\\\]\|[^]]\)*\)\]', '\="\\%(\\%(\\[". substitute(submatch(1), "\\\\\\\\]", "\\\\]", "g") . "]\\\&' . s:notPathSeparatorPattern . '\\)\\|[". substitute(submatch(1), "\\\\\\\\]", "\\\\]", "g") . "]\\)"', 'g')
+
     " ? wildcards
-    let l:text = substitute(l:text, '\\\@<!?', '\\.', 'g')
+    let l:text = substitute(l:text, '\\\@<!?', s:notPathSeparatorPattern, 'g')
     let l:text = substitute(l:text, '\\\\?', '?', 'g')
 
     " * wildcards
-    let l:text = substitute(l:text, '\\\@<!\*', '\\.\\*', 'g')
+    let l:text = substitute(l:text, '\\\@<!\*', s:notPathSeparatorPattern . '\\*', 'g')
     let l:text = substitute(l:text, '\\\\\*', '*', 'g')
-
-    " [] wildcards
-    " Simpler regexp that doesn't handle \] inside [...]: 
-    "let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?.\{-}\)\]', '\\%(\\[\1]\\|[\1]\\)', 'g')
-    " Handle \] (and other \x special characters) inside [...] by including \] in the inner pattern, then undoing the backslash escaping done first in this function (i.e. recreate \] from the initial \\]). 
-    let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?\(\\\\\]\|[^]]\)*\)\]', '\="\\%(\\[". substitute(submatch(1), "\\\\\\\\", "\\\\", "g") . "]\\|[". substitute(submatch(1), "\\\\\\\\", "\\\\", "g") . "]\\)"', 'g')
 
     return '\V' . l:text
 endfunction
@@ -134,6 +148,8 @@ function! s:Substitute( text, patterns )
 	if l:replacement ==# l:beforeReplacement
 	    call add(l:failedPatterns, l:pattern)
 	endif
+"****D echo '****' (l:beforeReplacement =~ s:WildcardToRegexp(l:from) ? '' : 'no ') . 'match for pattern' s:WildcardToRegexp(l:from)
+"****D echo '**** replacing' l:beforeReplacement "\n          with" l:replacement
     endfor
 
     return [l:replacement, l:failedPatterns]
