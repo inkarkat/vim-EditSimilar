@@ -10,7 +10,9 @@
 "
 " REVISION	DATE		REMARKS 
 "   1.12.008	12-May-2009	ENH: Completed implementation of file patterns
-"				with [...]. 
+"				with [...] and **; now also escaping ? and *
+"				inside [...] collections to undo the later
+"				indiscriminate wildcard expansion. 
 "				ENH: On Windows, forward slashes can also be
 "				used as path separators in the wildcard text. 
 "   1.12.007	11-May-2009	ENH: Implemented use of file pattern (? and *,
@@ -104,6 +106,24 @@ endfunction
 
 " Substitute commands. 
 let s:notPathSeparatorPattern = (exists('+shellslash') && ! &shellslash ? '\\[^/\\\\]' : '\\[^/]')
+function! s:AdaptCollection()
+    " Special processing for the submatch inside the [...] collection. 
+
+    " Earlier, simpler regexp that didn't handle \] inside [...]: 
+    "let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?.\{-}\)\]', '\\%(\\%(\\[\1]\\\&' . s:notPathSeparatorPattern . '\\)\\|[\1]\\)', 'g')
+
+    " Handle \] inside by including \] in the inner pattern, then undoing the
+    " backslash escaping done first in this function (i.e. recreate \] from the
+    " initial \\]). 
+    " Vim doesn't seem to support other escaped characters like [\x6f\d122] in a
+    " file pattern. 
+    let l:result = substitute(submatch(1), '\\\\]', '\\]', 'g')
+
+    " Escape ? and *; the later wildcard expansions will trample over them. 
+    let l:result = substitute(l:result, '[?*]', '\\\\\0', 'g')
+
+    return l:result
+endfunction
 function! s:WildcardToRegexp( text )
     let l:text = escape(a:text, '\')
 
@@ -115,16 +135,24 @@ function! s:WildcardToRegexp( text )
     endif
 
     " [...] wildcards
-    " Simpler regexp that doesn't handle \] inside [...]: 
-    "let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?.\{-}\)\]', '\\%(\\%(\\[\1]\\\&' . s:notPathSeparatorPattern . '\\)\\|[\1]\\)', 'g')
-    " Handle \] inside [...] by including \] in the inner pattern, then undoing the backslash escaping done first in this function (i.e. recreate \] from the initial \\]). 
-    " Vim doesn't seem to support other escaped characters like [\x6f\d122] in a
-    " file pattern. 
-    let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?\(\\\\\]\|[^]]\)*\)\]', '\="\\%(\\%(\\[". substitute(submatch(1), "\\\\\\\\]", "\\\\]", "g") . "]\\\&' . s:notPathSeparatorPattern . '\\)\\|[". substitute(submatch(1), "\\\\\\\\]", "\\\\]", "g") . "]\\)"', 'g')
+    let l:text = substitute(l:text, '\[\(\%(\^\?\]\)\?\(\\\\\]\|[^]]\)*\)\]', '\="\\%(\\%(\\[". s:AdaptCollection() . "]\\\&' . s:notPathSeparatorPattern . '\\)\\|[". s:AdaptCollection() . "]\\)"', 'g')
 
     " ? wildcards
     let l:text = substitute(l:text, '\\\@<!?', s:notPathSeparatorPattern, 'g')
     let l:text = substitute(l:text, '\\\\?', '?', 'g')
+
+    " ** wildcards
+    if exists('+shellslash') && ! &shellslash
+	" If backslash is the path separator, one cannot escape the ** wildcard.
+	" That isn't necessary, anyway, because Windows doesn't allow the '*'
+	" character in filespecs. 
+	let l:text = substitute(l:text, '\%(^\|\\\\\)\zs\*\*\ze\%(\\\\\|$\)', '\\.\\{0,}', 'g')
+    else
+	let l:text = substitute(l:text, '\%(^\|/\)\zs\*\*\ze\%(/\|$\)', '\\.\\{0,}', 'g')
+	" Convert the escaped \** to \*\*, so that the following * wildcard
+	" substitution converts that to **. 
+	let l:text = substitute(l:text, '\\\\\*\*', '\\\\*\\\\*', 'g')
+    endif
 
     " * wildcards
     let l:text = substitute(l:text, '\\\@<!\*', s:notPathSeparatorPattern . '\\*', 'g')
@@ -148,8 +176,8 @@ function! s:Substitute( text, patterns )
 	if l:replacement ==# l:beforeReplacement
 	    call add(l:failedPatterns, l:pattern)
 	endif
-"****D echo '****' (l:beforeReplacement =~ s:WildcardToRegexp(l:from) ? '' : 'no ') . 'match for pattern' s:WildcardToRegexp(l:from)
-"****D echo '**** replacing' l:beforeReplacement "\n          with" l:replacement
+"***D echo '****' (l:beforeReplacement =~ s:WildcardToRegexp(l:from) ? '' : 'no ') . 'match for pattern' s:WildcardToRegexp(l:from)
+"***D echo '**** replacing' l:beforeReplacement "\n          with" l:replacement
     endfor
 
     return [l:replacement, l:failedPatterns]
