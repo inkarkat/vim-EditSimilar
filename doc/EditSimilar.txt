@@ -76,15 +76,25 @@ harder to type.
 			    /etc/test/superapp/test001.cfg
 			    :Esubstitute test=prod test=production
 			    /etc/production/superapp/prod001.cfg
-<
-			The {replacement} can include the usual file wildcards
-			(?, *, cp.|file-pattern|) to save typing; however, the
-			file-pattern must resolve to exactly one existing
-			filespec, as the underlying ex commands can only open
-			one single file. >
+<			This also means that {text} cannot span both pathspec
+			and filename; you need to specify two separate
+			substitutions: >
+			    /etc/test/superapp/test001.cfg
+			    :Esubstitute superapp/test=normalapp/prod
+			    Nothing substituted
+			    :Esubstitute superapp=normalapp test=prod
+			    /etc/test/normalapp/prod001.cfg
+
+<			Both {text} and {replacement} can include the usual
+			file wildcards (?, *, ** and [...], cp.|file-pattern|)
+			to save typing; however, the file-pattern must resolve
+			to exactly one existing filespec, as the underlying ex
+			commands can only open one single file. >
 			    /etc/test/superapp/test001.cfg
 			    :Esubstitute test=p* test=p*
 			    /etc/production/superapp/prod001.cfg
+			    :Esubstitute **/=/tmp/ [01]=X
+			    /tmp/prodXXX.cfg
 <			Add [!] to create a new file when the substituted file
 			does not exist. 
 							     *:FileSubstitute*
@@ -263,6 +273,11 @@ TODO							    *EditSimilar-todo*
 
 ==============================================================================
 HISTORY							 *EditSimilar-history*
+1.12	12-May-2009
+- ENH: {text} in :EditSubstitute can now also contain file wildcards (?, *, **
+  and [...]) to save typing. 
+- ENH: On Windows, {text} in :EditSubstitute can now also use forward slashes
+  as path separators. 
 
 1.11	11-May-2009
 Added ":ViewSimilar" and ":SviewSimilar" commands to open similar files in
