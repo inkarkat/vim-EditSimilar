@@ -19,10 +19,10 @@ can use the built-in|cmdline-completion| or|filename-modifiers|like %:r to
 quickly edit a similar file, or even use special plugins, e.g. to alternate
 between source and header files (vimscript #31). 
 
-This script provides custom versions of the|:edit|,|:split|,|:vsplit|,|:file|,
-|:write| and|:saveas|commands which facilitate quick and simple editing of
-similarly named files. To quickly edit another file based on the current file,
-one can: 
+This script provides custom versions of
+the|:edit|,|:view|,|:split|,|:vsplit|,|:sview|,|:file|,|:write| and|:saveas|
+commands which facilitate quick and simple editing of similarly named files.
+To quickly edit another file based on the current file, one can: 
 - substitute {old} with {new}			   |EditSimilar-substitutions|
 - go to previous/next numbered file or			  |EditSimilar-offset|
   add any offset to the number
@@ -34,12 +34,13 @@ To open a set of similar files, it is possible to:
 ==============================================================================
 USAGE							   *EditSimilar-usage*
 						   *EditSimilar-substitutions*
-Substitutions: Change all literal occurrences via text=replacement in the
+Substitutions: Change all occurrences via {text}={replacement} in the
 currently edited file (modeled after the Korn shell's "cd {old} {new}"
 command). This can also be achieved with the built-in|filename-modifiers|: >
     :edit %:gs?pattern?replacement?
 but the syntax is difficult to memorize (it's subtly different from|:s|) and
-harder to type. 
+harder to type (because one has to use regular expressions instead of the
+simpler file wildcards). 
 
 						   *:Esubst* *:EditSubstitute*
 :EditSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
@@ -62,10 +63,13 @@ harder to type.
 			filename, the pathspec is left alone (so you don't get
 			any false replacements on a long pathspec). Otherwise,
 			the substitutions that weren't applicable to the
-			filename are done to the full absolute pathspec. 
+			filename are done to the full absolute pathspec.
+			Finally, substitutions spanning both pathspec and
+			filename are made. 
 
-			This way, you can substitute an the entire path by
-			specifying the same substitution twice: >
+			By taking advantage of these substitution scopes, you
+			can substitute occurrences in both path and filename
+			by specifying the same substitution twice: >
 			    /etc/test/superapp/test001.cfg
 			    :Esubstitute test=prod
 			    /etc/test/superapp/prod001.cfg
@@ -76,24 +80,20 @@ harder to type.
 			    /etc/test/superapp/test001.cfg
 			    :Esubstitute test=prod test=production
 			    /etc/production/superapp/prod001.cfg
-<			This also means that {text} cannot span both pathspec
-			and filename; you need to specify two separate
-			substitutions: >
+<			Or across the entire filespec: >
 			    /etc/test/superapp/test001.cfg
 			    :Esubstitute superapp/test=normalapp/prod
-			    Nothing substituted
-			    :Esubstitute superapp=normalapp test=prod
 			    /etc/test/normalapp/prod001.cfg
 
 <			Both {text} and {replacement} can include the usual
 			file wildcards (?, *, ** and [...], cp.|file-pattern|)
 			to save typing; however, the file-pattern must resolve
-			to exactly one existing filespec, as the underlying ex
-			commands can only open one single file. >
+			to exactly one filespec, as the underlying ex commands
+			can only open a single file. >
 			    /etc/test/superapp/test001.cfg
 			    :Esubstitute test=p* test=p*
 			    /etc/production/superapp/prod001.cfg
-			    :Esubstitute **/=/tmp/ [01]=X
+			    :Esubstitute **=/tmp [01]=X
 			    /tmp/prodXXX.cfg
 <			Add [!] to create a new file when the substituted file
 			does not exist. 
@@ -103,9 +103,9 @@ harder to type.
 :WriteSubstitute[!] {text}={replacement} [{text}={replacement} [...]] 
 							     *:SaveSubstitute*
 :SaveSubstitute[!] {text}={replacement} [{text}={replacement} [...]] 
-			Replaces all literal occurrences of {text} in the
-			currently edited file with {replacement}, and sets /
-			writes the resulting file. 
+			Replaces all occurrences of {text} in the currently
+			edited file with {replacement}, and sets / writes the
+			resulting file. Wildcards can be used here, too. 
 			The [!] is needed to overwrite an existing file.
 
 
@@ -273,11 +273,14 @@ TODO							    *EditSimilar-todo*
 
 ==============================================================================
 HISTORY							 *EditSimilar-history*
-1.12	12-May-2009
+
+1.12	13-May-2009
 - ENH: {text} in :EditSubstitute can now also contain file wildcards (?, *, **
   and [...]) to save typing. 
 - ENH: On Windows, {text} in :EditSubstitute can now also use forward slashes
-  as path separators. 
+  as path separators (as an alternative to the usual backslashes). 
+- ENH: Supporting substitutions spanning both pathspec and filename by finally
+  applying failed replacements of multi-path elements to the entire filespec. 
 
 1.11	11-May-2009
 Added ":ViewSimilar" and ":SviewSimilar" commands to open similar files in
