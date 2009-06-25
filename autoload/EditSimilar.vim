@@ -9,6 +9,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.13.010	26-Jun-2009	:EditNext / :EditPrevious without the optional
+"				[count] now skip over gaps in numbering. 
 "   1.12.009	13-May-2009	ENH: Supporting substitutions spanning both
 "				pathspec and filename by finally applying failed
 "				multi-path elements replacements to the entire
@@ -271,6 +273,11 @@ function! s:Offset( text, offset, minimum )
     return [l:nextNumberString, substitute(a:text, s:digitPattern, l:nextNumberString, '')]
 endfunction
 function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
+    " A passed difference of 0 means that no [count] was specified and thus
+    " skipping over missing numbers is enabled. 
+    let l:difference = max([a:difference, 1])
+    let l:isSkipOverMissingNumbers = (a:difference == 0)
+
     let l:originalNumber = matchstr(a:filespec, s:digitPattern)
     if empty(l:originalNumber)
 	call s:ErrorMsg('No number in filespec')
@@ -278,13 +285,23 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
     endif
 
     if a:isCreateNew
-	let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 0)
-	if str2nr(l:replacementNumberString, 10) == 0 && a:direction == -1 && a:difference > 1 && ! filereadable(l:replacement)
-	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 1)
+	let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
+	if str2nr(l:replacementNumberString, 10) == 0 && a:direction == -1 && l:difference > 1 && ! filereadable(l:replacement)
+	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 1)
 	endif
 	let l:replacementMsg = '#' . l:replacementNumberString
+    elseif l:isSkipOverMissingNumbers
+	let l:replacementMsg = ''
+	let l:numberLen = strlen(s:Offset(a:filespec, a:difference, 0)[0])
+	while l:difference < str2nr(repeat(9, l:numberLen))
+	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
+	    if empty(l:replacementMsg) | let l:replacementMsg = '#' . l:replacementNumberString | endif
+	    if filereadable(l:replacement)
+		break
+	    endif
+	    let l:difference += 1
+	endwhile
     else
-	let l:difference = a:difference
 	let l:replacementMsg = ''
 	while l:difference > 0
 	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
