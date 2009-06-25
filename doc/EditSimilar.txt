@@ -15,7 +15,7 @@ DESCRIPTION					     *EditSimilar-description*
 
 Files edited in Vim often relate to one another; maybe they just differ in
 file extensions, are numbered sequentially, or contain common patterns. One
-can use the built-in|cmdline-completion| or|filename-modifiers|like %:r to
+can use the built-in |cmdline-completion|  or |filename-modifiers| like %:r to
 quickly edit a similar file, or even use special plugins, e.g. to alternate
 between source and header files (vimscript #31). 
 
@@ -36,9 +36,9 @@ USAGE							   *EditSimilar-usage*
 						   *EditSimilar-substitutions*
 Substitutions: Change all occurrences via {text}={replacement} in the
 currently edited file (modeled after the Korn shell's "cd {old} {new}"
-command). This can also be achieved with the built-in|filename-modifiers|: >
+command). This can also be achieved with the built-in |filename-modifiers|: >
     :edit %:gs?pattern?replacement?
-but the syntax is difficult to memorize (it's subtly different from|:s|) and
+but the syntax is difficult to memorize (it's subtly different from |:s|) and
 harder to type (because one has to use regular expressions instead of the
 simpler file wildcards). 
 
@@ -86,7 +86,7 @@ simpler file wildcards).
 			    /etc/test/normalapp/prod001.cfg
 
 <			Both {text} and {replacement} can include the usual
-			file wildcards (?, *, ** and [...], cp.|file-pattern|)
+			file wildcards (?, *, ** and [...], cp. |file-pattern|)
 			to save typing; however, the file-pattern must resolve
 			to exactly one filespec, as the underlying ex commands
 			can only open a single file. >
@@ -206,7 +206,7 @@ This is an enhanced version of the built-in: >
 			    myfile
 <
 			The {extension} can include the usual file wildcards
-			(?, *, cp.|file-pattern|) to save typing; however, the
+			(?, *, cp. |file-pattern|) to save typing; however, the
 			file-pattern must resolve to exactly one existing
 			file, as the underlying ex commands can only open one
 			single file. 
@@ -244,20 +244,20 @@ Pattern: Open all files matching the pattern in split windows, similar to how
 			If one of the files is already open, no second split is
 			generated. 
 			The {file-pattern} can include the usual file wildcards
-			(?, *, cp.|file-pattern|). 
+			(?, *, cp. |file-pattern|). 
 			Makes all windows the same size if more than one has
 			been opened.  
 
 ==============================================================================
 INSTALLATION					    *EditSimilar-installation*
 
-This script is packaged as a|vimball|. If you have the "gunzip" decompressor
+This script is packaged as a |vimball|. If you have the "gunzip" decompressor
 in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
 the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
-vimball or via the|:UseVimball|command. >
+vimball or via the |:UseVimball| command. >
     vim EditSimilar.vba.gz
     :so %
-To uninstall, use the|:RmVimball|command. 
+To uninstall, use the |:RmVimball| command. 
 
 DEPENDENCIES					    *EditSimilar-dependencies*
 
@@ -304,7 +304,7 @@ Initial implementation sketch of :Sproot command.
 
 ==============================================================================
 Copyright: (C) 2009 by Ingo Karkat
-The VIM LICENSE applies to this script; see|copyright|. 
+The VIM LICENSE applies to this script; see |copyright|. 
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
 ==============================================================================
