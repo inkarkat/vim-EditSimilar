@@ -1,7 +1,7 @@
 " EditSimilar.vim: Commands to edit files with a similar filename. 
 "
 " DEPENDENCIES:
-"   - Requires escapings.vim autoload script. 
+"   - escapings.vim autoload script. 
 "
 " Copyright: (C) 2009 by Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
@@ -166,17 +166,23 @@ function! s:WildcardToRegexp( text )
     " is already following in the wildcard, anyway. 
     " (The l:originalPathspec that is processed in s:Substitute() always has a
     " trailing path separator.) 
+    "
+    " Note: Instead of escaping the '.*' pattern in the replacement (or else
+    " it'll be processed as a * wildcard), we use the equivalent '.\{0,}'
+    " pattern. 
+    " Note: The regexp .\{0,}/\@= later substitutes twice if nothing precedes
+    " it?! To fix this, we add the ^ anchor when the ** wildcard appears at the
+    " beginning. 
     if s:pathSeparator ==# '\'
 	" If backslash is the path separator, one cannot escape the ** wildcard.
 	" That isn't necessary, anyway, because Windows doesn't allow the '*'
 	" character in filespecs. 
-	" Note: Instead of escaping the '.*' pattern in the replacement (or else
-	" it'll be processed as a * wildcard), we use the equivalent '.\{0,}'
-	" pattern. 
-	let l:text = substitute(l:text, '\%(^\|\\\\\)\zs\*\*$', '\\.\\{0,}\\%(\\\\\\)\\@=', 'g')
+	let l:text = substitute(l:text, '\\\\\zs\*\*$', '\\.\\{0,}\\%(\\\\\\)\\@=', 'g')
+	let l:text = substitute(l:text, '^\*\*$', '\\^\\.\\{0,}\\%(\\\\\\)\\@=', 'g')
 	let l:text = substitute(l:text, '\%(^\|\\\\\)\zs\*\*\ze\\\\', '\\.\\{0,}', 'g')
     else
-	let l:text = substitute(l:text, '\%(^\|/\)\zs\*\*$', '\\.\\{0,}/\\@=', 'g')
+	let l:text = substitute(l:text, '/\zs\*\*$', '\\.\\{0,}/\\@=', 'g')
+	let l:text = substitute(l:text, '^\*\*$', '\\^\\.\\{0,}/\\@=', 'g')
 	let l:text = substitute(l:text, '\%(^\|/\)\zs\*\*\ze/', '\\.\\{0,}', 'g')
 	" Convert the escaped \** to \*\*, so that the following * wildcard
 	" substitution converts that to **. 
