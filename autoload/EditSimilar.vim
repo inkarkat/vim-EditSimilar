@@ -265,12 +265,43 @@ function! EditSimilar#OpenSubstitute( opencmd, isCreateNew, filespec, ... )
 endfunction
 
 " Next / Previous commands. 
+function! s:NumberString( number, digitNum )
+    return printf('%0' . a:digitNum . 'd', a:number)
+endfunction
 let s:digitPattern = '\d\+\ze\D*$'
 function! s:Offset( text, offset, minimum )
     let l:currentNumber = matchstr(a:text, s:digitPattern)
-    let l:nextNumber = max([str2nr(l:currentNumber, 10) + a:offset, a:minimum])
-    let l:nextNumberString = printf('%0' . strlen(l:currentNumber) . 'd', l:nextNumber)
+    let l:nextNumber = max([str2nr(l:currentNumber) + a:offset, a:minimum])
+    let l:nextNumberString = s:NumberString(l:nextNumber, strlen(l:currentNumber))
     return [l:nextNumberString, substitute(a:text, s:digitPattern, l:nextNumberString, '')]
+endfunction
+function! s:CheckNextDigitBlock( filespec, numberString, isDescending )
+    let l:numberBlockRegexp = (a:isDescending ? '9' : '0') . '\+$'
+    if a:numberString !~# l:numberBlockRegexp
+	return 1
+    endif
+
+    " The number is divisible by 10. Mass-check the next / last 10, 100, 1000,
+    " ... number range for existing files via a file glob. If no files exist in
+    " that range, the search can fast-forward across the range; otherwise, the
+    " search must continue sequentially (until the next block). 
+    let l:numberBlock = matchstr(a:numberString, l:numberBlockRegexp)
+    let l:numberBlockDigitNum = strlen(l:numberBlock)
+    let l:numberFilePattern = substitute(a:numberString, l:numberBlockRegexp, repeat('[0-9]', l:numberBlockDigitNum), '')
+    let l:filePattern = substitute(a:filespec, s:digitPattern, l:numberFilePattern, '')
+echomsg '****' l:filePattern
+    let l:files = glob(l:filePattern)
+    if empty(l:files)
+	" The glob resulted in no files; the entire block can be skipped. 
+	let l:block = 1
+	for l:i in range(strlen(l:numberBlock))
+	    let l:block = l:block * 10
+	endfor
+echomsg '++++' l:block
+	return l:block
+    else
+	return 1
+    endif
 endfunction
 function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, direction )
     " A passed difference of 0 means that no [count] was specified and thus
@@ -286,20 +317,21 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
 
     if a:isCreateNew
 	let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
-	if str2nr(l:replacementNumberString, 10) == 0 && a:direction == -1 && l:difference > 1 && ! filereadable(l:replacement)
+	if str2nr(l:replacementNumberString) == 0 && a:direction == -1 && l:difference > 1 && ! filereadable(l:replacement)
 	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 1)
 	endif
 	let l:replacementMsg = '#' . l:replacementNumberString
     elseif l:isSkipOverMissingNumbers
 	let l:replacementMsg = ''
-	let l:numberLen = strlen(s:Offset(a:filespec, a:difference, 0)[0])
+	let l:numberLen = strlen(s:Offset(a:filespec, a:difference, 0)[0]) + 1 " XXX
 	while l:difference < str2nr(repeat(9, l:numberLen))
 	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
 	    if empty(l:replacementMsg) | let l:replacementMsg = '#' . l:replacementNumberString | endif
 	    if filereadable(l:replacement)
 		break
 	    endif
-	    let l:difference += 1
+	    let l:difference += s:CheckNextDigitBlock(a:filespec, l:replacementNumberString, (a:direction == -1))
+echomsg '||||' l:difference
 	endwhile
     else
 	let l:replacementMsg = ''
@@ -309,7 +341,7 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
 	    if filereadable(l:replacement)
 		break
 	    endif
-	    let l:difference -= 1
+	    let l:difference -= s:CheckNextDigitBlock(a:filespec, l:replacementNumberString, 1)
 	endwhile
     endif
 
