@@ -281,10 +281,10 @@ function! s:CheckNextDigitBlock( filespec, numberString, isDescending )
 	return 1
     endif
 
-    " The number is divisible by 10. Mass-check the next / last 10, 100, 1000,
-    " ... number range for existing files via a file glob. If no files exist in
-    " that range, the search can fast-forward across the range; otherwise, the
-    " search must continue sequentially (until the next block). 
+    " The (ascending) number is divisible by 10. Mass-check the next / last 10,
+    " 100, 1000, ... number range for existing files via a file glob. If no
+    " files exist in that range, the search can fast-forward across the range;
+    " otherwise, the search must continue sequentially (until the next block). 
     let l:numberBlock = matchstr(a:numberString, l:numberBlockRegexp)
     let l:numberBlockDigitNum = strlen(l:numberBlock)
     let l:numberFilePattern = substitute(a:numberString, l:numberBlockRegexp, repeat('[0-9]', l:numberBlockDigitNum), '')
@@ -300,6 +300,7 @@ echomsg '****' l:filePattern
 echomsg '++++' l:block
 	return l:block
     else
+	" TODO: Recurse with block / 10 if strlen(l:numberBlock) > 1
 	return 1
     endif
 endfunction
@@ -324,6 +325,7 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
     elseif l:isSkipOverMissingNumbers
 	let l:replacementMsg = ''
 	let l:numberLen = strlen(s:Offset(a:filespec, a:difference, 0)[0]) + 1 " XXX
+	" TODO: First check for file*.txt
 	while l:difference < str2nr(repeat(9, l:numberLen))
 	    let [l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
 	    if empty(l:replacementMsg) | let l:replacementMsg = '#' . l:replacementNumberString | endif
