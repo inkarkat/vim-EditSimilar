@@ -9,6 +9,11 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.14.012	21-Aug-2009	BF: :[N]Eprev with supplied [N] would skip over
+"				existing smaller number file and would claim
+"				that no substituted file existed. Must clear
+"				a:isDescending flag passed to
+"				s:CheckNextDigitBlock() for :Eprev. 
 "   1.13.011	27-Jun-2009	The skip to the next number implements a more
 "				efficient search algorithm that checks whole
 "				number ranges (via glob('...[0-9]')) and skips
@@ -284,6 +289,7 @@ function! s:Offset( text, offset, minimum )
 endfunction
 function! s:CheckNextDigitBlock( filespec, numberString, isDescending, ... )
     let l:numberBlockRegexp = (a:isDescending ? '9' : '0') . (a:0 ? '\{' . a:1 . '}' : '\+') . '$'
+"****D echomsg '****' a:numberString l:numberBlockRegexp
     if a:numberString !~# l:numberBlockRegexp
 	return 1
     endif
@@ -306,6 +312,7 @@ function! s:CheckNextDigitBlock( filespec, numberString, isDescending, ... )
 	endfor
 	return l:block
     else
+"****D echomsg '**** found'
 	" The glob found at least one file; the block cannot be skipped. 
 	if l:numberBlockDigitNum > 1
 	    " The block consisted of more than one decimal digit, so we can
@@ -361,7 +368,8 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
 	    if filereadable(l:replacement)
 		break
 	    endif
-	    let l:difference -= s:CheckNextDigitBlock(a:filespec, l:replacementNumberString, 1)
+"****D echomsg '****' l:difference
+	    let l:difference -= s:CheckNextDigitBlock(a:filespec, l:replacementNumberString, (a:direction != -1))
 	endwhile
     endif
 
