@@ -14,6 +14,13 @@
 "				that no substituted file existed. Must clear
 "				a:isDescending flag passed to
 "				s:CheckNextDigitBlock() for :Eprev. 
+"				BF: :[N]Eprev with supplied large [N] together
+"				with a low original number hogs the CPU because
+"				the loop iterates over the entire number range
+"				where the resulting offset would be negative.
+"				Now using the original number as the upper
+"				bound, so that the efficient number range check
+"				starts immediately. 
 "   1.13.011	27-Jun-2009	The skip to the next number implements a more
 "				efficient search algorithm that checks whole
 "				number ranges (via glob('...[0-9]')) and skips
@@ -282,14 +289,13 @@ function! s:NumberString( number, digitNum )
 endfunction
 let s:digitPattern = '\d\+\ze\D*$'
 function! s:Offset( text, offset, minimum )
-    let l:currentNumber = matchstr(a:text, s:digitPattern)
-    let l:nextNumber = max([str2nr(l:currentNumber) + a:offset, a:minimum])
-    let l:nextNumberString = s:NumberString(l:nextNumber, strlen(l:currentNumber))
+    let l:originalNumber = matchstr(a:text, s:digitPattern)
+    let l:nextNumber = max([str2nr(l:originalNumber) + a:offset, a:minimum])
+    let l:nextNumberString = s:NumberString(l:nextNumber, strlen(l:originalNumber))
     return [l:nextNumber, l:nextNumberString, substitute(a:text, s:digitPattern, l:nextNumberString, '')]
 endfunction
 function! s:CheckNextDigitBlock( filespec, numberString, isDescending, ... )
     let l:numberBlockRegexp = (a:isDescending ? '9' : '0') . (a:0 ? '\{' . a:1 . '}' : '\+') . '$'
-"****D echomsg '****' a:numberString l:numberBlockRegexp
     if a:numberString !~# l:numberBlockRegexp
 	return 1
     endif
@@ -312,7 +318,6 @@ function! s:CheckNextDigitBlock( filespec, numberString, isDescending, ... )
 	endfor
 	return l:block
     else
-"****D echomsg '**** found'
 	" The glob found at least one file; the block cannot be skipped. 
 	if l:numberBlockDigitNum > 1
 	    " The block consisted of more than one decimal digit, so we can
@@ -332,8 +337,8 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
     let l:difference = max([a:difference, 1])
     let l:isSkipOverMissingNumbers = (a:difference == 0)
 
-    let l:originalNumber = matchstr(a:filespec, s:digitPattern)
-    if empty(l:originalNumber)
+    let l:originalNumberString = matchstr(a:filespec, s:digitPattern)
+    if empty(l:originalNumberString)
 	call s:ErrorMsg('No number in filespec')
 	return
     endif
@@ -361,6 +366,16 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
 	    let l:difference += s:CheckNextDigitBlock(a:filespec, l:replacementNumberString, (a:direction == -1))
 	endwhile
     else
+	if a:direction == -1
+	    " For :[N]Eprev, the replacement number cannot be smaller than zero.
+	    " To avoid a CPU-intensive decrease of l:difference until
+	    " l:replacementNumber becomes positive (which can take many
+	    " iterations when a high [N] is supplied), the upper bound for the
+	    " start value is the original number. 
+	    let l:originalNumber = s:Offset(a:filespec, 0, 0)[0]
+	    let l:difference = min([l:difference, l:originalNumber])
+	endif
+
 	let l:replacementMsg = ''
 	while l:difference > 0
 	    let [l:replacementNumber, l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
@@ -368,12 +383,11 @@ function! EditSimilar#OpenOffset( opencmd, isCreateNew, filespec, difference, di
 	    if filereadable(l:replacement)
 		break
 	    endif
-"****D echomsg '****' l:difference
 	    let l:difference -= s:CheckNextDigitBlock(a:filespec, l:replacementNumberString, (a:direction != -1))
 	endwhile
     endif
 
-    call s:Open(a:opencmd, a:isCreateNew, 0, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumber . ')')
+    call s:Open(a:opencmd, a:isCreateNew, 0, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumberString . ')')
 endfunction
 
 " Root (i.e. file extension) commands. 
