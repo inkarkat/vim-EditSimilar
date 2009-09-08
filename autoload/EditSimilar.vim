@@ -288,6 +288,9 @@ function! s:NumberString( number, digitNum )
     return printf('%0' . a:digitNum . 'd', a:number)
 endfunction
 let s:digitPattern = '\d\+\ze\D*$'
+function! EditSimilar#CanApplyOffset( text )
+    return a:text =~# s:digitPattern
+endfunction
 function! s:Offset( text, offset, minimum )
     let l:originalNumber = matchstr(a:text, s:digitPattern)
     let l:nextNumber = max([str2nr(l:originalNumber) + a:offset, a:minimum])
