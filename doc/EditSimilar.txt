@@ -111,8 +111,8 @@ simpler file wildcards).
 
 ------------------------------------------------------------------------------
 							  *EditSimilar-offset*
-Next / Previous: Add an offset to the last number in the currently edited
-file. 
+Next / Previous: Add an offset to the last (decimal) number in the currently
+edited file. 
 				 *:Enext* *:EditNext* *:Eprev* *:EditPrevious*
 :[N]EditNext[!] [N]
 :[N]Enext[!] [N]
@@ -138,12 +138,19 @@ file.
 :[N]Svnext[!] [N]
 :[N]SviewPrevious[!] [N]
 :[N]Svprev[!] [N]
-			Increases the last number found inside the full absolute
-			filespec of the currently edited file by [N]. (A fixed
-			number width via padding with leading zeros is maintained.) 
+			Increases / decreases the last number found inside the
+			full absolute filespec of the currently edited file by
+			[N]. This works best on fixed-width numbers which are
+			padded with leading zeros: 001, 011, 123, etc.  
 			If a file with that number does not exist, the
-			substitution is retried with smaller offsets, unless [!]
-			is specified. With [!], a new file is created when the
+			substitution is retried with larger (no [N]) or
+			smaller ([N] given) offsets, unless [!] is specified.
+			This way, you can easily skip to the last / first
+			numbered file by specifying a sufficiently large [N],
+			(e.g. :99EditNext), while zooming over gaps in the
+			numbering via a simple :EditNext. 
+			With [!], no skipping over non-existing numbers takes
+			place; instead, a new file is created when the
 			substituted file does not exist. 
 			When jumping to previous numbers, the resulting number
 			will never be negative. A jump with [!] and [N] > 1 will
@@ -151,11 +158,12 @@ file.
 			create number 0 by repeating the command with [N] = 1. 
 			Examples: >
 			test007.txt in a directory also containing 003-013. 
-			:Enext	    -> test008.txt
+			:Enext      -> test008.txt
 			:99Enext    -> test013.txt
 			:99Enext!   -> test106.txt [New File]
 			:99Eprev    -> test003.txt
 			:99Eprev!   -> test001.txt [New File]
+			:Enext      -> test003.txt
 <
 						   *:FilePrevious* *:FileNext*
 :[N]FileNext [N]
@@ -166,10 +174,10 @@ file.
 						   *:SavePrevious* *:SaveNext*
 :[N]SaveNext[!] [N]
 :[N]SavePrevious[!] [N]
-			Increases the last number found inside the full absolute
-			filespec of the currently edited file by [N] and sets /
-			writes that file. (A fixed number width via padding with
-			leading zeros is maintained.) 
+			Increases / decreases the last number found inside the
+			full absolute filespec of the currently edited file by
+			[N] and sets / writes that file. (A fixed number width
+			via padding with leading zeros is maintained.) 
 			The [!] is needed to overwrite an existing file.
 
 
@@ -273,6 +281,21 @@ TODO							    *EditSimilar-todo*
 
 ==============================================================================
 HISTORY							 *EditSimilar-history*
+
+1.15	09-Sep-2009
+Offset commands (:EditNext et al.) now check that the digit pattern does not
+accidentally match inside a hexadecimal number (which are unsupported). 
+
+1.14	21-Aug-2009
+- BF: :[N]EditPrevious with supplied [N] would skip over existing smaller
+  number file and would claim that no substituted file existed. 
+- BF: :[N]EditPrevious with supplied large [N] together with a low original
+  number hogs the CPU because the loop iterates over the entire number range
+  where the resulting offset would be negative.
+
+1.13	27-Jun-2009
+ENH: :EditNext / :EditPrevious without the optional [count] now skip over gaps
+in numbering. 
 
 1.12	13-May-2009
 - ENH: {text} in :EditSubstitute can now also contain file wildcards (?, *, **
