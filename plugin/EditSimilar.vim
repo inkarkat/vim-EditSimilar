@@ -9,6 +9,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.20.009	05-Nov-2011	ENH: Omit current buffer's file extension from
+"				the completion for EditSimilar-root commands. 
 "   1.18.008	22-Jun-2011	ENH: Implement completion of file extensions for
 "				EditSimilar-root commands like :EditRoot. 
 "   1.13.007	26-Jun-2009	:EditNext / :EditPrevious without the optional
@@ -91,13 +93,17 @@ command! -bar -bang -count=0 SavePrevious	call EditSimilar#OpenOffset('saveas<ba
 
 " Root (i.e. file extension) commands. 
 function! s:RootComplete( ArgLead, CmdLine, CursorPos )
-    return map(
-    \	split(
-    \	    glob(expand('%:r') . '.' . a:ArgLead . '*'),
-    \	    "\n"
-    \	),
-    \	'fnamemodify(v:val, ":e")'
-    \)
+    return 
+    \	filter(
+    \	    map(
+    \		split(
+    \		    glob(expand('%:r') . '.' . a:ArgLead . '*'),
+    \		    "\n"
+    \		),
+    \		'fnamemodify(v:val, ":e")'
+    \	    ),
+    \	    'v:val !=# ' . string(expand('%:e'))
+    \	)
     " Note: No need for fnameescape(); the Root commands don't support Vim
     " special characters like % and # and therefore do the escaping themselves. 
 endfunction
