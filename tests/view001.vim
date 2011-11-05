@@ -17,8 +17,8 @@ call vimtap#Ok(&l:readonly, '2Vnext is readonly')
 edit file007.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
 echomsg 'Test: file008.txt does not exist'
-Vnext
-call IsNumAndFile(7, 'Vnext to missing file')
+1Vnext
+call IsNumAndFile(7, '1Vnext to missing file')
 call vimtap#Ok(! &l:readonly, 'Original after Vnext still is not readonly')
 Vnext!
 call IsNumAndNoFile(8, 'Vnext! to missing file')
