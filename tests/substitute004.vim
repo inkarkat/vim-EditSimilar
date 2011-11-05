@@ -36,13 +36,12 @@ if ! vimtap#Skip(2, has('win32') || has('win64'), 'need Windows')
     call vimtap#file#IsFile('file001 -> Esubst =\\ -> 001/prod/prod001')
 endif
 
-" Tests impossible replacement across pathspec / filename. 
+" Tests replacement across pathspec / filename. 
 execute 'cd' expand('<sfile>:p:h') 
 edit 001/prod/prod001.txt
-echomsg 'Test: across pathspec / filename nothing substituted'
-Esubst prod/prod001=dev/dev007
-call vimtap#file#IsFilespec('001/prod/prod001.txt', '001/prod/prod001 -> Esubst /=/ H> 001/dev/dev007')
-call vimtap#file#IsFile('001/prod/prod001 -> Esubst /=/ H> 001/dev/dev007')
+Esubst prod/prod=dev/dev
+call vimtap#file#IsFilespec('001/dev/dev001.txt', '001/prod/prod001 -> Esubst /=/ -> 001/dev/dev001')
+call vimtap#file#IsFile('001/prod/prod001 -> Esubst /=/ -> 001/dev/dev001')
 
 call vimtest#Quit()
 
