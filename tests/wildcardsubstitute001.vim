@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(15)
+call vimtap#Plan(17)
 
 " Tests that the ? wildcard is recognized in the replacement part. 
 edit foobar.txt
@@ -15,6 +15,13 @@ edit foobar.txt
 Esubst foobar=l* txt=in*ll
 call vimtap#file#IsFilename('lala.install', 'foobar.txt -> Esubst =* -> lala.install')
 call vimtap#file#IsFile('foobar.txt -> Esubst =* -> lala.install')
+
+" Tests that the ** wildcard is recognized in the replacement part. 
+edit foobar.txt
+Esubst foobar=**/prod666
+call vimtap#file#IsFilespec('001/production/prod666.txt', 'foobar.txt -> Esubst =** -> 001/production/prod666')
+call vimtap#file#IsFile('foobar.txt -> Esubst =** -> 001/production/prod666')
+execute 'cd' expand('<sfile>:p:h')
 
 " Tests that the [ch] wildcard is recognized in the replacement part. 
 edit foobar.txt
