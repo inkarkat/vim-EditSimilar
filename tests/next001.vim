@@ -17,8 +17,8 @@ call IsNumAndFile(6, '1Enext')
 Enext 1
 call IsNumAndFile(7, '1Enext')
 echomsg 'Test: file008.txt does not exist'
-Enext
-call IsNumAndFile(7, 'Enext to missing file')
+1Enext
+call IsNumAndFile(7, '1Enext to missing file')
 Enext!
 call IsNumAndNoFile(8, 'Enext! to missing file')
 Enext
