@@ -1,7 +1,7 @@
 " Test Enext with unsupported numbers. 
 
 call vimtest#StartTap()
-call vimtap#Plan(14)
+call vimtap#Plan(17)
 
 " Test hexadecimal digits. 
 let s:negativeFilenames = [
@@ -9,10 +9,11 @@ let s:negativeFilenames = [
 \   'foobar 34aff1.txt',
 \   '12AFF0.txt',
 \   '0x12AFF0',
+\   '0x123456',
 \   '100CAFEBABE001',
 \   '123ABC456DEF',
 \   'lot_12AFF012_ex.txt',
-\   'not-E123',
+\   'not-1E23',
 \   'OutlookItem_000000009AC7471490E5C9438F3235912945E5470700242175EA3C8D3045B8D77EE70A063DB500000198B0C0000006B73489FB59244398201E9228CE9E850000001307E60000.txt'
 \]
 let s:positiveFilenames = [
@@ -20,7 +21,9 @@ let s:positiveFilenames = [
 \   '123456',
 \   '0y12AFF0',
 \   'fox42edition',
-\   'notE123'
+\   'notE123',
+\   'not-E123',
+\   'C406.vim'
 \]
 
 for s:filename in s:negativeFilenames
