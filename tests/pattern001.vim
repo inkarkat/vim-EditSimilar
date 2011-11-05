@@ -15,12 +15,12 @@ call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt'
 
 " Tests addition of many new files to the existing. 
 Sppat foobar*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar', 'foobar.cpp', 'foobar.orig.txt']), 'Sppat foobar*')
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'Sppat foobar*')
 
 " Test no new files. 
 echomsg 'Test: no new files'
 Sppat foo*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar', 'foobar.cpp', 'foobar.orig.txt']), 'Sppat foobar*')
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'Sppat foobar*')
 
 " Test no matches. 
 echomsg 'Test: no matches'
