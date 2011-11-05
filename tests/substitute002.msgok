@@ -1,0 +1,15 @@
+Test: no arguments
++Error detected while processing .*\n.*+
+E471: Argument required: Esubst
+
+Test: not a substitution
+Not a substitution: foo
+
+Test: one is not a substitution
+Not a substitution: ?lala?
+
+Test: substitution source must not be empty
+Not a substitution: =fox
+
+Test: Nothing substituted
+Nothing substituted
