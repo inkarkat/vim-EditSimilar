@@ -1,6 +1,6 @@
 Test: no arguments
 +Error detected while processing .*\n.*+
-E471: Argument required: Esubst
+E471: Argument required: EditSubstitute
 
 Test: not a substitution
 Not a substitution: foo
