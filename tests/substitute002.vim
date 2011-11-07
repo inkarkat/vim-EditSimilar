@@ -1,18 +1,17 @@
-" Test Esubst bad invocations. 
+" Test EditSubstitute bad invocations. 
 
 edit foobar.txt
 echomsg 'Test: no arguments'
-Esubst
+EditSubstitute
 echomsg 'Test: not a substitution'
-Esubst foo
+EditSubstitute foo
 echomsg 'Test: one is not a substitution'
-Esubst foo=fox XX=YY ?lala?
+EditSubstitute foo=fox XX=YY ?lala?
 echomsg 'Test: substitution source must not be empty'
-Esubst =fox
+EditSubstitute =fox
 
 " Tests nothing substituted. 
 echomsg 'Test: Nothing substituted'
-Esubst foo=foo x=x
+EditSubstitute foo=foo x=x
 
 call vimtest#Quit()
-
