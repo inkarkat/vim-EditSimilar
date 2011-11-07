@@ -1,4 +1,4 @@
-" Test Enext with unsupported numbers. 
+" Test EditNext with unsupported numbers. 
 
 call vimtest#StartTap()
 call vimtap#Plan(17)
@@ -28,16 +28,15 @@ let s:positiveFilenames = [
 
 for s:filename in s:negativeFilenames
     execute 'edit' escapings#fnameescape(s:filename)
-    echomsg 'Test: Enext on hexadecimal: ' . s:filename
-    Enext!
+    echomsg 'Test: EditNext on hexadecimal: ' . s:filename
+    EditNext!
     call vimtap#file#IsFilename(s:filename, 'Filename unchanged')
 endfor
 for s:filename in s:positiveFilenames
     execute 'edit' escapings#fnameescape(s:filename)
-    echomsg 'Test: Enext on decimal: ' . s:filename
-    Enext!
+    echomsg 'Test: EditNext on decimal: ' . s:filename
+    EditNext!
     call vimtap#file#IsntFilename(s:filename, 'Filename increased')
 endfor
 
 call vimtest#Quit()
-
