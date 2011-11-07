@@ -1,0 +1,4 @@
+autoload/EditSimilar.vim
+autoload/escapings.vim
+plugin/EditSimilar.vim
+doc/EditSimilar.txt
