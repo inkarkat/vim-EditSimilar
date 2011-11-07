@@ -45,4 +45,3 @@ call s:Is('[fgh]*b?r', '\V\%(\%(\[fgh]\&' . s:NPS . '\)\|[fgh]\)' . printf('%s\*
 call s:Is('foob[x*?y]r',    '\Vfoob\%(\%(\[x*?y]\&' . s:NPS . '\)\|[x*?y]\)r', '[*?] wildcards')
 
 call vimtest#Quit()
-
