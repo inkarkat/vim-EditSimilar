@@ -1,4 +1,4 @@
-" Test Sppat. 
+" Test SplitPattern. 
 
 call vimtest#StartTap()
 call vimtap#Plan(4)
@@ -6,25 +6,24 @@ call vimtap#Plan(4)
 edit file100.txt
 
 " Tests that a single match is opened. 
-Sppat foobar.txt
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt']), 'Sppat foobar.txt ')
+SplitPattern foobar.txt
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt']), 'SplitPattern foobar.txt ')
 
 " Tests addition of one new file to one existing. 
-Sppat f??b??.txt
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt']), 'Sppat f??b??.txt ')
+SplitPattern f??b??.txt
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt']), 'SplitPattern f??b??.txt ')
 
 " Tests addition of many new files to the existing. 
-Sppat foobar*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'Sppat foobar*')
+SplitPattern foobar*
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
 
 " Test no new files. 
 echomsg 'Test: no new files'
-Sppat foo*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'Sppat foobar*')
+SplitPattern foo*
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
 
 " Test no matches. 
 echomsg 'Test: no matches'
-Sppat doesn?texist.*
+SplitPattern doesn?texist.*
 
 call vimtest#Quit()
-
