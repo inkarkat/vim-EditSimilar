@@ -1,4 +1,4 @@
-" Test read-only Vsubst. 
+" Test read-only ViewSubstitute. 
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
@@ -8,26 +8,25 @@ call vimtap#Plan(11)
 " Tests that multiple substitutions are performed. 
 edit foobar.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
-Vsubst o=X bar=baz
-call vimtap#file#IsFilename('fXXbaz.txt', 'foobar -> Vsubst -> fXXbaz')
-call vimtap#file#IsFile('foobar -> Vsubst -> fXXbaz')
-call vimtap#Ok(&l:readonly, 'Vsubst is readonly')
+ViewSubstitute o=X bar=baz
+call vimtap#file#IsFilename('fXXbaz.txt', 'foobar -> ViewSubstitute -> fXXbaz')
+call vimtap#file#IsFile('foobar -> ViewSubstitute -> fXXbaz')
+call vimtap#Ok(&l:readonly, 'ViewSubstitute is readonly')
 
 " Tests simple substitution. 
 edit foobar.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
-Vroot cpp
-call vimtap#file#IsFilename('foobar.cpp', 'txt -> Vroot -> cpp')
-call vimtap#file#IsFile('txt -> Vroot -> cpp') 
-call vimtap#Ok(&l:readonly, 'Vroot is readonly')
- 
-" Test Svsubst on filename. 
+ViewRoot cpp
+call vimtap#file#IsFilename('foobar.cpp', 'txt -> ViewRoot -> cpp')
+call vimtap#file#IsFile('txt -> ViewRoot -> cpp') 
+call vimtap#Ok(&l:readonly, 'ViewRoot is readonly')
+
+" Test SviewSubstitute on filename. 
 edit foobar.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
-Svsubst o=X bar=baz 
-call vimtap#Ok(&l:readonly, 'Svsubst is readonly')
+SviewSubstitute o=X bar=baz 
+call vimtap#Ok(&l:readonly, 'SviewSubstitute is readonly')
 wincmd w
-call vimtap#Ok(! &l:readonly, 'Original after Svsubst is still not readonly')
+call vimtap#Ok(! &l:readonly, 'Original after SviewSubstitute is still not readonly')
 
 call vimtest#Quit()
-
