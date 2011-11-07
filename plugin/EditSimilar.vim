@@ -63,9 +63,9 @@ call EditSimilar#CommandBuilder#SimilarFileOperations('View', 'view', 1, '<bang>
 call EditSimilar#CommandBuilder#SimilarFileOperations('Split', 'split', 1, '<bang>0')
 call EditSimilar#CommandBuilder#SimilarFileOperations('Vsplit', 'vsplit', 1, '<bang>0')
 call EditSimilar#CommandBuilder#SimilarFileOperations('Sview', 'sview', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('File', 'file', 0, '1')
-call EditSimilar#CommandBuilder#SimilarFileOperations('Write', 'write<bang>', 1, '1')
-call EditSimilar#CommandBuilder#SimilarFileOperations('Save', 'saveas<bang>', 1, '1')
+call EditSimilar#CommandBuilder#SimilarFileOperations('File', 'file', 0, 1)
+call EditSimilar#CommandBuilder#SimilarFileOperations('Write', 'write<bang>', 1, 1)
+call EditSimilar#CommandBuilder#SimilarFileOperations('Save', 'saveas<bang>', 1, 1)
 
 
 " Root (i.e. file extension) commands. 
