@@ -1,4 +1,4 @@
-" Test Enext and Eprev with changing CWDs. 
+" Test EditNext and EditPrevious with changing CWDs. 
 " Tests with :set autochdir, too. 
 
 source helpers/NumAndFile.vim
@@ -6,21 +6,20 @@ call vimtest#StartTap()
 call vimtap#Plan(8)
 
 edit file004.txt
-Enext
-call IsNumAndFile(5, 'Enext')
+EditNext
+call IsNumAndFile(5, 'EditNext')
 cd ../..
-Enext
-call IsNumAndFile(6, 'Enext with cd ../..')
+EditNext
+call IsNumAndFile(6, 'EditNext with cd ../..')
 cd $VIM
-Enext
-call IsNumAndFile(7, 'Enext with cd $VIM')
+EditNext
+call IsNumAndFile(7, 'EditNext with cd $VIM')
 
 if exists('&autochdir')
     set autochdir
 endif
-Enext!
-Enext
-call IsNumAndFile(9, 'Enext!, Enext with :set autochdir')
+EditNext!
+EditNext
+call IsNumAndFile(9, 'EditNext!, EditNext with :set autochdir')
 
 call vimtest#Quit()
-
