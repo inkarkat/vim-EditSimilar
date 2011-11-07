@@ -30,4 +30,3 @@ call s:Is(printf('foo%s**', s:PS), 1, '.../** wildcard text')
 call s:Is('**', 1, 'only ** wildcard text')
 
 call vimtest#Quit()
-
