@@ -32,7 +32,7 @@
 "				given count. 
 "   1.11.006	11-May-2009	Added commands to open similar files in
 "				read-only mode, a la :ViewSubstitute,
-"				:SviewSubstitute. 
+"				:SViewSubstitute. 
 "   1.00.005	18-Feb-2009	Reviewed for publication. 
 "	004	04-Feb-2009	Full path '%:p' not needed for root commands. 
 "	003	02-Feb-2009	Moved functions from plugin to separate autoload
@@ -61,8 +61,8 @@ set cpo&vim
 call EditSimilar#CommandBuilder#SimilarFileOperations('Edit', 'edit', 1, '<bang>0')
 call EditSimilar#CommandBuilder#SimilarFileOperations('View', 'view', 1, '<bang>0')
 call EditSimilar#CommandBuilder#SimilarFileOperations('Split', 'split', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('Vsplit', 'vsplit', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('Sview', 'sview', 1, '<bang>0')
+call EditSimilar#CommandBuilder#SimilarFileOperations('VSplit', 'vsplit', 1, '<bang>0')
+call EditSimilar#CommandBuilder#SimilarFileOperations('SView', 'sview', 1, '<bang>0')
 call EditSimilar#CommandBuilder#SimilarFileOperations('File', 'file', 0, 1)
 call EditSimilar#CommandBuilder#SimilarFileOperations('Write', 'write<bang>', 1, 1)
 call EditSimilar#CommandBuilder#SimilarFileOperations('Save', 'saveas<bang>', 1, 1)
@@ -87,8 +87,8 @@ endfunction
 command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete EditRoot     call EditSimilar#OpenRoot('edit',   <bang>0, expand('%'), <f-args>)
 command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete ViewRoot     call EditSimilar#OpenRoot('view',   <bang>0, expand('%'), <f-args>)
 command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SplitRoot    call EditSimilar#OpenRoot('split',  <bang>0, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete VsplitRoot   call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SviewRoot    call EditSimilar#OpenRoot('sview',  <bang>0, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete VSplitRoot   call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%'), <f-args>)
+command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SViewRoot    call EditSimilar#OpenRoot('sview',  <bang>0, expand('%'), <f-args>)
 command! -bar       -nargs=1 -complete=customlist,<SID>RootComplete FileRoot     call EditSimilar#OpenRoot('file',         1, expand('%'), <f-args>)
 command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete WriteRoot    call EditSimilar#OpenRoot('write<bang>',  1, expand('%'), <f-args>)
 command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SaveRoot     call EditSimilar#OpenRoot('saveas<bang>', 1, expand('%'), <f-args>)
@@ -98,8 +98,8 @@ command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SaveRoot    
 " Note: We cannot use -complete=file; it results in E77: too many files error
 " when using a pattern. 
 command! -bar -nargs=1 SplitPattern    call EditSimilar#SplitPattern('split', <f-args>)
-command! -bar -nargs=1 VsplitPattern   call EditSimilar#SplitPattern('vsplit', <f-args>)
-command! -bar -nargs=1 SviewPattern    call EditSimilar#SplitPattern('sview', <f-args>)
+command! -bar -nargs=1 VSplitPattern   call EditSimilar#SplitPattern('vsplit', <f-args>)
+command! -bar -nargs=1 SViewPattern    call EditSimilar#SplitPattern('sview', <f-args>)
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
