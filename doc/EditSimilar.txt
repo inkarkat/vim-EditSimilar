@@ -259,6 +259,10 @@ TODO							    *EditSimilar-todo*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
+1.21	19-Jan-2012
+Refactoring: Move file extension completion to EditSimilar#Root#Complete() and
+create the root commands also in the command builder. 
+
 1.20	08-Nov-2011
 - ENH: Omit current buffer's file extension from the completion for
   EditSimilar-root commands. 
