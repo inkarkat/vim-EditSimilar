@@ -4,12 +4,15 @@
 "   - EditSimilar.vim autoload script. 
 "   - EditSimilar/CommandBuilder.vim autoload script. 
 "
-" Copyright: (C) 2009-2011 by Ingo Karkat
+" Copyright: (C) 2009-2012 by Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.21.010	19-Jan-2012	Move file extension completion to
+"				EditSimilar#Root#Complete() and create the root
+"				commands also in the command builder. 
 "   1.20.009	05-Nov-2011	ENH: Omit current buffer's file extension from
 "				the completion for EditSimilar-root commands. 
 "				Use
@@ -48,16 +51,14 @@
 "				(:Eprev) version. 
 "	001	29-Jan-2009	file creation
 
-" Avoid installing twice or when in unsupported VIM version. 
+" Avoid installing twice or when in unsupported Vim version. 
 if exists('g:loaded_EditSimilar') || (v:version < 700)
     finish
 endif
 let g:loaded_EditSimilar = 1
 
-let s:save_cpo = &cpo
-set cpo&vim
-
 " Substitute and Next / Previous commands. 
+" Root (i.e. file extension) commands. 
 call EditSimilar#CommandBuilder#SimilarFileOperations('Edit', 'edit', 1, '<bang>0')
 call EditSimilar#CommandBuilder#SimilarFileOperations('View', 'view', 1, '<bang>0')
 call EditSimilar#CommandBuilder#SimilarFileOperations('Split', 'split', 1, '<bang>0')
@@ -68,32 +69,6 @@ call EditSimilar#CommandBuilder#SimilarFileOperations('Write', 'write<bang>', 1,
 call EditSimilar#CommandBuilder#SimilarFileOperations('Save', 'saveas<bang>', 1, 1)
 
 
-" Root (i.e. file extension) commands. 
-function! s:RootComplete( ArgLead, CmdLine, CursorPos )
-    return 
-    \	filter(
-    \	    map(
-    \		split(
-    \		    glob(expand('%:r') . '.' . a:ArgLead . '*'),
-    \		    "\n"
-    \		),
-    \		'fnamemodify(v:val, ":e")'
-    \	    ),
-    \	    'v:val !=# ' . string(expand('%:e'))
-    \	)
-    " Note: No need for fnameescape(); the Root commands don't support Vim
-    " special characters like % and # and therefore do the escaping themselves. 
-endfunction
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete EditRoot     call EditSimilar#OpenRoot('edit',   <bang>0, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete ViewRoot     call EditSimilar#OpenRoot('view',   <bang>0, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SplitRoot    call EditSimilar#OpenRoot('split',  <bang>0, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete VSplitRoot   call EditSimilar#OpenRoot('vsplit', <bang>0, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SViewRoot    call EditSimilar#OpenRoot('sview',  <bang>0, expand('%'), <f-args>)
-command! -bar       -nargs=1 -complete=customlist,<SID>RootComplete FileRoot     call EditSimilar#OpenRoot('file',         1, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete WriteRoot    call EditSimilar#OpenRoot('write<bang>',  1, expand('%'), <f-args>)
-command! -bar -bang -nargs=1 -complete=customlist,<SID>RootComplete SaveRoot     call EditSimilar#OpenRoot('saveas<bang>', 1, expand('%'), <f-args>)
-
-
 " Pattern commands. 
 " Note: We cannot use -complete=file; it results in E77: too many files error
 " when using a pattern. 
@@ -101,6 +76,4 @@ command! -bar -nargs=1 SplitPattern    call EditSimilar#SplitPattern('split', <f
 command! -bar -nargs=1 VSplitPattern   call EditSimilar#SplitPattern('vsplit', <f-args>)
 command! -bar -nargs=1 SViewPattern    call EditSimilar#SplitPattern('sview', <f-args>)
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
