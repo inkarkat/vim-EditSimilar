@@ -1,0 +1,8 @@
+Test: EditPlus on filespec without number
+No number in filespec
+
+Test: EditMinus on filespec without number
+No number in filespec
+
+Test: EditPlus on unsaved changes
+No write since last change
