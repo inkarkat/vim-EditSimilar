@@ -21,12 +21,12 @@ call vimtap#file#IsFilename('foobar.cpp', 'txt -> ViewRoot -> cpp')
 call vimtap#file#IsFile('txt -> ViewRoot -> cpp') 
 call vimtap#Ok(&l:readonly, 'ViewRoot is readonly')
 
-" Test SviewSubstitute on filename. 
+" Test SViewSubstitute on filename. 
 edit foobar.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
-SviewSubstitute o=X bar=baz 
-call vimtap#Ok(&l:readonly, 'SviewSubstitute is readonly')
+SViewSubstitute o=X bar=baz 
+call vimtap#Ok(&l:readonly, 'SViewSubstitute is readonly')
 wincmd w
-call vimtap#Ok(! &l:readonly, 'Original after SviewSubstitute is still not readonly')
+call vimtap#Ok(! &l:readonly, 'Original after SViewSubstitute is still not readonly')
 
 call vimtest#Quit()
