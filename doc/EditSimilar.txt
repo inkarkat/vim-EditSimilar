@@ -247,10 +247,38 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES					    *EditSimilar-dependencies*
 
 - Requires Vim 7.0 or higher. 
+- Optional, recommended: cmdalias plugin (vimscript #746). 
 
 ==============================================================================
 CONFIGURATION					   *EditSimilar-configuration*
 
+For a permanent configuration, put the following commands into your |vimrc|:
+
+							 *EditSimilar-aliases*
+All these edit commands are about speed; after all, they vie to be a faster
+alternative to the built-in commands that take a complete filename. Each
+user's Vim setup and behavior is different. Therefore, the previously defined
+short command forms :Esubst, :Enext, etc. are gone in version 1.20. Instead,
+you are encouraged to define your own shortcuts, depending on your preferences
+and needs. A great way to do this (because it allows the definition of pure
+lowercase commands) is defining short aliases through the cmdalias plugin
+(vimscript #746), like this: >
+    " Shorten the most frequently used commands from EditSimilar.vim. 
+    Alias es  EditSubstitute
+    Alias sps SplitSubstitute
+    Alias en  EditNext
+    Alias ep  EditPrevious
+    Alias er  EditRoot
+    Alias spr SplitRoot
+    Alias spp SplitPattern
+<
+			  *g:EditSimilar_splitmode* *g:EditSimilar_vsplitmode*
+All :Split..., :VSplit... and :SView commands obey the default 'splitbelow'
+and 'splitright' settings. If you want different behavior, you can insert the
+appropriate split modifier command via: >
+    let g:EditSimilar_splitmode = 'rightbelow'
+    let g:EditSimilar_vsplitmode = 'rightbelow'
+<
 ==============================================================================
 KNOWN PROBLEMS					  *EditSimilar-known-problems*
 
@@ -259,11 +287,15 @@ TODO							    *EditSimilar-todo*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-1.21	19-Jan-2012
+1.22	10-Feb-2012
+ENH: Allow [v]split mode different than determined by 'splitbelow' /
+'splitright' via configuration. 
+
+1.21	19-Jan-2012 (unreleased)
 Refactoring: Move file extension completion to EditSimilar#Root#Complete() and
 create the root commands also in the command builder. 
 
-1.20	08-Nov-2011
+1.20	08-Nov-2011 (unreleased)
 - ENH: Omit current buffer's file extension from the completion for
   EditSimilar-root commands. 
 - Obsolete the short command forms :Esubst, :Enext, :Eprev; the starting
@@ -338,7 +370,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command. 
 
 ==============================================================================
-Copyright: (C) 2009-2011 Ingo Karkat
+Copyright: (C) 2009-2012 Ingo Karkat
 The VIM LICENSE applies to this script; see |copyright|. 
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
