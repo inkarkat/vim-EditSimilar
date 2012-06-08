@@ -1,4 +1,4 @@
-" Test SplitNext and SplitPreviousious. 
+" Test SplitNext and SplitPrevious. 
 
 call vimtest#StartTap()
 call vimtap#Plan(1)
