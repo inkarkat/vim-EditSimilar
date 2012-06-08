@@ -4,12 +4,15 @@
 "   - EditSimilar.vim autoload script. 
 "   - EditSimilar/CommandBuilder.vim autoload script. 
 "
-" Copyright: (C) 2009-2012 by Ingo Karkat
+" Copyright: (C) 2009-2012 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.22.011	10-Feb-2012	ENH: Allow [v]split mode different than
+"				determined by 'splitbelow' / 'splitright' via
+"				configuration. 
 "   1.21.010	19-Jan-2012	Move file extension completion to
 "				EditSimilar#Root#Complete() and create the root
 "				commands also in the command builder. 
@@ -57,23 +60,36 @@ if exists('g:loaded_EditSimilar') || (v:version < 700)
 endif
 let g:loaded_EditSimilar = 1
 
+"- configuration ---------------------------------------------------------------
+
+if ! exists('g:EditSimilar_splitmode')
+    let g:EditSimilar_splitmode = ''
+endif
+if ! exists('g:EditSimilar_vsplitmode')
+    let g:EditSimilar_vsplitmode = ''
+endif
+
+
+
+"- commands --------------------------------------------------------------------
+
 " Substitute and Next / Previous commands. 
 " Root (i.e. file extension) commands. 
-call EditSimilar#CommandBuilder#SimilarFileOperations('Edit', 'edit', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('View', 'view', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('Split', 'split', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('VSplit', 'vsplit', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('SView', 'sview', 1, '<bang>0')
-call EditSimilar#CommandBuilder#SimilarFileOperations('File', 'file', 0, 1)
-call EditSimilar#CommandBuilder#SimilarFileOperations('Write', 'write<bang>', 1, 1)
-call EditSimilar#CommandBuilder#SimilarFileOperations('Save', 'saveas<bang>', 1, 1)
+call EditSimilar#CommandBuilder#SimilarFileOperations('Edit',   'edit', 1, '<bang>0')
+call EditSimilar#CommandBuilder#SimilarFileOperations('View',   'view', 1, '<bang>0')
+call EditSimilar#CommandBuilder#SimilarFileOperations('Split',  join([g:EditSimilar_splitmode, 'split']),   1, '<bang>0')
+call EditSimilar#CommandBuilder#SimilarFileOperations('VSplit', join([g:EditSimilar_vsplitmode, 'vsplit']), 1, '<bang>0')
+call EditSimilar#CommandBuilder#SimilarFileOperations('SView',  join([g:EditSimilar_splitmode, 'sview']),   1, '<bang>0')
+call EditSimilar#CommandBuilder#SimilarFileOperations('File',   'file', 0, 1)
+call EditSimilar#CommandBuilder#SimilarFileOperations('Write',  'write<bang>', 1, 1)
+call EditSimilar#CommandBuilder#SimilarFileOperations('Save',   'saveas<bang>', 1, 1)
 
 
 " Pattern commands. 
 " Note: We cannot use -complete=file; it results in E77: too many files error
 " when using a pattern. 
-command! -bar -nargs=1 SplitPattern    call EditSimilar#SplitPattern('split', <f-args>)
-command! -bar -nargs=1 VSplitPattern   call EditSimilar#SplitPattern('vsplit', <f-args>)
-command! -bar -nargs=1 SViewPattern    call EditSimilar#SplitPattern('sview', <f-args>)
+command! -bar -nargs=1 SplitPattern    call EditSimilar#SplitPattern(join([g:EditSimilar_splitmode, 'split']),   <f-args>)
+command! -bar -nargs=1 VSplitPattern   call EditSimilar#SplitPattern(join([g:EditSimilar_vsplitmode, 'vsplit']), <f-args>)
+command! -bar -nargs=1 SViewPattern    call EditSimilar#SplitPattern(join([g:EditSimilar_splitmode, 'sview']),   <f-args>)
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
