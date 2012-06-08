@@ -1,8 +1,8 @@
-Test: Enext on filespec without number
+Test: EditNext on filespec without number
 No number in filespec
 
-Test: Eprev on filespec without number
+Test: EditPrevious on filespec without number
 No number in filespec
 
-Test: Enext on unsaved changes
+Test: EditNext on unsaved changes
 No write since last change
