@@ -1,0 +1,8 @@
+Test: Nothing substituted when ...**
+Nothing substituted
+
+Test: Wildcard interpreted as * * when **...
++Substituted file does not exist (add ! to create): 001[/\\]EditSimilar[/\\]prod666.txt+
+
+Test: Sole ** wildcard eats up entire pathspec
++Substituted file does not exist (add ! to create): [/\\]foo[/\\]prod666.txt+
