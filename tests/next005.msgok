@@ -1,0 +1,5 @@
+Test: EditNext
++Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt+
+
+Test: EditPrevious
++Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt+
