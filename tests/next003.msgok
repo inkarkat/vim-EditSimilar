@@ -1,8 +1,5 @@
-Test: EditNext on filespec without number
-No number in filespec
+Test: EditNext
+This is the sole file in the directory
 
-Test: EditPrevious on filespec without number
-No number in filespec
-
-Test: EditNext on unsaved changes
-No write since last change
+Test: EditPrevious
+This is the sole file in the directory
