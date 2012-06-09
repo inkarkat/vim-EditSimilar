@@ -1,12 +1,26 @@
-" Test EditNext and EditPrevious when exceeding digit width. 
+" Test EditPlus and EditMinus with changing CWDs.
+" Tests with :set autochdir, too.
 
+source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(2)
+call vimtap#Plan(8)
+cd testdata
 
-edit file011.txt
-EditNext! 1000
-call vimtap#Is(expand('%:t'), 'file1011.txt', 'EditNext! 1000 to four-digit number')
-EditPrevious! 12
-call vimtap#Is(expand('%:t'), 'file0999.txt', 'EditPrevious! 12 back but keep four-digit number')
+edit file004.txt
+EditPlus
+call IsNumAndFile(5, 'EditPlus')
+cd ../..
+EditPlus
+call IsNumAndFile(6, 'EditPlus with cd ../..')
+cd $VIM
+EditPlus
+call IsNumAndFile(7, 'EditPlus with cd $VIM')
+
+if exists('&autochdir')
+    set autochdir
+endif
+EditPlus!
+EditPlus
+call IsNumAndFile(9, 'EditPlus!, EditPlus with :set autochdir')
 
 call vimtest#Quit()
