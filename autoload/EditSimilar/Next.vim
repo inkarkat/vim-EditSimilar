@@ -10,6 +10,8 @@
 "
 " REVISION	DATE		REMARKS
 "   2.00.001	09-Jun-2012	file creation
+let s:save_cpo = &cpo
+set cpo&vim
 
 " Next / Previous commands.
 let s:pathSeparator = (exists('+shellslash') && ! &shellslash ? '\' : '/')
@@ -30,7 +32,20 @@ function! EditSimilar#Next#Open( opencmd, isCreateNew, filespec, difference, dir
 
     let l:currentIndex = index(l:files, a:filespec)
     if l:currentIndex == -1
-	call EditSimilar#ErrorMsg('Cannot locate current file: ' . a:filespec)
+	if len(l:files) == 0
+	    call EditSimilar#ErrorMsg('No files in this directory')
+	else
+	    call EditSimilar#ErrorMsg('Cannot locate current file: ' . a:filespec)
+	endif
+	return
+    elseif l:currentIndex == 0 && len(l:files) == 1
+	call EditSimilar#ErrorMsg('This is the sole file in the directory')
+	return
+    elseif l:currentIndex == 0 && a:direction == -1
+	call EditSimilar#ErrorMsg('No previous file')
+	return
+    elseif l:currentIndex == (len(l:files) - 1) && a:direction == 1
+	call EditSimilar#ErrorMsg('No next file')
 	return
     endif
 
@@ -50,4 +65,6 @@ function! EditSimilar#Next#Open( opencmd, isCreateNew, filespec, difference, dir
     call EditSimilar#Open(a:opencmd, a:isCreateNew, 0, a:filespec, l:replacementFilespec, '')
 endfunction
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
