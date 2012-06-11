@@ -71,7 +71,9 @@ function! EditSimilar#Next#Open( opencmd, isCreateNew, filespec, difference, dir
     \   ])
     let l:replacementFilespec = l:files[l:replacementIndex]
 
-    call EditSimilar#Open(a:opencmd, a:isCreateNew, 0, a:filespec, l:replacementFilespec, '')
+    " Note: The a:isCreateNew flag has no meaning here, as all replacement
+    " files do already exist.
+    call EditSimilar#Open(a:opencmd, 0, 0, a:filespec, l:replacementFilespec, '')
 endfunction
 
 let &cpo = s:save_cpo
