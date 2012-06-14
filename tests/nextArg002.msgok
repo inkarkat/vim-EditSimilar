@@ -1,0 +1,8 @@
+Test: EditNext file* on foobar file
++Cannot locate current file matching file\*: .*[/\\]testdata[/\\]foobar+
+
+Test: EditNext foobar on foobar file
+This is the sole file in the directory matching foobar
+
+Test: EditNext doesnotexist on foobar file
+No files in this directory matching doesnotexist
