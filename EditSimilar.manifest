@@ -1,3 +1,5 @@
+autoload/ingocollections.vim
+autoload/ingofile.vim
 autoload/EditSimilar.vim
 autoload/EditSimilar/CommandBuilder.vim
 autoload/EditSimilar/Next.vim
