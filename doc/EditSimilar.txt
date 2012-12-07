@@ -32,6 +32,12 @@ To quickly edit another file based on the current file, one can:
 To open a set of similar files, it is possible to:
 - open all files matching a pattern in split windows	 |EditSimilar-pattern|
 
+RELATED WORKS								     *
+
+- altr (vimscript #4202) lets you set up custom (per-filetype) rules and then
+  opens related files through two forward / backward mappings, e.g. allowing
+  you to open the autoload file from the plugin.
+
 ==============================================================================
 USAGE							   *EditSimilar-usage*
 						   *EditSimilar-substitutions*
