@@ -72,7 +72,15 @@ function! s:CheckNextDigitBlock( filespec, numberString, isDescending, ... )
 	endif
     endif
 endfunction
-function! EditSimilar#Offset#Open( opencmd, isCreateNew, filespec, difference, direction )
+function! s:ApplyOffset( filespec, direction, difference )
+    let [l:replacementNumber, l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 0)
+    if l:replacementNumber == 0 && a:direction == -1 && a:difference > 1 && ! filereadable(l:replacement)
+	let [l:replacementNumber, l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * a:difference, 1)
+    endif
+    let l:replacementMsg = '#' . l:replacementNumberString
+    return [l:replacement, l:replacementMsg]
+endfunction
+function! EditSimilar#Offset#Open( opencmd, isCreateNew, isFindNextNonExisting, filespec, difference, direction )
     " A passed difference of 0 means that no [count] was specified and thus
     " skipping over missing numbers is enabled.
     let l:difference = max([a:difference, 1])
@@ -87,11 +95,7 @@ function! EditSimilar#Offset#Open( opencmd, isCreateNew, filespec, difference, d
 
     let l:replacement = a:filespec
     if a:isCreateNew
-	let [l:replacementNumber, l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 0)
-	if l:replacementNumber == 0 && a:direction == -1 && l:difference > 1 && ! filereadable(l:replacement)
-	    let [l:replacementNumber, l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 1)
-	endif
-	let l:replacementMsg = '#' . l:replacementNumberString
+	let [l:replacement, l:replacementMsg] = s:ApplyOffset(a:filespec, a:direction, l:difference)
     elseif l:isSkipOverMissingNumbers
 	let l:replacementMsg = ''
 
