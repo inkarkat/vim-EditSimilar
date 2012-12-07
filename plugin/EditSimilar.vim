@@ -11,6 +11,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.20.015	27-Aug-2012	Do not use <f-args> because of its unescaping
+"				behavior.
 "   2.20.014	26-Aug-2012	Enable file (pattern) completion for :*Pattern
 "				commands via -nargs=+ workaround and passing of
 "				multiple file (pattern).
@@ -97,8 +99,8 @@ call EditSimilar#CommandBuilder#SimilarFileOperations('Save',   'saveas<bang>', 
 " Pattern commands.
 " Note: Must use + instead of 1; otherwise (due to -complete=file), Vim
 " complains about globs with "E77: Too many file names".
-command! -bar -nargs=+ -complete=file SplitPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'split']),   <f-args>)
-command! -bar -nargs=+ -complete=file VSplitPattern call EditSimilar#Pattern#Split(join([g:EditSimilar_vsplitmode, 'vsplit']), <f-args>)
-command! -bar -nargs=+ -complete=file SViewPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'sview']),   <f-args>)
+command! -bar -nargs=+ -complete=file SplitPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'split']),   <q-args>)
+command! -bar -nargs=+ -complete=file VSplitPattern call EditSimilar#Pattern#Split(join([g:EditSimilar_vsplitmode, 'vsplit']), <q-args>)
+command! -bar -nargs=+ -complete=file SViewPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'sview']),   <q-args>)
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
