@@ -1,6 +1,2 @@
-Test: foobar.j* does not exist
-Substituted file does not exist (add ! to create): foobar.j*
-
 Test: Nothing substituted
 Nothing substituted
-
