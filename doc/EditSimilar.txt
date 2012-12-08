@@ -158,8 +158,8 @@ edited file.
 			:EditPlus      -> test003.txt
 <
 						   *:FileMinus* *:FilePlus*
-:[N]FilePlus [N]
-:[N]FileMinus [N]
+:[N]FilePlus[!] [N]
+:[N]FileMinus[!] [N]
 						 *:WriteMinus* *:WritePlus*
 :[N]WritePlus[!] [N]
 :[N]WriteMinus[!] [N]
@@ -170,7 +170,21 @@ edited file.
 			full absolute filespec of the currently edited file by
 			[N] and sets / writes that file. (A fixed number width
 			via padding with leading zeros is maintained.)
-			The [!] is needed to overwrite an existing file.
+			When [N] is given and no [!] is given, an existing
+			file with an offset of [N] or smaller is searched, and
+			if such an offset is found, that offset incremented by
+			one is used. This lets you use a large [N] to write
+			the file with the next number within [N] for which no
+			file exists yet.
+			When [!] is given, the file with the added offset is
+			written, plain and simple. [!] is also needed to
+			overwrite an existing file.
+			Examples: >
+			test007.txt in a directory also containing 003-013.
+			:WritePlus     -> file exists
+			:WritePlus!    -> test008.txt
+			:99WritePlus   -> test014.txt [New File]
+			:99WritePlus!  -> test106.txt [New File]
 
 
 ------------------------------------------------------------------------------
