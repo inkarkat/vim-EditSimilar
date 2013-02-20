@@ -350,6 +350,13 @@ IDEAS							    *EditSimilar-ideas*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
+2.30	09-Dec-2012
+CHG: For :FilePlus, :WritePlus, :SavePlus, when a [count] but no [!] is given,
+try to create an offset one more than an existing file between the current and
+the passed offset. This lets you use a large [N] to write the file with the
+next number within [N] for which no file exists yet. Change inspired by
+http://stackoverflow.com/questions/13778322/vimscript-code-to-create-a-new-numbered-file
+
 2.20	26-Aug-2012
 - Allow passing of multiple {file-pattern} to :SplitPattern et al. and enable
   file completion for them.
