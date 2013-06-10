@@ -9,6 +9,13 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.00.018	11-Jun-2012	FIX: a:isFilePattern argument was ignored; only
+"				perform the filespec glob expansion when it is
+"				set.
+"				BUG: Substituted filenames that only exist in an
+"				unpersisted Vim buffer cause a "file does not
+"				exist" error when a:isCreateNew isn't set. Also
+"				check Vim buffers for a match.
 "   2.00.017	09-Jun-2012	Move all similarity implementations to separate
 "				modules and only keep core functionality here.
 "   1.19.016	25-Jul-2011	Avoid that :SplitPattern usually opens splits in
@@ -122,7 +129,7 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
 	return
     endif
 
-    if ! filereadable(l:filespecToOpen) && ! isdirectory(l:filespecToOpen)
+    if a:isFilePattern && ! filereadable(l:filespecToOpen) && ! isdirectory(l:filespecToOpen)
 	let l:files = split(glob(l:filespecToOpen), "\n")
 	if len(l:files) > 1
 	    call EditSimilar#ErrorMsg('Too many file names')
@@ -133,9 +140,16 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
 		call EditSimilar#ErrorMsg('Nothing substituted')
 		return
 	    endif
-	elseif ! a:isCreateNew
-	    call EditSimilar#ErrorMsg('Substituted file does not exist (add ! to create)' . (empty(a:createNewNotAllowedMsg) ? '' : ': ' . a:createNewNotAllowedMsg))
-	    return
+	endif
+    endif
+    if ! filereadable(l:filespecToOpen) && ! isdirectory(l:filespecToOpen)
+	if bufexists(l:filespecToOpen)
+	    " The file only exists in an unpersisted Vim buffer so far.
+	else
+	    if ! a:isCreateNew
+		call EditSimilar#ErrorMsg('Substituted file does not exist (add ! to create)' . (empty(a:createNewNotAllowedMsg) ? '' : ': ' . a:createNewNotAllowedMsg))
+		return
+	    endif
 	endif
     endif
 
