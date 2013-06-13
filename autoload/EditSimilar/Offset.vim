@@ -9,6 +9,12 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.30.002	08-Dec-2012	CHG: For a:isCreateNew when a [count] but no [!]
+"				is given, try to create an offset one more than
+"				an existing file between the current and the
+"				passed offset. This lets you use a large [N] to
+"				write the file with the next number within [N]
+"				for which no file exists yet.
 "   2.00.001	09-Jun-2012	file creation from autoload/EditSimilar.vim.
 
 " Plus / Minus commands.
@@ -94,9 +100,9 @@ function! EditSimilar#Offset#Open( opencmd, isCreateNew, isFindNextNonExisting, 
     if empty(l:originalNumberString) | throw 'ASSERT: Extracted number.' | endif
 
     let l:replacement = a:filespec
-    if a:isCreateNew
+    if a:isCreateNew && (! a:isFindNextNonExisting || a:difference == 0)
 	let [l:replacement, l:replacementMsg] = s:ApplyOffset(a:filespec, a:direction, l:difference)
-    elseif l:isSkipOverMissingNumbers
+    elseif ! a:isCreateNew && l:isSkipOverMissingNumbers
 	let l:replacementMsg = ''
 
 	" The maximum number that is searched for can have one more digit than
@@ -132,6 +138,24 @@ function! EditSimilar#Offset#Open( opencmd, isCreateNew, isFindNextNonExisting, 
 	    endif
 	    let l:difference -= s:CheckNextDigitBlock(a:filespec, l:replacementNumberString, (a:direction != -1))
 	endwhile
+
+	if a:isCreateNew && a:isFindNextNonExisting
+	    if l:difference <= 0
+		let l:difference = a:difference
+		" We found no existing file between the current file and the
+		" passed offset. Create a new one with an offset of 1.
+		let [l:replacement, l:replacementMsg] = s:ApplyOffset(a:filespec, a:direction, 1)
+	    elseif l:difference == a:difference
+		" There's an existing file with the exact offset. (Try to)
+		" overwrite it.
+	    else
+		" We found an existing file below the passed offset. Create a
+		" new one with an offset of that file + 1.
+		let l:difference += 1
+		let [l:replacementNumber, l:replacementNumberString, l:replacement] = s:Offset(a:filespec, a:direction * l:difference, 1)
+		let l:replacementMsg = '#' . l:replacementNumberString
+	    endif
+	endif
     endif
 
     call EditSimilar#Open(a:opencmd, a:isCreateNew, 0, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumberString . ')')
