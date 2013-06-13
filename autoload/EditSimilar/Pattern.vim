@@ -2,14 +2,16 @@
 "
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
-"   - ingofileargs.vim autoload script
+"   - ingo/cmdargs/file.vim autoload script
+"   - ingo/cmdargs/glob.vim autoload script
 "
-" Copyright: (C) 2012 Ingo Karkat
+" Copyright: (C) 2012-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.31.004	01-Jun-2013	Move ingofileargs.vim into ingo-library.
 "   2.20.003	27-Aug-2012	Do not use <f-args> because of its unescaping
 "				behavior.
 "				Handle optional ++opt +cmd file options and
@@ -22,17 +24,17 @@
 
 " Pattern commands.
 function! EditSimilar#Pattern#Split( splitcmd, filePatternsString )
-    let l:filePatterns = ingofileargs#SplitAndUnescapeArguments(a:filePatternsString)
+    let l:filePatterns = ingo#cmdargs#file#SplitAndUnescape(a:filePatternsString)
 
     let l:openCnt = 0
 
     " Strip off the optional ++opt +cmd file options and commands.
-    let [l:filePatterns, l:fileOptionsAndCommands] = ingofileargs#FilterFileOptionsAndCommands(l:filePatterns)
-    let l:filespecs = ingofileargs#ExpandGlobs(l:filePatterns)
+    let [l:filePatterns, l:fileOptionsAndCommands] = ingo#cmdargs#file#FilterFileOptionsAndCommands(l:filePatterns)
+    let l:filespecs = ingo#cmdargs#glob#Expand(l:filePatterns)
 
     " Expand all files to their absolute path, because the CWD may change when a
     " file is opened (e.g. due to autocmds or :set autochdir).
-    let l:filespecs = map(ingofileargs#ExpandGlobs(l:filePatterns), "fnamemodify(v:val, ':p')")
+    let l:filespecs = map(ingo#cmdargs#glob#Expand(l:filePatterns), "fnamemodify(v:val, ':p')")
 
     for l:filespec in map(l:filespecs, 'fnamemodify(v:val, ":p")')
 	if bufwinnr(escapings#bufnameescape(l:filespec)) == -1
