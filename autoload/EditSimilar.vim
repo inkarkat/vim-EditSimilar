@@ -99,7 +99,7 @@ endfunction
 function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespec, replacementFilespec, createNewNotAllowedMsg )
 "*******************************************************************************
 "* PURPOSE:
-"   Open a substituted filespec via the a:opencmd ex command.
+"   Open a substituted filespec via the a:opencmd Ex command.
 "* ASSUMPTIONS / PRECONDITIONS:
 "   None.
 "* EFFECTS / POSTCONDITIONS:
