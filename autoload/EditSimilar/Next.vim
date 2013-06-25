@@ -2,13 +2,16 @@
 "
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
+"   - ingo/msg.vim autoload script
 "
-" Copyright: (C) 2012 Ingo Karkat
+" Copyright: (C) 2012-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.31.005	14-Jun-2013	Replace EditSimilar#ErrorMsg() with
+"				ingo#msg#ErrorMsg().
 "   2.01.003	12-Jun-2012	FIX: To avoid issues with differing forward
 "				slash / backslash path separator components,
 "				canonicalize the glob pattern and filespec. This
@@ -38,7 +41,7 @@ function! EditSimilar#Next#GetDirectoryEntries( dirSpec, fileGlobs )
     return l:files
 endfunction
 function! s:ErrorMsg( text, fileGlobsString, ... )
-    call EditSimilar#ErrorMsg(a:text . (empty(a:fileGlobsString) ? '' : ' matching ' . a:fileGlobsString) . (a:0 ? ': ' . a:1 : ''))
+    call ingo#msg#ErrorMsg(a:text . (empty(a:fileGlobsString) ? '' : ' matching ' . a:fileGlobsString) . (a:0 ? ': ' . a:1 : ''))
 endfunction
 function! EditSimilar#Next#Open( opencmd, isCreateNew, filespec, difference, direction, fileGlobsString )
     " To be able to find the current filespec in the glob results with a simple
