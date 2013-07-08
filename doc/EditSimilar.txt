@@ -90,7 +90,7 @@ simpler file wildcards).
 <			Both {text} and {replacement} can include the usual
 			file wildcards (?, *, ** and [...], cp. |file-pattern|)
 			to save typing; however, the file-pattern must resolve
-			to exactly one filespec, as the underlying ex commands
+			to exactly one filespec, as the underlying Ex commands
 			can only open a single file. >
 			    /etc/test/superapp/test001.cfg
 			    :EditSubstitute test=p* test=p*
@@ -252,7 +252,7 @@ This is an enhanced version of the built-in: >
 			The {extension} can include the usual file wildcards
 			(?, *, cp. |file-pattern|) to save typing; however, the
 			file-pattern must resolve to exactly one existing
-			file, as the underlying ex commands can only open one
+			file, as the underlying Ex commands can only open one
 			single file.
 
 			Add [!] to create a new file when the substituted file
