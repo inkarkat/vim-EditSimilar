@@ -1,7 +1,6 @@
 " EditSimilar/Pattern.vim: Custom completion for EditSimilar pattern commands.
 "
 " DEPENDENCIES:
-"   - EditSimilar.vim autoload script
 "   - ingo/cmdargs/file.vim autoload script
 "   - ingo/cmdargs/glob.vim autoload script
 "
@@ -11,6 +10,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.31.005	14-Jun-2013	Replace EditSimilar#ErrorMsg() with
+"				ingo#msg#ErrorMsg().
 "   2.31.004	01-Jun-2013	Move ingofileargs.vim into ingo-library.
 "   2.20.003	27-Aug-2012	Do not use <f-args> because of its unescaping
 "				behavior.
@@ -54,7 +55,7 @@ function! EditSimilar#Pattern#Split( splitcmd, filePatternsString )
     if l:openCnt > 1
 	wincmd =
     elseif len(l:filespecs) == 0
-	call EditSimilar#ErrorMsg('No matches')
+	call ingo#msg#ErrorMsg('No matches')
     elseif l:openCnt == 0
 	echomsg 'No new matches that haven''t yet been opened'
     endif
