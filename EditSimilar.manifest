@@ -1,5 +1,3 @@
-autoload/ingofile.vim
-autoload/ingofileargs.vim
 autoload/EditSimilar.vim
 autoload/EditSimilar/CommandBuilder.vim
 autoload/EditSimilar/Next.vim
