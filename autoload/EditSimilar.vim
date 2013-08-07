@@ -10,6 +10,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.31.020	09-Jul-2013	Also handle :echoerr errors, which don't have an
+"				E... number prepended.
 "   2.31.019	14-Jun-2013	Minor: Make substitute() robust against
 "				'ignorecase'.
 "				Replace EditSimilar#ErrorMsg() with
@@ -158,7 +160,7 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
 	" The "(add ! to override)" is wrong here, we use the ! for another
 	" purpose, so filter it away.
 	call ingo#msg#ErrorMsg(substitute(substitute(v:exception, '^\CVim\%((\a\+)\)\=:E37:\s*', '', ''), '\s*(.*)', '', 'g'))
-    catch /^Vim\%((\a\+)\)\=:E/
+    catch /^Vim\%((\a\+)\)\=:/
 	call ingo#msg#VimExceptionMsg()
     endtry
 endfunction
