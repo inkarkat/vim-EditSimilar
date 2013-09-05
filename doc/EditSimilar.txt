@@ -304,7 +304,7 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES					    *EditSimilar-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.007 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.012 or
   higher.
 - Optional, recommended: cmdalias plugin (vimscript #746)
 
