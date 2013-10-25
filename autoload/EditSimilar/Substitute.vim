@@ -2,13 +2,16 @@
 "
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
+"   - ingo/msg.vim autoload script
 "
-" Copyright: (C) 2012 Ingo Karkat
+" Copyright: (C) 2012-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.31.005	14-Jun-2013	Replace EditSimilar#ErrorMsg() with
+"				ingo#msg#ErrorMsg().
 "   2.00.001	09-Jun-2012	file creation from autoload/EditSimilar.vim.
 
 " Substitute commands.
@@ -158,7 +161,7 @@ function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
 	endif
 	call EditSimilar#Open(a:opencmd, a:isCreateNew, 1, l:originalFilespec, l:replacementFilespec, l:replacementMsg)
     catch /^EditSimilar:/
-	call EditSimilar#ErrorMsg(substitute(v:exception, '^EditSimilar:\s*', '', ''))
+	call ingo#msg#ErrorMsg(substitute(v:exception, '^EditSimilar:\s*', '', ''))
     endtry
 endfunction
 
