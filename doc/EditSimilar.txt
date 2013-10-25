@@ -37,6 +37,8 @@ RELATED WORKS								     *
 - altr (vimscript #4202) lets you set up custom (per-filetype) rules and then
   opens related files through two forward / backward mappings, e.g. allowing
   you to open the autoload file from the plugin.
+- nextfile (vimscript #4698) has definitions of related files (like Rails
+  controllers, views, model, tests), and can edit a next file via a mapping.
 
 ==============================================================================
 USAGE							   *EditSimilar-usage*
