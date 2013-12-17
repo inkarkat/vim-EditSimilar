@@ -343,6 +343,8 @@ appropriate split modifier command via: >
     let g:EditSimilar_vsplitmode = 'rightbelow'
 <
 ==============================================================================
+LIMITATIONS					     *EditSimilar-limitations*
+
 KNOWN PROBLEMS					  *EditSimilar-known-problems*
 
 TODO							    *EditSimilar-todo*
@@ -355,12 +357,13 @@ IDEAS							    *EditSimilar-ideas*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-2.31	RELEASEME
+2.31	19-Nov-2013
 - Minor: Also handle :echoerr errors, which don't have an E... number
   prepended.
 - FIX: Non-any completion can yield duplicate roots, too (e.g. foobar.orig.txt
   + foobar.txt).
-- Add dependency to ingo-library (vimscript #4433).
+- Add dependency to ingo-library (vimscript #4433). *** You need to separately
+  install ingo-library (vimscript #4433) version 1.014 (or higher)! ***
 
 2.30	09-Dec-2012
 CHG: For :FilePlus, :WritePlus, :SavePlus, when a [count] but no [!] is given,
