@@ -12,6 +12,10 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.31.006	13-Jul-2013	FIX: Non-any completion can yield duplicate
+"				roots, too (e.g. foobar.orig.txt + foobar.txt).
+"				Use (sorted) unique function already in
+"				s:Complete().
 "   2.31.005	01-Jun-2013	Move ingofile.vim into ingo-library.
 "   2.31.004	21-Feb-2013	Move ingocollections.vim to ingo-library.
 "   2.10.003	26-Jul-2012	ENH: Complete file extensions for any files
@@ -38,8 +42,8 @@ function! EditSimilar#Root#Open( opencmd, isCreateNew, filespec, newExtension )
     call EditSimilar#Open( a:opencmd, a:isCreateNew, 1, a:filespec, l:newFilespec, fnamemodify(l:newFilespec, ':t'))
 endfunction
 
-function! s:Complete( ArgLead, filenameGlob)
-    return
+function! s:Complete( ArgLead, filenameGlob )
+    return ingo#collections#UniqueSorted(sort(
     \	filter(
     \	    map(
     \		split(
@@ -50,6 +54,7 @@ function! s:Complete( ArgLead, filenameGlob)
     \	    ),
     \	    'v:val !=# ' . string(expand('%:e'))
     \	)
+    \))
     " Note: No need for fnameescape(); the Root commands don't support Vim
     " special characters like % and # and therefore do the escaping themselves.
 endfunction
@@ -59,7 +64,7 @@ function! EditSimilar#Root#Complete( ArgLead, CmdLine, CursorPos )
 endfunction
 
 function! EditSimilar#Root#CompleteAny( ArgLead, CmdLine, CursorPos )
-    return sort(ingo#collections#Unique(s:Complete(a:ArgLead, ingo#fs#path#Combine(expand('%:h'), '*'))))
+    return s:Complete(a:ArgLead, ingo#fs#path#Combine(expand('%:h'), '*'))
 endfunction
 
 let &cpo = s:save_cpo
