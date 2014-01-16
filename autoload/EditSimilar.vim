@@ -1,7 +1,7 @@
 " EditSimilar.vim: Commands to edit files with a similar filename.
 "
 " DEPENDENCIES:
-"   - escapings.vim autoload script.
+"   - ingo/compat.vim autoload script
 "   - ingo/msg.vim autoload script
 "
 " Copyright: (C) 2009-2013 Ingo Karkat
@@ -10,6 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.31.021	08-Aug-2013	Move escapings.vim into ingo-library.
 "   2.31.020	09-Jul-2013	Also handle :echoerr errors, which don't have an
 "				E... number prepended.
 "   2.31.019	14-Jun-2013	Minor: Make substitute() robust against
@@ -155,7 +156,7 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
 
 "****D echomsg '****' . a:opencmd . ' ' . l:filespecToOpen | return
     try
-	execute a:opencmd escapings#fnameescape(fnamemodify(l:filespecToOpen, ':~:.'))
+	execute a:opencmd ingo#compat#fnameescape(fnamemodify(l:filespecToOpen, ':~:.'))
     catch /^Vim\%((\a\+)\)\=:E37/	" E37: No write since last change (add ! to override)
 	" The "(add ! to override)" is wrong here, we use the ! for another
 	" purpose, so filter it away.
