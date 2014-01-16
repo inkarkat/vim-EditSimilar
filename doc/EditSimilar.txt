@@ -32,6 +32,12 @@ To quickly edit another file based on the current file, one can:
 To open a set of similar files, it is possible to:
 - open all files matching a pattern in split windows	 |EditSimilar-pattern|
 
+SEE ALSO								     *
+
+- The |PatternsOnText.vim| plugin (vimscript #4602) applies the
+  {text}={replacement} of :EditSubstitute via |:substitute| to the text in the
+  buffer with |:SubstituteWildcard|.
+
 RELATED WORKS								     *
 
 - altr (vimscript #4202) lets you set up custom (per-filetype) rules and then
@@ -488,7 +494,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ==============================================================================
-Copyright: (C) 2009-2013 Ingo Karkat
+Copyright: (C) 2009-2014 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
