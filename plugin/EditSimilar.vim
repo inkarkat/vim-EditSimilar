@@ -11,9 +11,6 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"   2.30.016	08-Dec-2012	Add [!] to :File* commands, because it is used
-"				to turn off the search for the next unused
-"				offset.
 "   2.20.015	27-Aug-2012	Do not use <f-args> because of its unescaping
 "				behavior.
 "   2.20.014	26-Aug-2012	Enable file (pattern) completion for :*Pattern
@@ -94,7 +91,7 @@ call EditSimilar#CommandBuilder#SimilarFileOperations('View',   'view',         
 call EditSimilar#CommandBuilder#SimilarFileOperations('Split',  join([g:EditSimilar_splitmode, 'split']),   1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 call EditSimilar#CommandBuilder#SimilarFileOperations('VSplit', join([g:EditSimilar_vsplitmode, 'vsplit']), 1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 call EditSimilar#CommandBuilder#SimilarFileOperations('SView',  join([g:EditSimilar_splitmode, 'sview']),   1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
-call EditSimilar#CommandBuilder#SimilarFileOperations('File',   'file',                                     1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
+call EditSimilar#CommandBuilder#SimilarFileOperations('File',   'file',                                     0, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
 call EditSimilar#CommandBuilder#SimilarFileOperations('Write',  'write<bang>',                              1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
 call EditSimilar#CommandBuilder#SimilarFileOperations('Save',   'saveas<bang>',                             1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
 
