@@ -5,12 +5,13 @@
 "   - EditSimilar/CommandBuilder.vim autoload script
 "   - EditSimilar/Pattern.vim autoload script
 "
-" Copyright: (C) 2009-2012 Ingo Karkat
+" Copyright: (C) 2009-2014 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.33.016	18-Mar-2014	Add :BDelete... commands.
 "   2.20.015	27-Aug-2012	Do not use <f-args> because of its unescaping
 "				behavior.
 "   2.20.014	26-Aug-2012	Enable file (pattern) completion for :*Pattern
@@ -94,13 +95,15 @@ call EditSimilar#CommandBuilder#SimilarFileOperations('SView',  join([g:EditSimi
 call EditSimilar#CommandBuilder#SimilarFileOperations('File',   'file',                                     0, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
 call EditSimilar#CommandBuilder#SimilarFileOperations('Write',  'write<bang>',                              1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
 call EditSimilar#CommandBuilder#SimilarFileOperations('Save',   'saveas<bang>',                             1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
+call EditSimilar#CommandBuilder#SimilarFileOperations('BDelete','bdelete<bang>',                            1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 
 
 " Pattern commands.
 " Note: Must use + instead of 1; otherwise (due to -complete=file), Vim
 " complains about globs with "E77: Too many file names".
-command! -bar -nargs=+ -complete=file SplitPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'split']),   <q-args>)
-command! -bar -nargs=+ -complete=file VSplitPattern call EditSimilar#Pattern#Split(join([g:EditSimilar_vsplitmode, 'vsplit']), <q-args>)
-command! -bar -nargs=+ -complete=file SViewPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'sview']),   <q-args>)
+command! -bar -nargs=+ -complete=file SplitPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'split']),   <q-args>, 1)
+command! -bar -nargs=+ -complete=file VSplitPattern call EditSimilar#Pattern#Split(join([g:EditSimilar_vsplitmode, 'vsplit']), <q-args>, 1)
+command! -bar -nargs=+ -complete=file SViewPattern  call EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'sview']),   <q-args>, 1)
+command! -bar -bang -nargs=+ -complete=file BDeletePattern call EditSimilar#Pattern#Split('silent! bdelete<bang>', <q-args>, 0)
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
