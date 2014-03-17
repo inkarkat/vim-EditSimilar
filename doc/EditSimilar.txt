@@ -364,15 +364,15 @@ IDEAS							    *EditSimilar-ideas*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-2.32	RELEASEME
+2.32	13-Mar-2014
 - Handle dot prefixes (e.g. ".txt") in root completion.
 - Also offer multi-extension roots (e.g. ".orig.txt") in root completion, and
   correctly handle existing roots (e.g. ".orig.t").
 - Add workaround for editing via :pedit, which uses the CWD of existing
   preview window instead of the CWD of the current window; leading to wrong
   not-existing files being opened when :set autochdir. Work around this by
-  always passing a full absolute filespec.
-  *** You need to update to ingo-library (vimscript #4433) version 1.017! ***
+  always passing a full absolute filespec. *** You need to update to
+  ingo-library (vimscript #4433) version 1.017! ***
 
 2.31	19-Nov-2013
 - Minor: Also handle :echoerr errors, which don't have an E... number
