@@ -117,6 +117,12 @@ simpler file wildcards).
 			edited file with {replacement}, and sets / writes the
 			resulting file. Wildcards can be used here, too.
 			The [!] is needed to overwrite an existing file.
+							  *:BDeleteSubstitute*
+:BDeleteSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+			Replaces all occurrences of {text} in the currently
+			edited file with {replacement}, and deletes the
+			resulting buffer. Wildcards can be used here, too.
+			The [!] is needed to delete a changed buffer.
 
 
 ------------------------------------------------------------------------------
@@ -193,6 +199,12 @@ edited file.
 			:WritePlus!    -> test008.txt
 			:99WritePlus   -> test014.txt [New File]
 			:99WritePlus!  -> test106.txt [New File]
+<						*:BDeleteMinus* *:BDeletePlus*
+:[N]BDeletePlus[!] [N]
+:[N]BDeleteMinus[!] [N]
+			Increases / decreases the last number found inside the
+			full absolute filespec of the currently edited file by
+			[N] and deletes that buffer.
 
 
 ------------------------------------------------------------------------------
@@ -228,6 +240,11 @@ succeeding / preceding file entries.
 			resolution of the glob, as elsewhere in Vim.
 			The current buffer must be contained in {filelist} for
 			the commands to work.
+
+					     *:BDeleteNext* *:BDeletePrevious*
+:[N]BDeleteNext [{filelist}]
+:[N]BDeletePrevious [{filelist}]
+			Delete a succeeding / preceding buffer.
 
 
 ------------------------------------------------------------------------------
@@ -277,6 +294,9 @@ This is an enhanced version of the built-in: >
 			name, but replaces the file extension with the passed
 			one.
 			The [!] is needed to overwrite an existing file.
+								*:BDeleteRoot*
+:BDeleteRoot[!] {extension}
+			Deletes a buffer with a different file extension.
 
 
 ------------------------------------------------------------------------------
@@ -298,6 +318,9 @@ argument list.
 			(?, *, cp. |file-pattern|).
 			Makes all windows the same size if more than one has
 			been opened.
+							     *:BDeletePattern*
+:BDeletePattern {file-pattern} [{file-pattern} ...]
+			Delete all buffers matching {file-pattern}.
 
 ==============================================================================
 INSTALLATION					    *EditSimilar-installation*
@@ -363,6 +386,10 @@ IDEAS							    *EditSimilar-ideas*
 
 ==============================================================================
 HISTORY							 *EditSimilar-history*
+
+2.33	RELEASEME
+- Add :BDelete... variants, which are especially useful for when "E139: File
+  is loaded in another buffer" is given.
 
 2.32	13-Mar-2014
 - Handle dot prefixes (e.g. ".txt") in root completion.
