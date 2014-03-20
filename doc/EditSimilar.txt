@@ -67,6 +67,8 @@ simpler file wildcards).
 :VSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 							     *SViewSubstitute*
 :SViewSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+							 *DiffSplitSubstitute*
+:DiffSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 			Replaces all literal occurrences of {text} in the
 			currently edited file with {replacement}, and opens the
 			resulting file. If all substitutions can be made on the
@@ -144,6 +146,9 @@ edited file.
 						    *:SViewPlus* *:SViewMinus*
 :[N]SViewPlus[!] [N]
 :[N]SViewMinus[!] [N]
+					    *:DiffSplitPlus* *:DiffSplitMinus*
+:[N]DiffSplitPlus[!] [N]
+:[N]DiffSplitMinus[!] [N]
 			Increases / decreases the last number found inside the
 			full absolute filespec of the currently edited file by
 			[N]. This works best on fixed-width numbers which are
@@ -226,6 +231,9 @@ succeeding / preceding file entries.
 						 *:SViewNext* *:SViewPrevious*
 :[N]SViewNext [{filelist}]
 :[N]SViewPrevious [{filelist}]
+					 *:DiffSplitNext* *:DiffSplitPrevious*
+:[N]DiffSplitNext [{filelist}]
+:[N]DiffSplitPrevious [{filelist}]
 			From the files in the same directory as the current
 			file, go to a succeeding / preceding one. If
 			{filelist} is specified (typically not via separate
@@ -262,6 +270,8 @@ This is an enhanced version of the built-in: >
 :VSplitRoot[!] {extension}
 								  *:SViewRoot*
 :SViewRoot[!] {extension}
+							      *:DiffSplitRoot*
+:DiffSplitRoot[!] {extension}
 			Switches the current file's extension:
 			Edits a file with the current file's path and name, but
 			replaces the file extension with the passed one. The
@@ -311,6 +321,8 @@ argument list.
 :VSplitPattern [++opt] [+cmd] {file-pattern} [{file-pattern} ...]
 							       *:SViewPattern*
 :SViewPattern [++opt] [+cmd] {file-pattern} [{file-pattern} ...]
+							   *:DiffSplitPattern*
+:DiffSplitPattern [++opt] [+cmd] {file-pattern} [{file-pattern} ...]
 			Open all files matching {file-pattern} in split windows.
 			If one of the files is already open, no second split is
 			generated.
@@ -366,11 +378,12 @@ lowercase commands) is defining short aliases through the cmdalias plugin
     Alias spp SplitPattern
 <
 			  *g:EditSimilar_splitmode* *g:EditSimilar_vsplitmode*
-All :Split..., :VSplit... and :SView commands obey the default 'splitbelow'
-and 'splitright' settings. If you want different behavior, you can insert the
-appropriate split modifier command via: >
+All :Split..., :VSplit..., :SView, and :DiffSplit... commands obey the default
+'splitbelow' and 'splitright' settings. If you want different behavior, you
+can insert the appropriate split modifier command via: >
     let g:EditSimilar_splitmode = 'rightbelow'
     let g:EditSimilar_vsplitmode = 'rightbelow'
+    let g:EditSimilar_diffsplitmode = 'rightbelow'
 <
 ==============================================================================
 LIMITATIONS					     *EditSimilar-limitations*
@@ -388,8 +401,9 @@ IDEAS							    *EditSimilar-ideas*
 HISTORY							 *EditSimilar-history*
 
 2.33	RELEASEME
-- Add :BDelete... variants, which are especially useful for when "E139: File
+- Add :BDelete... comands, which are especially useful for when "E139: File
   is loaded in another buffer" is given.
+- Add :DiffSplit... comands.
 
 2.32	13-Mar-2014
 - Handle dot prefixes (e.g. ".txt") in root completion.
