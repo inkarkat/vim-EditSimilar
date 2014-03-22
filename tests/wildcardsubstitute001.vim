@@ -63,7 +63,7 @@ call vimtap#file#IsFilename('lala.txt', 'foobar -> EditSubstitute =* H> .desc .d
 " Tests that bang creates file (on Unix, not possible on Windows).
 edit foobar.txt
 EditSubstitute! bar=z*
-if has('win32') || has('win64')
+if ingo#os#IsWindows()
     call vimtap#file#IsFilename('foobar.txt', 'foobar -> EditSubstitute! =* H> fooz*')
     call vimtap#file#IsFile('foobar -> EditSubstitute! =* H> fooz*')
 else
