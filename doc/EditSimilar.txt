@@ -348,7 +348,7 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES					    *EditSimilar-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.017 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.018 or
   higher.
 - Optional, recommended: cmdalias plugin (vimscript #746)
 
@@ -400,10 +400,13 @@ IDEAS							    *EditSimilar-ideas*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-2.33	RELEASEME
+2.40	RELEASEME
 - Add :BDelete... comands, which are especially useful for when "E139: File
   is loaded in another buffer" is given.
 - Add :DiffSplit... comands.
+- For next files, escape the dirspec for wildcards to handle peculiar
+  directories.
+  *** You need to update to ingo-library (vimscript #4433) version 1.018! ***
 
 2.32	13-Mar-2014
 - Handle dot prefixes (e.g. ".txt") in root completion.
