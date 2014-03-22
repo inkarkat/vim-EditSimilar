@@ -1,25 +1,17 @@
-" Test EditNext and EditPrevious with changing CWDs. 
-" Tests with :set autochdir, too. 
+" Test EditNext and EditPrevious with no files in the directory.
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(8)
+call vimtap#Plan(4)
+cd testdata
 
-edit file004.txt
+edit 001/empty/newfile.txt
+echomsg 'Test: EditNext'
 EditNext
-call IsNumAndFile(5, 'EditNext')
-cd ../..
-EditNext
-call IsNumAndFile(6, 'EditNext with cd ../..')
-cd $VIM
-EditNext
-call IsNumAndFile(7, 'EditNext with cd $VIM')
+call IsNameAndNoFile('newfile.txt', 'EditNext')
 
-if exists('&autochdir')
-    set autochdir
-endif
-EditNext!
-EditNext
-call IsNumAndFile(9, 'EditNext!, EditNext with :set autochdir')
+echomsg 'Test: EditPrevious'
+EditPrevious
+call IsNameAndNoFile('newfile.txt', 'EditPrevious')
 
 call vimtest#Quit()
