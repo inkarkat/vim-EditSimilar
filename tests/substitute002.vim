@@ -1,4 +1,6 @@
-" Test EditSubstitute bad invocations. 
+" Test EditSubstitute bad invocations.
+
+cd testdata
 
 edit foobar.txt
 echomsg 'Test: no arguments'
@@ -10,7 +12,7 @@ EditSubstitute foo=fox XX=YY ?lala?
 echomsg 'Test: substitution source must not be empty'
 EditSubstitute =fox
 
-" Tests nothing substituted. 
+" Tests nothing substituted.
 echomsg 'Test: Nothing substituted'
 EditSubstitute foo=foo x=x
 
