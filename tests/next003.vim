@@ -1,17 +1,17 @@
-" Test EditNext and EditPrevious error conditions. 
+" Test EditNext and EditPrevious with the sole file in the directory.
 
-" Tests error about no number in filespec. 
-edit foobar.txt
-echomsg 'Test: EditNext on filespec without number'
-EditNext
-echomsg 'Test: EditPrevious on filespec without number'
-100EditPrevious!
+source helpers/NumAndFile.vim
+call vimtest#StartTap()
+call vimtap#Plan(4)
+cd testdata
 
-" Tests error when trying to edit a next file when the current buffer has
-" unsaved changes. 
-edit file004.txt
-normal! ggiEdited.
-echomsg 'Test: EditNext on unsaved changes'
+edit 001/prod/prod001.txt
+echomsg 'Test: EditNext'
 EditNext
+call IsNameAndFile('prod001.txt', 'EditNext')
+
+echomsg 'Test: EditPrevious'
+EditPrevious
+call IsNameAndFile('prod001.txt', 'EditPrevious')
 
 call vimtest#Quit()
