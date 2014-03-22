@@ -5,12 +5,13 @@
 "   - ingo/fs/path.vim autoload script
 "   - ingo/msg.vim autoload script
 "
-" Copyright: (C) 2012-2013 Ingo Karkat
+" Copyright: (C) 2012-2014 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.40.007	21-Mar-2014	Escape the dirspec for wildcards.
 "   2.31.006	26-Jun-2013	Replace duplicated functions with
 "				ingo/fs/path.vim.
 "   2.31.005	14-Jun-2013	Replace EditSimilar#ErrorMsg() with
@@ -27,11 +28,12 @@ set cpo&vim
 
 " Next / Previous commands.
 function! EditSimilar#Next#GetDirectoryEntries( dirSpec, fileGlobs )
+    let l:dirSpec = ingo#escape#file#wildcardescape(a:dirSpec)
     let l:files = []
 
     " Get list of files, apply 'wildignore'.
     for l:fileGlob in a:fileGlobs
-	let l:files += split(glob(ingo#fs#path#Combine(a:dirSpec, l:fileGlob)), "\n")
+	let l:files += split(glob(ingo#fs#path#Combine(l:dirSpec, l:fileGlob)), "\n")
 	" Note: No need to normalize here; glob() always returns results with
 	" the default path separator.
     endfor
