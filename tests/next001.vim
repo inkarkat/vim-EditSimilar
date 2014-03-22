@@ -11,8 +11,8 @@ EditNext
 call IsNameAndFile('file005.txt', 'EditNext')
 1EditNext
 call IsNameAndFile('file006.txt', '1EditNext')
-EditNext 1
-call IsNameAndFile('file007.txt', 'EditNext 1')
+1EditNext
+call IsNameAndFile('file007.txt', '1EditNext')
 EditNext
 call IsNameAndFile('file009.txt', 'EditNext')
 4EditNext
