@@ -12,6 +12,12 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.30.008	09-Dec-2012	Do not require a:hasBang; instead pass the -bang
+"				only for the *Plus and *Minus commands.
+"   2.30.007	08-Dec-2012	CHG: For *Plus and *Minus commands with
+"				a:options.omitOperationsWorkingOnlyOnExistingFiles,
+"				define a -bang argument and pass
+"				isFindNextNonExisting flag.
 "   2.10.006	26-Jul-2012	Change
 "				a:omitOperationsWorkingOnlyOnExistingFiles
 "				argument to optional a:options for
@@ -55,7 +61,7 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 "   a:fileCommand   Command to be invoked with the similar file name. Can
 "		    contain :command escape sequences, e.g.
 "		    "<line1>,<line2>MyCommand<bang>"
-"   a:hasBang	    Flag whether the built commands support a bang argument.
+"   a:hasBang	    Flag whether a:fileCommand supports a bang.
 "   a:createNew	    Expression (e.g. '<bang>0') or flag whether a non-existing
 "		    filespec will be opened, thereby creating a new file.
 "   a:options       Optional Dictionary with configuration:
@@ -80,9 +86,15 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
     execute printf('command! -bar %s -nargs=+ %sSubstitute call EditSimilar#Substitute#Open(%s, %s, expand("%%:p"), <f-args>)',
     \   l:bangArg, a:commandPrefix, string(a:fileCommand), a:createNew)
     execute printf('command! -bar %s -count=0 %sPlus       call EditSimilar#Offset#Open(%s, %s, %s, expand("%%:p"), <count>,  1)',
-    \   l:bangArg, a:commandPrefix, string(a:fileCommand), a:createNew, (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0))
+    \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
+    \   a:commandPrefix, string(a:fileCommand), a:createNew,
+    \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0)
+    \)
     execute printf('command! -bar %s -count=0 %sMinus      call EditSimilar#Offset#Open(%s, %s, %s, expand("%%:p"), <count>,  -1)',
-    \   l:bangArg, a:commandPrefix, string(a:fileCommand), a:createNew, (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0))
+    \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
+    \   a:commandPrefix, string(a:fileCommand), a:createNew,
+    \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0)
+    \)
     if ! l:omitOperationsWorkingOnlyOnExistingFiles
 	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sNext       call EditSimilar#Next#Open(%s, %s, expand("%%:p"), <count>,  1, <q-args>)',
 	\   l:bangArg, a:commandPrefix, string(a:fileCommand), a:createNew)
