@@ -28,13 +28,13 @@ let s:positiveFilenames = [
 \]
 
 for s:filename in s:negativeFilenames
-    execute 'edit' escapings#fnameescape(s:filename)
+    execute 'edit' ingo#compat#fnameescape(s:filename)
     echomsg 'Test: EditPlus on hexadecimal: ' . s:filename
     EditPlus!
     call vimtap#file#IsFilename(s:filename, 'Filename unchanged')
 endfor
 for s:filename in s:positiveFilenames
-    execute 'edit' escapings#fnameescape(s:filename)
+    execute 'edit' ingo#compat#fnameescape(s:filename)
     echomsg 'Test: EditPlus on decimal: ' . s:filename
     EditPlus!
     call vimtap#file#IsntFilename(s:filename, 'Filename increased')
