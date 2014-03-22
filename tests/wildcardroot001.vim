@@ -32,7 +32,7 @@ call vimtap#file#IsFilename('foobar.txt', 'txt -> EditRoot H> t?t')
 " Tests that bang creates file.
 edit foobar.cpp
 EditRoot! j*
-if has('win32') || has('win64')
+if ingo#os#IsWindows()
     call vimtap#file#IsFilename('foobar.cpp', 'cpp -> EditRoot! H> j*')
     call vimtap#file#IsFile('cpp -> EditRoot! H> j*')
 else
