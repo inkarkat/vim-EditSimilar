@@ -1,33 +1,34 @@
-" Test read-only ViewNext and ViewPrevious. 
+" Test read-only ViewPlus and ViewMinus.
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
 call vimtap#Plan(18)
+cd testdata
 
 edit file004.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
-ViewNext
-call IsNumAndFile(5, 'ViewNext')
-call vimtap#Ok(&l:readonly, 'ViewNext is readonly')
-ViewNext 2
-call IsNumAndFile(7, '2VSplitNext')
-call vimtap#Ok(&l:readonly, '2VSplitNext is readonly')
+ViewPlus
+call IsNumAndFile(5, 'ViewPlus')
+call vimtap#Ok(&l:readonly, 'ViewPlus is readonly')
+ViewPlus 2
+call IsNumAndFile(7, '2VSplitPlus')
+call vimtap#Ok(&l:readonly, '2VSplitPlus is readonly')
 
 
 edit file007.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
 echomsg 'Test: file008.txt does not exist'
-1VSplitNext
-call IsNumAndFile(7, '1VSplitNext to missing file')
-call vimtap#Ok(! &l:readonly, 'Original after ViewNext still is not readonly')
-ViewNext!
-call IsNumAndNoFile(8, 'ViewNext! to missing file')
-call vimtap#Ok(&l:readonly, 'ViewNext! is readonly')
+1VSplitPlus
+call IsNumAndFile(7, '1VSplitPlus to missing file')
+call vimtap#Ok(! &l:readonly, 'Original after ViewPlus still is not readonly')
+ViewPlus!
+call IsNumAndNoFile(8, 'ViewPlus! to missing file')
+call vimtap#Ok(&l:readonly, 'ViewPlus! is readonly')
 
 edit file020.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
-999ViewPrevious
-call IsNumAndFile(3, '999ViewPrevious to first file')
-call vimtap#Ok(&l:readonly, '999ViewPrevious is readonly')
+999ViewMinus
+call IsNumAndFile(3, '999ViewMinus to first file')
+call vimtap#Ok(&l:readonly, '999ViewMinus is readonly')
 
 call vimtest#Quit()
