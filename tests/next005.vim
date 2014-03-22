@@ -1,18 +1,17 @@
-" Test SplitNext and SplitPrevious. 
+" Test EditNext and EditPrevious with non-existing file.
 
+source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(1)
+call vimtap#Plan(4)
+cd testdata
 
-edit file004.txt
-SplitNext
-1SplitNext
-SplitNext 6
-SplitNext 999
-SplitNext 999
-SplitPrevious
-SplitPrevious! 10
-SplitPrevious! 10
+edit newfile.txt
+echomsg 'Test: EditNext'
+EditNext
+call IsNameAndNoFile('newfile.txt', 'EditNext')
 
-call vimtap#window#IsWindows( reverse(map(['004', '005', '006', '011', '101', '100', '090', '080'], '"file" . v:val . ".txt"')), 'split next files')
+echomsg 'Test: EditPrevious'
+EditPrevious
+call IsNameAndNoFile('newfile.txt', 'EditPrevious')
 
 call vimtest#Quit()
