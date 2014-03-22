@@ -1,10 +1,11 @@
-" Test EditRoot. 
+" Test EditRoot.
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
 call vimtap#Plan(20)
+cd testdata
 
-" Tests simple substitution. 
+" Tests simple substitution.
 edit foobar.txt
 EditRoot cpp
 call vimtap#file#IsFilename('foobar.cpp', 'txt -> EditRoot -> cpp')
@@ -16,55 +17,55 @@ EditRoot .cpp
 call vimtap#file#IsFilename('foobar.cpp', 'txt -> EditRoot -> cpp')
 call vimtap#file#IsFile('txt -> EditRoot -> cpp')
 
-" Tests error that substituted extension does not exist. 
+" Tests error that substituted extension does not exist.
 edit foobar.cpp
 echomsg 'Test: foobar.java does not exist'
 EditRoot java
 call vimtap#file#IsFilename('foobar.cpp', 'cpp -> EditRoot H> java')
 
-" Tests error that substituted file is the same. 
+" Tests error that substituted file is the same.
 edit foobar.txt
 echomsg 'Test: Nothing substituted'
 EditRoot txt
 call vimtap#file#IsFilename('foobar.txt', 'txt -> EditRoot H> txt')
 
-" Tests that bang creates file. 
+" Tests that bang creates file.
 edit foobar.cpp
 EditRoot! java
 call vimtap#file#IsFilename('foobar.java', 'cpp -> EditRoot! -> java')
 call vimtap#file#IsNoFile('cpp -> EditRoot! -> java')
 
-" Tests from no extension. 
+" Tests from no extension.
 edit foobar
 EditRoot cpp
 call vimtap#file#IsFilename('foobar.cpp', '[] -> EditRoot -> cpp')
 call vimtap#file#IsFile('[] -> EditRoot -> cpp')
 
-" Tests to no extension. 
+" Tests to no extension.
 edit foobar.txt
 EditRoot .
 call vimtap#file#IsFilename('foobar', 'txt -> EditRoot -> []')
 call vimtap#file#IsFile('txt -> EditRoot -> []')
 
-" Tests from double to no extension. 
+" Tests from double to no extension.
 edit foobar.orig.txt
 EditRoot ..
 call vimtap#file#IsFilename('foobar', 'orig.txt -> EditRoot -> []')
 call vimtap#file#IsFile('orig.txt -> EditRoot -> []')
 
-" Tests from double extension, replacing last. 
+" Tests from double extension, replacing last.
 edit foobar.orig.txt
 EditRoot! XXX
 call vimtap#file#IsFilename('foobar.orig.XXX', 'orig.txt -> EditRoot! -> orig.XXX')
 call vimtap#file#IsNoFile('orig.txt -> EditRoot! -> orig.XXX')
 
-" Tests from double extension, replacing both. 
+" Tests from double extension, replacing both.
 edit foobar.orig.txt
 EditRoot! ..YYY
 call vimtap#file#IsFilename('foobar.YYY', 'orig.txt -> EditRoot! -> YYY')
 call vimtap#file#IsNoFile('orig.txt -> EditRoot! -> YYY')
 
-" Tests to double extension. 
+" Tests to double extension.
 edit foobar.cpp
 EditRoot orig.txt
 call vimtap#file#IsFilename('foobar.orig.txt', 'cpp -> EditRoot -> orig.txt')
