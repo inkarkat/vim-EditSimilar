@@ -2,16 +2,23 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(4)
+call vimtap#Plan(6)
 cd testdata
 
 edit newfile.txt
-echomsg 'Test: EditNext'
-EditNext
+try
+    EditNext
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#ThrownLike('Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt', 'error')
+endtry
 call IsNameAndNoFile('newfile.txt', 'EditNext')
 
-echomsg 'Test: EditPrevious'
-EditPrevious
+try
+    EditPrevious
+catch
+    call vimtap#err#ThrownLike('Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt', 'error')
+endtry
 call IsNameAndNoFile('newfile.txt', 'EditPrevious')
 
 call vimtest#Quit()
