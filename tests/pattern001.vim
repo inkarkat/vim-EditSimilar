@@ -1,7 +1,7 @@
 " Test SplitPattern.
 
 call vimtest#StartTap()
-call vimtap#Plan(4)
+call vimtap#Plan(5)
 cd testdata
 
 edit file100.txt
@@ -24,7 +24,11 @@ SplitPattern foo*
 call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
 
 " Test no matches.
-echomsg 'Test: no matches'
-SplitPattern doesn?texist.*
+try
+    SplitPattern doesn?texist.*
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('No matches', 'error')
+endtry
 
 call vimtest#Quit()
