@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(18)
+call vimtap#Plan(19)
 cd testdata
 
 edit file004.txt
@@ -17,8 +17,12 @@ call vimtap#Ok(&l:readonly, '2VSplitPlus is readonly')
 
 edit file007.txt
 call vimtap#Ok(! &l:readonly, 'Original is not readonly')
-echomsg 'Test: file008.txt does not exist'
-1VSplitPlus
+try
+    1VSplitPlus
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): #008 (from #007)', 'file008.txt does not exist')
+endtry
 call IsNumAndFile(7, '1VSplitPlus to missing file')
 call vimtap#Ok(! &l:readonly, 'Original after ViewPlus still is not readonly')
 ViewPlus!
