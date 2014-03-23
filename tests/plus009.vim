@@ -1,7 +1,7 @@
 " Test EditPlus with unsupported numbers.
 
 call vimtest#StartTap()
-call vimtap#Plan(17)
+call vimtap#Plan(27)
 cd testdata
 
 " Test hexadecimal digits.
@@ -29,8 +29,12 @@ let s:positiveFilenames = [
 
 for s:filename in s:negativeFilenames
     execute 'edit' ingo#compat#fnameescape(s:filename)
-    echomsg 'Test: EditPlus on hexadecimal: ' . s:filename
-    EditPlus!
+    try
+	EditPlus!
+	call vimtap#Fail('expected error')
+    catch
+	call vimtap#err#Thrown('No number in filespec', 'EditPlus on hexadecimal: ' . s:filename)
+    endtry
     call vimtap#file#IsFilename(s:filename, 'Filename unchanged')
 endfor
 for s:filename in s:positiveFilenames
