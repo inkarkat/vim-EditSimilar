@@ -3,7 +3,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(20)
+call vimtap#Plan(22)
 cd testdata
 
 edit file004.txt
@@ -20,8 +20,11 @@ call IsNameAndFile('file100.txt', '4EditNext')
 999EditNext
 call IsNameAndFile('lala.txt', '999EditNext to last file')
 
-echomsg 'Test: No next file'
-EditNext
+try
+    EditNext
+catch
+    call vimtap#err#Thrown('No next file', 'error')
+endtry
 call IsNameAndFile('lala.txt', 'EditNext on last file')
 
 EditPrevious
@@ -29,8 +32,12 @@ call IsNameAndFile('lala.install', 'EditPrevious')
 999EditPrevious
 call IsNameAndFile('fXXbaz.txt', '999EditPrevious to first file')
 
-echomsg 'Test: No previous file'
-EditPrevious
+try
+    EditPrevious
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('No previous file', 'error')
+endtry
 call IsNameAndFile('fXXbaz.txt', 'EditPrevious on first file')
 
 call vimtest#Quit()
