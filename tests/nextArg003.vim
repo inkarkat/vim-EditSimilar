@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(18)
+call vimtap#Plan(20)
 cd testdata
 
 edit foobar.cpp
@@ -12,8 +12,12 @@ call IsNameAndFile('lala.desc', 'EditNext *.cpp *.desc* on foobar.cpp file')
 EditNext *.cpp *.desc*
 call IsNameAndFile('lala.description', 'EditNext *.cpp *.desc* on lala.desc file')
 
-echomsg 'Test: No next *.cpp *.desc* file'
-EditNext *.cpp *.desc*
+try
+    EditNext *.cpp *.desc*
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('No next file matching *.cpp *.desc*', 'No next file matching *.cpp *.desc*')
+endtry
 call IsNameAndFile('lala.description', 'EditNext *.cpp *.desc* on last matching file')
 
 
@@ -26,8 +30,12 @@ EditPrevious *foo\ bar*
 call IsNameAndFile('#foo bar.txt', 'EditPrevious *foo\ bar* on +foo bar.txt')
 
 " Tests that escaped whitespace is correctly parsed as one glob.
-echomsg 'Test: No previous *foo\ bar* file'
-EditPrevious *foo\ bar*
+try
+    EditPrevious *foo\ bar*
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('No previous file matching *foo\ bar*', 'No previous *foo\ bar* file')
+endtry
 call IsNameAndFile('#foo bar.txt', 'EditPrevious *foo\ bar* on +foo bar.txt')
 
 " Tests that glob splitting still works together with escaped whitespace.
