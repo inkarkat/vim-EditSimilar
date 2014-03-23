@@ -2,7 +2,7 @@
 
 source helpers/Buffers.vim
 call vimtest#StartTap()
-call vimtap#Plan(3)
+call vimtap#Plan(4)
 cd testdata
 
 edit lala.txt
@@ -14,8 +14,12 @@ call IsBuffers(['foobar.txt', 'foobar.cpp', 'file100.txt', 'lala.txt'], 'all buf
 BDeleteRoot cpp
 call IsBuffers(['foobar.txt', 'file100.txt', 'lala.txt'], 'BDeleteNext')
 
-echomsg 'Test: Nothing substituted'
-BDeleteRoot txt
+try
+    BDeleteRoot txt
+    call vimtap#Fail('expected exception')
+catch
+    call vimtap#err#Thrown('Nothing substituted', 'error')
+endtry
 call IsBuffers(['foobar.txt', 'file100.txt', 'lala.txt'], 'BDeleteNext')
 
 call vimtest#Quit()
