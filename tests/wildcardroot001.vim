@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(10)
+call vimtap#Plan(12)
 cd testdata
 
 " Tests that the ? wildcard is recognized.
@@ -19,14 +19,22 @@ call vimtap#file#IsFile('txt -> EditRoot -> d*c')
 
 " Tests error that substituted extension does not exist.
 edit foobar.cpp
-echomsg 'Test: foobar.j* does not exist'
-EditRoot j*
+try
+    EditRoot j*
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): foobar.j*', 'foobar.j* does not exist')
+endtry
 call vimtap#file#IsFilename('foobar.cpp', 'cpp -> EditRoot H> j*')
 
 " Tests error that substituted file is the same.
 edit foobar.txt
-echomsg 'Test: Nothing substituted'
-EditRoot t?t
+try
+    EditRoot t?t
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Nothing substituted', 'error')
+endtry
 call vimtap#file#IsFilename('foobar.txt', 'txt -> EditRoot H> t?t')
 
 " Tests that bang creates file.
