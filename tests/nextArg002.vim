@@ -2,20 +2,32 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(6)
+call vimtap#Plan(9)
 cd testdata
 
 edit foobar
-echomsg 'Test: EditNext file* on foobar file'
-EditNext file*
+try
+    EditNext file*
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#ThrownLike('Cannot locate current file matching file\*: .*[/\\]testdata[/\\]foobar', 'EditNext file* on foobar file')
+endtry
 call IsNameAndFile('foobar', 'EditNext file* on foobar file')
 
-echomsg 'Test: EditNext foobar on foobar file'
-EditNext foobar
+try
+    EditNext foobar
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('This is the sole file in the directory matching foobar', 'EditNext foobar on foobar file')
+endtry
 call IsNameAndFile('foobar', 'EditNext foobar on foobar file')
 
-echomsg 'Test: EditNext doesnotexist on foobar file'
-EditNext doesnotexist
+try
+    EditNext doesnotexist
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('No files in this directory matching doesnotexist', 'EditNext doesnotexist on foobar file')
+endtry
 call IsNameAndFile('foobar', 'EditNext doesnotexist on foobar file')
 
 call vimtest#Quit()
