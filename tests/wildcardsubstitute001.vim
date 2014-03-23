@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(17)
+call vimtap#Plan(20)
 cd testdata
 
 " Tests that the ? wildcard is recognized in the replacement part.
@@ -45,19 +45,31 @@ call vimtap#file#IsFile('file003 -> EditSubstitute =[] -> file[abc]')
 
 " Tests error that substituted file pattern does not exist.
 edit foobar.txt
-echomsg 'Test: fooz*.txt does not exist'
-EditSubstitute bar=z*
+try
+    EditSubstitute bar=z*
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): fooz*.txt', 'fooz*.txt does not exist')
+endtry
 call vimtap#file#IsFilename('foobar.txt', 'foobar -> EditSubstitute =* H> fooz*')
 
 edit foobar.txt
-echomsg 'Test: fi[XYZ]e[abc123].txt does not exist'
-EditSubstitute oobar=i[XYZ]e[abc123]
+try
+    EditSubstitute oobar=i[XYZ]e[abc123]
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): fi[XYZ]e[abc123].txt', 'fi[XYZ]e[abc123].txt does not exist')
+endtry
 call vimtap#file#IsFilename('foobar.txt', 'foobar -> EditSubstitute =[] H> fi[XYZ]e[abc123]')
 
 " Tests error that substituted file pattern matches multiple files.
 edit lala.txt
-echomsg 'Test: lala.des* matches multiple files.'
-EditSubstitute txt=des*
+try
+    EditSubstitute txt=des*
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Too many file names', 'lala.des* matches multiple files.')
+endtry
 call vimtap#file#IsFilename('lala.txt', 'foobar -> EditSubstitute =* H> .desc .description')
 
 " Tests that bang creates file (on Unix, not possible on Windows).
