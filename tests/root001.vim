@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(20)
+call vimtap#Plan(22)
 cd testdata
 
 " Tests simple substitution.
@@ -19,14 +19,22 @@ call vimtap#file#IsFile('txt -> EditRoot -> cpp')
 
 " Tests error that substituted extension does not exist.
 edit foobar.cpp
-echomsg 'Test: foobar.java does not exist'
-EditRoot java
+try
+    EditRoot java
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): foobar.java', 'foobar.java does not exist')
+endtry
 call vimtap#file#IsFilename('foobar.cpp', 'cpp -> EditRoot H> java')
 
 " Tests error that substituted file is the same.
 edit foobar.txt
-echomsg 'Test: Nothing substituted'
-EditRoot txt
+try
+    EditRoot txt
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Nothing substituted', 'error')
+endtry
 call vimtap#file#IsFilename('foobar.txt', 'txt -> EditRoot H> txt')
 
 " Tests that bang creates file.
