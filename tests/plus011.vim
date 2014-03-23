@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(5)
+call vimtap#Plan(6)
 cd testdata
 
 " Tests forced boundary of 1 (not 0).
@@ -21,8 +21,12 @@ FileMinus
 call vimtap#file#IsFilespec('001/dev/dev000.txt', 'FileMinus on 001')
 
 " Tests no further decrease on 0.
-echomsg 'Test: Nothing substituted'
-FileMinus
+try
+    FileMinus
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Nothing substituted', 'error')
+endtry
 call vimtap#file#IsFilespec('001/dev/dev000.txt', 'FileMinus on 000')
 
 call vimtest#Quit()
