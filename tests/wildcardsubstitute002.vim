@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(13)
+call vimtap#Plan(14)
 cd testdata
 
 " Tests that the ? wildcard is recognized in the text part.
@@ -44,8 +44,12 @@ call vimtap#file#IsFile('file[abc] -> EditSubstitute []= -> file003')
 
 " Tests error that file pattern substitutes nothing.
 edit foobar.txt
-echomsg 'Test: z* nothing substituted'
-EditSubstitute z*=lala
+try
+    EditSubstitute z*=lala
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Nothing substituted', 'error')
+endtry
 call vimtap#file#IsFilename('foobar.txt', 'foobar -> EditSubstitute *= H> lala')
 
 call vimtest#Quit()
