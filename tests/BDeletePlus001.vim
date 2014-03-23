@@ -2,7 +2,7 @@
 
 source helpers/Buffers.vim
 call vimtest#StartTap()
-call vimtap#Plan(4)
+call vimtap#Plan(5)
 cd testdata
 
 edit lala.txt
@@ -14,8 +14,12 @@ call IsBuffers(['file004.txt', 'file005.txt', 'file100.txt', 'lala.txt'], 'all b
 BDeletePlus
 call IsBuffers(['file004.txt', 'file100.txt', 'lala.txt'], 'BDeletePlus')
 
-echomsg 'Test: 999BDeletePlus'
-999BDeletePlus
+try
+    999BDeletePlus
+    call vimtap#Fail('expected exception')
+catch
+    call vimtap#err#ThrownLike('^E94: .* file1003.txt', 'No matching buffer')
+endtry
 call IsBuffers(['file004.txt', 'file100.txt', 'lala.txt'], '999BDeletePlus')
 
 96BDeletePlus
