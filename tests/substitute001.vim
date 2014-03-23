@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(15)
+call vimtap#Plan(19)
 execute 'cd' expand('<sfile>:p:h') . '/testdata'
 
 " Tests that substitution is performed multiple times (o=X).
@@ -16,8 +16,12 @@ call vimtap#file#IsFilename('foobar.txt', 'fXXbaz -> EditSubstitute -> foobar')
 call vimtap#file#IsFile('fXXbaz -> EditSubstitute -> foobar')
 
 " Tests error that substituted file does not exist.
-echomsg 'Test: foxbar.txt does not exist'
-EditSubstitute foo=fox
+try
+    EditSubstitute foo=fox
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): foxbar.txt', 'foxbar.txt does not exist')
+endtry
 call vimtap#file#IsFilename('foobar.txt', 'foobar -> EditSubstitute H> foxbar')
 
 " Tests that bang creates file.
@@ -65,17 +69,30 @@ call vimtap#file#IsNoFile('001/production/prod666 -> EditSubstitute -> 002/dev/d
 execute 'cd' expand('<sfile>:p:h') . '/testdata'
 edit 001/dev/dev001.txt
 cd $VIM
-echomsg 'Test: foo123 does not exist'
-EditSubstitute 001=123 dev=foo
+try
+    EditSubstitute 001=123 dev=foo
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): foo123.txt', 'foo123 does not exist')
+endtry
 
 " Tests that the shortened filespec is printed in the error when the match is in
 " the pathspec.
 execute 'cd' expand('<sfile>:p:h') . '/testdata'
 edit 001/production/prod666.txt
 cd $VIM
-echomsg 'Test: new/fox456 does not exist'
-EditSubstitute prod=fox 666=456 production=new
+try
+    EditSubstitute prod=fox 666=456 production=new
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#ThrownLike('Substituted file does not exist (add ! to create): .*[/\\]testdata[/\\]001[/\\]new[/\\]fox456.txt', 'new/fox456 does not exist')
+endtry
 execute 'cd' expand('<sfile>:p:h') . '/testdata'
-EditSubstitute prod=fox 666=456 production=new
+try
+    EditSubstitute prod=fox 666=456 production=new
+    call vimtap#Fail('expected error')
+catch
+    call vimtap#err#ThrownLike('Substituted file does not exist (add ! to create): 001[/\\]new[/\\]fox456.txt', 'new/fox456 does not exist')
+endtry
 
 call vimtest#Quit()
