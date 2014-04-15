@@ -334,6 +334,25 @@ argument list.
 :BDeletePattern {file-pattern} [{file-pattern} ...]
 			Delete all buffers matching {file-pattern}.
 
+------------------------------------------------------------------------------
+					     *EditSimilar-supporting-commands*
+							   *:SaveOverBufferAs*
+:SaveOverBufferAs[!] [++opt] {file}
+			Like |:saveas|, but with [!] also suppresses the
+			|E139|: "File is loaded in another buffer" error by
+			forcibly deleting the buffer (any unpersisted changes
+			there will be lost). With this plugin, one often
+			(re-)updates similar files that are already loaded in
+			Vim. This command (which is also used in the :Save...
+			commands) avoids the need to issue a separate >
+			    :BDelete... | Save...
+<							    *:WriteOverBuffer*
+:[range]WriteOverBuffer[!] [++opt] {file}
+			Like |:write|, but with [!] also suppresses the
+			|E139|: "File is loaded in another buffer" error by
+			forcibly deleting the buffer (any unpersisted changes
+			there will be lost). Used in the :Write... commands.
+
 ==============================================================================
 INSTALLATION					    *EditSimilar-installation*
 
@@ -406,6 +425,12 @@ HISTORY							 *EditSimilar-history*
 - Add :DiffSplit... comands.
 - For next files, escape the dirspec for wildcards to handle peculiar
   directories.
+- Allow to :write partial buffer contents by defining -range=% on :Write...
+  commands that do not yet use the count.
+- Add :SaveOverBufferAs and :WriteOverBuffer commands (that with [!] also
+  :bdelete an existing buffer with the same name) and use those in the
+  :Save... and :Write... commands.
+- All commands now properly abort on error.
   *** You need to update to ingo-library (vimscript #4433) version 1.018! ***
 
 2.32	13-Mar-2014
