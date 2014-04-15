@@ -5,6 +5,5 @@ autoload/EditSimilar/Offset.vim
 autoload/EditSimilar/Pattern.vim
 autoload/EditSimilar/Root.vim
 autoload/EditSimilar/Substitute.vim
-autoload/escapings.vim
 plugin/EditSimilar.vim
 doc/EditSimilar.txt
