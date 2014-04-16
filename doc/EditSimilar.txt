@@ -419,7 +419,7 @@ IDEAS							    *EditSimilar-ideas*
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-2.40	RELEASEME
+2.40	16-Apr-2014
 - Add :BDelete... comands, which are especially useful for when "E139: File
   is loaded in another buffer" is given.
 - Add :DiffSplit... comands.
