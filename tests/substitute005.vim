@@ -1,7 +1,8 @@
-" Test SplitSubstitute on filename. 
+" Test SplitSubstitute on filename.
 
 call vimtest#StartTap()
 call vimtap#Plan(1)
+cd testdata
 
 edit foobar.txt
 SplitSubstitute o=X bar=baz
