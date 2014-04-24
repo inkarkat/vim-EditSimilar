@@ -24,11 +24,6 @@ SplitPattern foo*
 call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
 
 " Test no matches.
-try
-    SplitPattern doesn?texist.*
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('No matches', 'error')
-endtry
+call vimtap#err#Errors('No matches', 'SplitPattern doesn?texist.*', 'error')
 
 call vimtest#Quit()
