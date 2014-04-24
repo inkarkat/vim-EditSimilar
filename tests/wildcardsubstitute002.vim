@@ -44,12 +44,7 @@ call vimtap#file#IsFile('file[abc] -> EditSubstitute []= -> file003')
 
 " Tests error that file pattern substitutes nothing.
 edit foobar.txt
-try
-    EditSubstitute z*=lala
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('Nothing substituted', 'error')
-endtry
+call vimtap#err#Errors('Nothing substituted', 'EditSubstitute z*=lala', 'error')
 call vimtap#file#IsFilename('foobar.txt', 'foobar -> EditSubstitute *= H> lala')
 
 call vimtest#Quit()
