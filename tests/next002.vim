@@ -29,7 +29,7 @@ call IsNameAndFile('fXXbaz.txt', '999EditPrevious to first file with cd $VIM')
 
 
 execute 'edit' expand('<sfile>:p:h') . '/testdata/file005.txt'
-if exists('&autochdir')
+if exists('+autochdir')
     set autochdir
 endif
 EditNext
