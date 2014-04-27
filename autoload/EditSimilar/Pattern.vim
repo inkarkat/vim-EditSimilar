@@ -4,6 +4,7 @@
 "   - ingo/cmdargs/file.vim autoload script
 "   - ingo/cmdargs/glob.vim autoload script
 "   - ingo/compat.vim autoload script
+"   - ingo/err.vim autoload script
 "   - ingo/escape/file.vim autoload script
 "
 " Copyright: (C) 2012-2014 Ingo Karkat
@@ -12,6 +13,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.40.009	23-Mar-2014	Return success status to abort on errors.
 "   2.33.008	18-Mar-2014	Add a:isSkipVisible flag to
 "				EditSimilar#Pattern#Split() to support the
 "				:BDeletePattern command, which isn't concerned
@@ -59,7 +61,12 @@ function! EditSimilar#Pattern#Split( splitcmd, filePatternsString, isSkipVisible
 	    " :belowright.
 	    let l:splitWhere = (l:openCnt == 0 ? '' : 'belowright')
 
-	    execute l:splitWhere a:splitcmd l:exFileOptionsAndCommands ingo#compat#fnameescape(fnamemodify(l:filespec, ':~:.'))
+	    try
+		execute l:splitWhere a:splitcmd l:exFileOptionsAndCommands ingo#compat#fnameescape(fnamemodify(l:filespec, ':~:.'))
+	    catch /^Vim\%((\a\+)\)\=:E/
+		call ingo#err#SetVimException()
+		return 0
+	    endtry
 	    let l:openCnt += 1
 	endif
     endfor
@@ -68,10 +75,12 @@ function! EditSimilar#Pattern#Split( splitcmd, filePatternsString, isSkipVisible
     if l:openCnt > 1
 	wincmd =
     elseif len(l:filespecs) == 0
-	call ingo#msg#ErrorMsg('No matches')
+	call ingo#err#Set('No matches')
+	return 0
     elseif l:openCnt == 0
 	echomsg 'No new matches that haven''t yet been opened'
     endif
+    return 1
 endfunction
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
