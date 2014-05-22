@@ -45,6 +45,8 @@ RELATED WORKS								     *
   you to open the autoload file from the plugin.
 - nextfile (vimscript #4698) has definitions of related files (like Rails
   controllers, views, model, tests), and can edit a next file via a mapping.
+- projectile (https://github.com/tpope/vim-projectile) allows you to define
+  per-project settings and navigation commands, e.g. :Eplugin and :Edoc.
 
 ==============================================================================
 USAGE							   *EditSimilar-usage*
