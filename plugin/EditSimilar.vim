@@ -3,6 +3,7 @@
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
 "   - EditSimilar/CommandBuilder.vim autoload script
+"   - EditSimilar/OverBuffer.vim autoload script
 "   - EditSimilar/Pattern.vim autoload script
 "   - ingo/err.vim autoload script
 "
@@ -15,6 +16,10 @@
 "   2.40.018	24-Mar-2014	Allow to :write partial buffer contents by
 "				defining -range=% on :Write... commands that do
 "				not yet use the count.
+"				Add :SaveOverBufferAs and :WriteOverBuffer
+"				commands (that with [!] also :bdelete an
+"				existing buffer with the same name) and use
+"				those in the :Save... and :Write... commands.
 "   2.40.017	23-Mar-2014	Abort on errors.
 "   2.33.016	18-Mar-2014	Add :BDelete... commands.
 "				Add :DiffSplit... commands.
@@ -94,6 +99,11 @@ endif
 
 "- commands --------------------------------------------------------------------
 
+" Supporting commands.
+command! -bar -bang          -nargs=1 -complete=file  SaveOverBufferAs if ! EditSimilar#OverBuffer#Save('saveas<bang>', <bang>0, <q-args>) | echoerr ingo#err#Get() | endif
+command! -bar -bang -range=% -nargs=1 -complete=file WriteOverBuffer   if ! EditSimilar#OverBuffer#Save('<line1>,<line2>write<bang>', <bang>0, <q-args>) | echoerr ingo#err#Get() | endif
+
+
 " Substitute, Plus / Minus, and Next / Previous commands.
 " Root (i.e. file extension) commands.
 call EditSimilar#CommandBuilder#SimilarFileOperations('Edit',           'edit',                                           1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
@@ -103,8 +113,8 @@ call EditSimilar#CommandBuilder#SimilarFileOperations('VSplit',         join([g:
 call EditSimilar#CommandBuilder#SimilarFileOperations('SView',          join([g:EditSimilar_splitmode, 'sview']),         1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 call EditSimilar#CommandBuilder#SimilarFileOperations('DiffSplit',      join([g:EditSimilar_diffsplitmode, 'diffsplit']), 1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 call EditSimilar#CommandBuilder#SimilarFileOperations('File',           'file',                                           0, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
-call EditSimilar#CommandBuilder#SimilarFileOperations('-range=% Write', '<line1>,<line2>write<bang>',                     1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
-call EditSimilar#CommandBuilder#SimilarFileOperations('Save',           'saveas<bang>',                                   1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
+call EditSimilar#CommandBuilder#SimilarFileOperations('-range=% Write', '<line1>,<line2>WriteOverBuffer<bang>',           1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
+call EditSimilar#CommandBuilder#SimilarFileOperations('Save',           'SaveOverBufferAs<bang>',                         1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
 call EditSimilar#CommandBuilder#SimilarFileOperations('BDelete',        'bdelete<bang>',                                  1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 
 
