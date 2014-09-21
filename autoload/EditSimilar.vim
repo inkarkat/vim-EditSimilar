@@ -178,7 +178,7 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
     try
 	execute a:opencmd ingo#compat#fnameescape(l:filespec)
 	return 1
-    catch /^Vim\%((\a\+)\)\=:E37/	" E37: No write since last change (add ! to override)
+    catch /^Vim\%((\a\+)\)\=:E37:/	" E37: No write since last change (add ! to override)
 	" The "(add ! to override)" is wrong here, we use the ! for another
 	" purpose, so filter it away.
 	call ingo#err#Set(substitute(substitute(v:exception, '^\CVim\%((\a\+)\)\=:E37:\s*', '', ''), '\s*(.*)', '', 'g'))
