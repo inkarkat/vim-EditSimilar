@@ -369,7 +369,7 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES					    *EditSimilar-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.019 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.022 or
   higher.
 - Optional, recommended: cmdalias plugin (vimscript #746)
 
@@ -425,7 +425,8 @@ HISTORY							 *EditSimilar-history*
 - BUG: :{range}WritePlus 999 doesn't actually work, because it executes as
   999,999WriteOverBuffer.
 - Refactoring: Use ingo#fs#path#Exists().
-  *** You need to update to ingo-library (vimscript #4433) version 1.019! ***
+- Use ingo#compat#glob().
+  *** You need to update to ingo-library (vimscript #4433) version 1.022! ***
 
 2.40	16-Apr-2014
 - Add :BDelete... comands, which are especially useful for when "E139: File
