@@ -7,12 +7,17 @@
 "   - ingo/regexp/fromwildcard.vim autoload script
 "   - ingo/subst/pairs.vim autoload script
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2015 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.50.009	01-May-2015	Canonicalize path separators in {text} and
+"				{replacement}. This is important to match
+"				further ones, too, as the pattern is always in
+"				canonical form, so the replacement has to be,
+"				too.
 "   2.40.008	23-Mar-2014	Return success status to abort on errors.
 "   2.32.007	16-Jan-2014	Move s:Substitute() to
 "				ingo#subst#pairs#Substitute() for reuse.
@@ -31,7 +36,7 @@ function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
     let l:originalFilespec = l:originalPathspec . l:originalFilename
     try
 	" Try replacement in filename first.
-	let [l:replacementFilename, l:failedPatterns] = ingo#subst#pairs#Substitute(l:originalFilename, a:000)
+	let [l:replacementFilename, l:failedPatterns] = ingo#subst#pairs#Substitute(l:originalFilename, map(copy(a:000), 'ingo#fs#path#Normalize(v:val)'))   " Canonicalize path separators in {text} and {replacement}. This is important to match further ones, too.
 	let l:replacementFilespec = l:originalPathspec . l:replacementFilename
 	let l:replacementMsg = l:replacementFilename
 	if ! empty(l:failedPatterns)
