@@ -2,6 +2,7 @@
 "
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
+"   - ingo/collections.vim autoload script
 "   - ingo/fs/path.vim autoload script
 "   - ingo/err.vim autoload script
 "   - ingo/regexp/fromwildcard.vim autoload script
@@ -13,6 +14,10 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.50.009	01-May-2015	ENH: Also support optional {text}=?{replacement}
+"				that if done don't count yet as a successful
+"				substitution; another {text2}={replacement2}
+"				must still happen.
 "   2.40.008	23-Mar-2014	Return success status to abort on errors.
 "   2.32.007	16-Jan-2014	Move s:Substitute() to
 "				ingo#subst#pairs#Substitute() for reuse.
@@ -33,7 +38,7 @@ function! s:SplitArgumentsIntoPairs( argumentList )
 	if empty(l:match)
 	    throw 'Substitute: Not a substitution: ' . l:argument
 	endif
-	if l:match[1] ==# '?'
+	if l:match[2] ==# '?'
 	    call add(l:optionalPairs, [l:match[1], l:match[3]])
 	endif
 	call add(l:pairs, [l:match[1], l:match[3]])
@@ -62,12 +67,29 @@ function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
 		" actually spans a path separator. (To avoid that pathological
 		" replacements that should not match now suddenly match in the
 		" already done replacements.)
-		let [l:replacementFilespec, l:failedPairs] = ingo#subst#pairs#Substitute(l:replacementFilespec, filter(l:failedPairs, 'ingo#regexp#fromwildcard#IsWildcardPathPattern(v:val[0])'))
+		let [l:attemptedPathPatternPairs, l:failedPairs] = ingo#collections#Partition(l:failedPairs, 'ingo#regexp#fromwildcard#IsWildcardPathPattern(v:val[0])')
+		let [l:replacementFilespec, l:failedAttemptedPairs] = ingo#subst#pairs#Substitute(l:replacementFilespec, l:attemptedPathPatternPairs)
+		let l:failedPairs += l:failedAttemptedPairs
 	    endif
 	endif
+
+	if len(l:optionalPairs) > 0
+	    " Ensure that not only optional pairs got applied. In that case, the
+	    " substitution is deeped inapplicable; at least one non-optional
+	    " pair must have been applied.
+
+	    let l:failedNonOptionalPairNum = len(filter(l:failedPairs, 'index(l:optionalPairs, v:val) == -1'))
+	    let l:nonOptionalPairNum = len(l:pairs) - len(l:optionalPairs)
+	    if l:failedNonOptionalPairNum == l:nonOptionalPairNum
+		call ingo#err#Set('Nothing non-optional substituted')
+		return 0
+	    endif
+	endif
+
 	return EditSimilar#Open(a:opencmd, a:isCreateNew, 1, l:originalFilespec, l:replacementFilespec, l:replacementMsg)
     catch /^Substitute:/
 	call ingo#err#SetCustomException('Substitute')
+	return 0
     endtry
 endfunction
 
