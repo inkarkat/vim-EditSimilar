@@ -111,6 +111,15 @@ simpler file wildcards).
 			    /tmp/prodXXX.cfg
 <			Add [!] to create a new file when the substituted file
 			does not exist.
+			With the special {text}=?{replacement} syntax, you can
+			define optional substitutions that if done don't count
+			yet as a successful substitution; another
+			{text2}={replacement2} must still happen (to edit the
+			file / create a new file with [!]). This allows you to
+			define switch commands that only happen when the
+			crucial substitution can be done, yet still do other
+			adaptations as well.
+
 							     *:FileSubstitute*
 :FileSubstitute {text}={replacement} [{text}={replacement} [...]]
 							    *:WriteSubstitute*
@@ -369,7 +378,7 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES					    *EditSimilar-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.022 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.025 or
   higher.
 - Optional, recommended: cmdalias plugin (vimscript #746)
 
@@ -420,6 +429,12 @@ IDEAS							    *EditSimilar-ideas*
 
 ==============================================================================
 HISTORY							 *EditSimilar-history*
+
+2.50	RELEASEME
+- ENH: Also support optional {text}=?{replacement} that if done don't count
+  yet as a successful substitution; another {text2}={replacement2} must still
+  happen.
+  *** You need to update to ingo-library (vimscript #4433) version 1.025! ***
 
 2.41	20-Jun-2014
 - BUG: :{range}WritePlus 999 doesn't actually work, because it executes as
@@ -576,7 +591,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ==============================================================================
-Copyright: (C) 2009-2014 Ingo Karkat
+Copyright: (C) 2009-2015 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
