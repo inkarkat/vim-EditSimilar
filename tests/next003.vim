@@ -10,12 +10,7 @@ echomsg 'Test: EditNext'
 EditNext
 call IsNameAndFile('prod001.txt', 'EditNext')
 
-try
-    EditPrevious
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('This is the sole file in the directory', 'error')
-endtry
+call vimtap#err#Errors('This is the sole file in the directory', 'EditPrevious', 'error')
 call IsNameAndFile('prod001.txt', 'EditPrevious')
 
 call vimtest#Quit()
