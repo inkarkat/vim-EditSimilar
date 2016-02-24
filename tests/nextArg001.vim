@@ -26,6 +26,6 @@ call IsNameAndFile('foobar', 'EditPrevious foo*')
 call vimtap#err#Errors('No previous file matching foo*', 'EditPrevious foo*', 'error')
 call IsNameAndFile('foobar', 'EditPrevious foo* on first file')
 EditPrevious
-call IsNameAndFile('file[abc].txt', 'EditPrevious on first foo* file')
+call IsNameAndFile('fino[^abc].txt', 'EditPrevious on first foo* file')
 
 call vimtest#Quit()
