@@ -6,19 +6,10 @@ call vimtap#Plan(6)
 cd testdata
 
 edit newfile.txt
-try
-    EditNext
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#ThrownLike('Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt', 'error')
-endtry
+call vimtap#err#ErrorsLike('Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt', 'EditNext', 'error')
 call IsNameAndNoFile('newfile.txt', 'EditNext')
 
-try
-    EditPrevious
-catch
-    call vimtap#err#ThrownLike('Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt', 'error')
-endtry
+call vimtap#err#ErrorsLike('Cannot locate current file: .*[/\\]testdata[/\\]newfile.txt', 'EditPrevious', 'error')
 call IsNameAndNoFile('newfile.txt', 'EditPrevious')
 
 call vimtest#Quit()
