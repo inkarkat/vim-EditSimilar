@@ -1,16 +1,11 @@
 " Test check of wildcard path pattern.
 
-runtime plugin/SidTools.vim
-runtime autoload/EditSimilar/Substitute.vim
-
 call vimtest#StartTap()
 call vimtap#Plan(10)
 cd testdata
 
-let s:SID = Sid('autoload/EditSimilar/Substitute.vim')
 function! s:Is( input, expected, description )
-    let l:got = SidInvoke(s:SID, printf("IsWildcardPathPattern('%s')", a:input))
-    call vimtap#Is(l:got, a:expected, a:description)
+    call vimtap#Is(ingo#regexp#fromwildcard#IsWildcardPathPattern(a:input), a:expected, a:description)
 endfunction
 
 let s:PS = (exists('+shellslash') && ! &shellslash ? '\' : '/')
