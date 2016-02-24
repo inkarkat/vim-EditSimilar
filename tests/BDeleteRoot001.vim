@@ -14,12 +14,7 @@ call IsBuffers(['foobar.txt', 'foobar.cpp', 'file100.txt', 'lala.txt'], 'all buf
 BDeleteRoot cpp
 call IsBuffers(['foobar.txt', 'file100.txt', 'lala.txt'], 'BDeleteNext')
 
-try
-    BDeleteRoot txt
-    call vimtap#Fail('expected exception')
-catch
-    call vimtap#err#Thrown('Nothing substituted', 'error')
-endtry
+call vimtap#err#Errors('Nothing substituted', 'BDeleteRoot txt', 'error')
 call IsBuffers(['foobar.txt', 'file100.txt', 'lala.txt'], 'BDeleteNext')
 
 call vimtest#Quit()
