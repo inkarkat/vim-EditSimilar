@@ -12,6 +12,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.41.026	22-Sep-2014	Use ingo#compat#glob().
 "   2.41.025	23-May-2014	Refactoring: Use ingo#fs#path#Exists().
 "   2.40.024	23-Mar-2014	Return success status to abort on errors.
 "   2.32.023	17-Jan-2014	Add workaround for editing via :pedit, which
@@ -143,7 +144,7 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
     endif
 
     if a:isFilePattern && ! ingo#fs#path#Exists(l:filespecToOpen)
-	let l:files = split(glob(l:filespecToOpen), "\n")
+	let l:files = ingo#compat#glob(l:filespecToOpen, 0, 1)
 	if len(l:files) > 1
 	    call ingo#err#Set('Too many file names')
 	    return 0
