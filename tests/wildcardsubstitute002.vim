@@ -26,9 +26,9 @@ execute 'cd' expand('<sfile>:p:h') . '/testdata'
 
 " Tests that the [ch] wildcard is recognized in the text part.
 edit foobar.txt
-EditSubstitute [opq]o=XX [rs]=z
-call vimtap#file#IsFilename('fXXbaz.txt', 'foobar -> EditSubstitute []= -> fXXbaz')
-call vimtap#file#IsFile('foobar -> EditSubstitute []= -> fXXbaz')
+EditSubstitute [opq]o=CC [rs]=z
+call vimtap#file#IsFilename('fCCbaz.txt', 'foobar -> EditSubstitute []= -> fCCbaz')
+call vimtap#file#IsFile('foobar -> EditSubstitute []= -> fCCbaz')
 
 " Tests that the [^ch] wildcard is recognized in the text part.
 edit file011.txt
