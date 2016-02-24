@@ -21,12 +21,7 @@ FileMinus
 call vimtap#file#IsFilespec('001/dev/dev000.txt', 'FileMinus on 001')
 
 " Tests no further decrease on 0.
-try
-    FileMinus
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('Nothing substituted', 'error')
-endtry
+call vimtap#err#Errors('Nothing substituted', 'FileMinus', 'error')
 call vimtap#file#IsFilespec('001/dev/dev000.txt', 'FileMinus on 000')
 
 call vimtest#Quit()
