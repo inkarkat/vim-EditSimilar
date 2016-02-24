@@ -26,9 +26,9 @@ call IsNameAndFile('lala.txt', 'EditNext on last file')
 EditPrevious
 call IsNameAndFile('lala.install', 'EditPrevious')
 999EditPrevious
-call IsNameAndFile('fXXbaz.txt', '999EditPrevious to first file')
+call IsNameAndFile('fCCbaz.txt', '999EditPrevious to first file')
 
 call vimtap#err#Errors('No previous file', 'EditPrevious', 'error')
-call IsNameAndFile('fXXbaz.txt', 'EditPrevious on first file')
+call IsNameAndFile('fCCbaz.txt', 'EditPrevious on first file')
 
 call vimtest#Quit()
