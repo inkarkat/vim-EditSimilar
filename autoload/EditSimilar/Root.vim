@@ -4,6 +4,7 @@
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
 "   - ingo/collections.vim autoload script
+"   - ingo/compat.vim autoload script
 "   - ingo/fs/path.vim autoload script
 "   - ingo/str.vim autoload script
 "
@@ -13,6 +14,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.41.009	22-Sep-2014	Use ingo#compat#glob().
 "   2.40.008	23-Mar-2014	Return success status to abort on errors.
 "   2.32.007	23-Dec-2013	Handle dot prefixes (e.g. ".txt") in root
 "				completion.
@@ -53,10 +55,7 @@ function! s:Complete( dots, argLead, filenameGlob )
     let l:roots = ingo#collections#UniqueSorted(sort(
     \   filter(
     \       ingo#collections#Flatten1(map(
-    \           split(
-    \               glob(a:filenameGlob . '.' . a:argLead . '*'),
-    \               "\n"
-    \           ),
+    \           ingo#compat#glob(a:filenameGlob . '.' . a:argLead . '*', 0, 1),
     \           '[' .
     \               'fnamemodify(v:val, ":e"),' .
     \               'fnamemodify(v:val, ":e:e"),' .
