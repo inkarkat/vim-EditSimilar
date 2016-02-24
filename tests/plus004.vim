@@ -16,7 +16,7 @@ cd $VIM
 EditPlus
 call IsNumAndFile(7, 'EditPlus with cd $VIM')
 
-if exists('&autochdir')
+if exists('+autochdir')
     set autochdir
 endif
 EditPlus!
