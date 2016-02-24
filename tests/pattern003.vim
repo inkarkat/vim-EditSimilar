@@ -1,30 +1,15 @@
-" Test SplitPattern.
+" Test SplitPattern with optional +cmd.
+" Tests that all files are opened with the cmd applied.
 
 call vimtest#StartTap()
-call vimtap#Plan(4)
+call vimtap#Plan(2)
 cd testdata
 
+set nowrap
 edit file100.txt
 
-" Tests that a single match is opened.
-SplitPattern foobar.txt
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt']), 'SplitPattern foobar.txt ')
-
-" Tests addition of one new file to one existing.
-SplitPattern f??b??.txt
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt']), 'SplitPattern f??b??.txt ')
-
-" Tests addition of many new files to the existing.
-SplitPattern foobar*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
-
-" Test no new files.
-echomsg 'Test: no new files'
-SplitPattern foo*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
-
-" Test no matches.
-echomsg 'Test: no matches'
-SplitPattern doesn?texist.*
+SplitPattern +setl\ wrap\|echomsg\ 'open'\ expand('\%') foobar*
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
+call vimtap#Is(&l:wrap, 1, 'asdfasf')
 
 call vimtest#Quit()
