@@ -7,20 +7,10 @@ cd testdata
 
 edit 001/empty/newfile.txt
 echomsg 'Test: EditNext'
-try
-    EditNext
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('No files in this directory', 'error')
-endtry
+call vimtap#err#Errors('No files in this directory', 'EditNext', 'error')
 call IsNameAndNoFile('newfile.txt', 'EditNext')
 
-try
-    EditPrevious
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('No files in this directory', 'error')
-endtry
+call vimtap#err#Errors('No files in this directory', 'EditPrevious', 'error')
 call IsNameAndNoFile('newfile.txt', 'EditPrevious')
 
 call vimtest#Quit()
