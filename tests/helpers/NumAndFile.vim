@@ -9,6 +9,10 @@ function! IsNameAndFile( name, description )
     call IsName(a:name, a:description)
     call vimtap#file#IsFile(a:description)
 endfunction
+function! IsNameAndNoFile( name, description )
+    call IsName(a:name, a:description)
+    call vimtap#file#IsNoFile(a:description)
+endfunction
 
 function! IsNumAndFile( number, description )
     call IsNum(a:number, a:description)
