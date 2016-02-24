@@ -14,6 +14,10 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.50.010	18-May-2015	Pass new a:isCanonicalizeReplacement argument to
+"				ingo#subst#pairs#Substitute(). Doing this by
+"				default interfered with the use in
+"				PatternsOnText.
 "   2.50.009	01-May-2015	ENH: Also support optional {text}=?{replacement}
 "				that if done don't count yet as a successful
 "				substitution; another {text2}={replacement2}
@@ -53,12 +57,12 @@ function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
 	let [l:pairs, l:optionalPairs] = s:SplitArgumentsIntoPairs(a:000)
 
 	" Try replacement in filename first.
-	let [l:replacementFilename, l:failedPairs] = ingo#subst#pairs#Substitute(l:originalFilename, l:pairs)
+	let [l:replacementFilename, l:failedPairs] = ingo#subst#pairs#Substitute(l:originalFilename, l:pairs, 1)
 	let l:replacementFilespec = l:originalPathspec . l:replacementFilename
 	let l:replacementMsg = l:replacementFilename
 	if ! empty(l:failedPairs)
 	    " Then re-try all failed replacements in pathspec.
-	    let [l:replacementPathspec, l:failedPairs] = ingo#subst#pairs#Substitute(l:originalPathspec, l:failedPairs)
+	    let [l:replacementPathspec, l:failedPairs] = ingo#subst#pairs#Substitute(l:originalPathspec, l:failedPairs, 1)
 	    let l:replacementFilespec = l:replacementPathspec . l:replacementFilename
 	    let l:replacementMsg = fnamemodify(l:replacementFilespec, ':~:.')
 	    if ! empty(l:failedPairs)
@@ -68,7 +72,7 @@ function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
 		" replacements that should not match now suddenly match in the
 		" already done replacements.)
 		let [l:attemptedPathPatternPairs, l:failedPairs] = ingo#collections#Partition(l:failedPairs, 'ingo#regexp#fromwildcard#IsWildcardPathPattern(v:val[0])')
-		let [l:replacementFilespec, l:failedAttemptedPairs] = ingo#subst#pairs#Substitute(l:replacementFilespec, l:attemptedPathPatternPairs)
+		let [l:replacementFilespec, l:failedAttemptedPairs] = ingo#subst#pairs#Substitute(l:replacementFilespec, l:attemptedPathPatternPairs, 1)
 		let l:failedPairs += l:failedAttemptedPairs
 	    endif
 	endif
