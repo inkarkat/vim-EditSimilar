@@ -1,7 +1,8 @@
-" Test SplitSubstitute on entire filespec. 
+" Test SplitSubstitute on entire filespec.
 
 call vimtest#StartTap()
 call vimtap#Plan(1)
+cd testdata
 
 edit file001.txt
 SplitSubstitute file=001/dev/dev
