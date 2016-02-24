@@ -2,6 +2,7 @@
 "
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
+"   - ingo/compat.vim autoload script
 "   - ingo/fs/path.vim autoload script
 "   - ingo/err.vim autoload script
 "
@@ -11,6 +12,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.41.009	22-Sep-2014	Use ingo#compat#glob().
 "   2.40.008	23-Mar-2014	Return success status to abort on errors.
 "   2.40.007	21-Mar-2014	Escape the dirspec for wildcards.
 "   2.31.006	26-Jun-2013	Replace duplicated functions with
@@ -34,7 +36,7 @@ function! EditSimilar#Next#GetDirectoryEntries( dirSpec, fileGlobs )
 
     " Get list of files, apply 'wildignore'.
     for l:fileGlob in a:fileGlobs
-	let l:files += split(glob(ingo#fs#path#Combine(l:dirSpec, l:fileGlob)), "\n")
+	let l:files += ingo#compat#glob(ingo#fs#path#Combine(l:dirSpec, l:fileGlob), 0, 1)
 	" Note: No need to normalize here; glob() always returns results with
 	" the default path separator.
     endfor
