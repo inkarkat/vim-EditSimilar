@@ -14,12 +14,7 @@ call IsBuffers(['file004.txt', 'file005.txt', 'file100.txt', 'lala.txt'], 'all b
 BDeletePlus
 call IsBuffers(['file004.txt', 'file100.txt', 'lala.txt'], 'BDeletePlus')
 
-try
-    999BDeletePlus
-    call vimtap#Fail('expected exception')
-catch
-    call vimtap#err#ThrownLike('^E94: .* file1003.txt', 'No matching buffer')
-endtry
+call vimtap#err#ErrorsLike('^E94: .* file1003.txt', '999BDeletePlus', 'No matching buffer')
 call IsBuffers(['file004.txt', 'file100.txt', 'lala.txt'], '999BDeletePlus')
 
 96BDeletePlus
