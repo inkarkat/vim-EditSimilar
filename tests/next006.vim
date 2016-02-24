@@ -9,12 +9,7 @@ set wildignore=*.description,lala.txt
 edit lala.desc
 EditNext
 call IsNameAndFile('lala.install', 'EditNext')
-try
-    EditNext
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('No next file', 'error')
-endtry
+call vimtap#err#Errors('No next file', 'EditNext', 'error')
 call IsNameAndFile('lala.install', 'EditNext')
 
 call vimtest#Quit()
