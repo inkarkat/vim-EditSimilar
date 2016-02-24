@@ -1,4 +1,4 @@
-" Test SaveOverBuffer command.
+" Test SaveOverBufferAs command use in SavePlus.
 
 source helpers/NumAndFile.vim
 set hidden
@@ -11,14 +11,13 @@ edit file008.txt
 call IsNameAndNoFile('file008.txt', 'temp buffer does not exist on disk')
 call setline(1, 'temp insert')
 edit file007.txt
-try
-    SavePlus
-    call vimtap#Fail('expected exception')
-catch
-    call vimtap#err#ThrownLike('^E139:', 'File is loaded in another buffer')
-endtry
+call vimtap#err#ErrorsLike('^E139:', 'SavePlus', 'File is loaded in another buffer')
 
-SavePlus!
-call IsNameAndFile('file008.txt', 'SavePlus!')
+try
+    SavePlus!
+    call IsNameAndFile('file008.txt', 'SavePlus!')
+finally
+    call delete('file008.txt')
+endtry
 
 call vimtest#Quit()
