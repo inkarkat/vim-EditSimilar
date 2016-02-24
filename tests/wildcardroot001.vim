@@ -19,22 +19,12 @@ call vimtap#file#IsFile('txt -> EditRoot -> d*c')
 
 " Tests error that substituted extension does not exist.
 edit foobar.cpp
-try
-    EditRoot j*
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('Substituted file does not exist (add ! to create): foobar.j*', 'foobar.j* does not exist')
-endtry
+call vimtap#err#Errors('Substituted file does not exist (add ! to create): foobar.j*', 'EditRoot j*', 'foobar.j* does not exist')
 call vimtap#file#IsFilename('foobar.cpp', 'cpp -> EditRoot H> j*')
 
 " Tests error that substituted file is the same.
 edit foobar.txt
-try
-    EditRoot t?t
-    call vimtap#Fail('expected error')
-catch
-    call vimtap#err#Thrown('Nothing substituted', 'error')
-endtry
+call vimtap#err#Errors('Nothing substituted', 'EditRoot t?t', 'error')
 call vimtap#file#IsFilename('foobar.txt', 'txt -> EditRoot H> t?t')
 
 " Tests that bang creates file.
