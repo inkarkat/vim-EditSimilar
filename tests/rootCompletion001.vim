@@ -7,8 +7,8 @@ cd testdata
 edit foobar.txt
 call vimtap#Is(EditSimilar#Root#Complete('', '', 1), ['cpp', 'orig.txt'], 'complete from foobar.txt')
 call vimtap#Is(EditSimilar#Root#Complete('t', '', 1), [], 'complete t from foobar.txt')
-edit fXXbaz.txt
-call vimtap#Is(EditSimilar#Root#Complete('', '', 1), [], 'complete from fXXbaz.txt')
+edit fCCbaz.txt
+call vimtap#Is(EditSimilar#Root#Complete('', '', 1), [], 'complete from fCCbaz.txt')
 edit lala.txt
 call vimtap#Is(EditSimilar#Root#Complete('', '', 1), ['desc', 'description', 'install'], 'complete from lala.txt')
 call vimtap#Is(EditSimilar#Root#Complete('d', '', 1), ['desc', 'description'], 'complete d from lala.txt')
