@@ -1,0 +1,7 @@
+open foobar
+
+open foobar.cpp
+
+open foobar.orig.txt
+
+open foobar.txt
