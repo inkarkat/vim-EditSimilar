@@ -29,12 +29,7 @@ let s:positiveFilenames = [
 
 for s:filename in s:negativeFilenames
     execute 'edit' ingo#compat#fnameescape(s:filename)
-    try
-	EditPlus!
-	call vimtap#Fail('expected error')
-    catch
-	call vimtap#err#Thrown('No number in filespec', 'EditPlus on hexadecimal: ' . s:filename)
-    endtry
+    call vimtap#err#Errors('No number in filespec', 'EditPlus!', 'EditPlus on hexadecimal: ' . s:filename)
     call vimtap#file#IsFilename(s:filename, 'Filename unchanged')
 endfor
 for s:filename in s:positiveFilenames
