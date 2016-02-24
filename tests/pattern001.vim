@@ -12,16 +12,16 @@ call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt']), 'SplitPatt
 
 " Tests addition of one new file to one existing.
 SplitPattern f??b??.txt
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt']), 'SplitPattern f??b??.txt ')
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fCCbaz.txt']), 'SplitPattern f??b??.txt ')
 
 " Tests addition of many new files to the existing.
 SplitPattern foobar*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fCCbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
 
 " Test no new files.
 echomsg 'Test: no new files'
 SplitPattern foo*
-call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fXXbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
+call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'fCCbaz.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
 
 " Test no matches.
 call vimtap#err#Errors('No matches', 'SplitPattern doesn?texist.*', 'error')
