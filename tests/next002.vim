@@ -15,7 +15,7 @@ call IsNameAndFile('file006.txt', 'EditNext with cd ../..')
 999EditNext
 call IsNameAndFile('lala.txt', '999EditNext to last file with cd ../..')
 999EditPrevious
-call IsNameAndFile('fXXbaz.txt', '999EditPrevious to first file with cd ../..')
+call IsNameAndFile('fCCbaz.txt', '999EditPrevious to first file with cd ../..')
 
 
 cd $VIM
@@ -25,7 +25,7 @@ call IsNameAndFile('file006.txt', 'EditNext with cd $VIM')
 999EditNext
 call IsNameAndFile('lala.txt', '999EditNext to last file with cd $VIM')
 999EditPrevious
-call IsNameAndFile('fXXbaz.txt', '999EditPrevious to first file with cd $VIM')
+call IsNameAndFile('fCCbaz.txt', '999EditPrevious to first file with cd $VIM')
 
 
 execute 'edit' expand('<sfile>:p:h') . '/testdata/file005.txt'
@@ -37,6 +37,6 @@ call IsNameAndFile('file006.txt', 'EditNext with :set autochdir')
 999EditNext
 call IsNameAndFile('lala.txt', '999EditNext to last file with :set autochdir')
 999EditPrevious
-call IsNameAndFile('fXXbaz.txt', '999EditPrevious to first file with :set autochdir')
+call IsNameAndFile('fCCbaz.txt', '999EditPrevious to first file with :set autochdir')
 
 call vimtest#Quit()
