@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(10)
+call vimtap#Plan(12)
 cd testdata
 
 " Tests replacement with forward slashes as path separators.
@@ -19,6 +19,15 @@ if ! vimtap#Skip(2, ingo#os#IsWindows(), 'need Windows')
     EditSubstitute prod001=dev002 1\prod\=1\dev\
     call vimtap#file#IsFilespec('001/dev/dev002.txt', '001/prod/prod001 -> EditSubstitute \\= -> 001/dev/dev002')
     call vimtap#file#IsFile('001/prod/prod001 -> EditSubstitute \\= -> 001/dev/dev002')
+endif
+
+if ! vimtap#Skip(2, ingo#os#IsWindows(), 'need Windows')
+    " Tests mixed search with native path separators, replacement with forward slashes.
+    execute 'cd' expand('<sfile>:p:h') . '/testdata'
+    edit 001/prod/prod001.txt
+    EditSubstitute prod001=prod666 1\prod\=1/dev/ 001\dev\=001/production/
+    call vimtap#file#IsFilespec('001/production/prod666.txt', '001/prod/prod001 -> EditSubstitute \/= -> 001/production/prod666')
+    call vimtap#file#IsFile('001/prod/prod001 -> EditSubstitute \/= -> 001/production/prod666')
 endif
 
 " Tests text with forward slashes as path separators.
