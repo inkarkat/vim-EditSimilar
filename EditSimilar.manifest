@@ -2,6 +2,7 @@ autoload/EditSimilar.vim
 autoload/EditSimilar/CommandBuilder.vim
 autoload/EditSimilar/Next.vim
 autoload/EditSimilar/Offset.vim
+autoload/EditSimilar/OverBuffer.vim
 autoload/EditSimilar/Pattern.vim
 autoload/EditSimilar/Root.vim
 autoload/EditSimilar/Substitute.vim
