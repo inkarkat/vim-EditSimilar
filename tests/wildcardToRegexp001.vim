@@ -1,16 +1,11 @@
 " Test conversion of file wildcards to regexp.
 
-runtime plugin/SidTools.vim
-runtime autoload/EditSimilar.vim
-
 call vimtest#StartTap()
 call vimtap#Plan(21)
 cd testdata
 
-let s:SID = Sid('autoload/EditSimilar.vim')
 function! s:Is( input, expectedRegexp, description )
-    let l:gotRegexp = SidInvoke(s:SID, printf("WildcardToRegexp('%s')", a:input))
-    call vimtap#Is(l:gotRegexp, a:expectedRegexp, a:description)
+    call vimtap#Is(ingo#regexp#fromwildcard#Convert(a:input), a:expectedRegexp, a:description)
 endfunction
 
 let s:NPS = (exists('+shellslash') && ! &shellslash ? '\[^/\\]' : '\[^/]')
