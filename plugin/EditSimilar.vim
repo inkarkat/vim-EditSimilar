@@ -7,12 +7,16 @@
 "   - EditSimilar/Pattern.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2009-2014 Ingo Karkat
+" Copyright: (C) 2009-2016 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.50.020	26-Apr-2016	FIX: :SaveOverBufferAs and :WriteOverBuffer
+"				don't handle files with spaces. Need to define
+"				them with -nargs=+ to keep Vim from unescaping
+"				the filespec.
 "   2.41.019	20-Jun-2014	BUG: :{range}WritePlus 999 doesn't actually
 "				work, because it executes as
 "				999,999WriteOverBuffer.
@@ -106,8 +110,8 @@ endif
 "- commands --------------------------------------------------------------------
 
 " Supporting commands.
-command! -bar -bang          -nargs=1 -complete=file  SaveOverBufferAs if ! EditSimilar#OverBuffer#Save('saveas<bang>', <bang>0, <q-args>) | echoerr ingo#err#Get() | endif
-command! -bar -bang -range=% -nargs=1 -complete=file WriteOverBuffer   if ! EditSimilar#OverBuffer#Save('<line1>,<line2>write<bang>', <bang>0, <q-args>) | echoerr ingo#err#Get() | endif
+command! -bar -bang          -nargs=+ -complete=file  SaveOverBufferAs if ! EditSimilar#OverBuffer#Save('saveas<bang>', <bang>0, <q-args>) | echoerr ingo#err#Get() | endif
+command! -bar -bang -range=% -nargs=+ -complete=file WriteOverBuffer   if ! EditSimilar#OverBuffer#Save('<line1>,<line2>write<bang>', <bang>0, <q-args>) | echoerr ingo#err#Get() | endif
 
 
 " Substitute, Plus / Minus, and Next / Previous commands.
