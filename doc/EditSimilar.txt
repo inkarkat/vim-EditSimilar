@@ -63,13 +63,13 @@ simpler file wildcards).
 :EditSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 							     *:ViewSubstitute*
 :ViewSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
-							     *SplitSubstitute*
+							    *:SplitSubstitute*
 :SplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 							   *:VSplitSubstitute*
 :VSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
-							     *SViewSubstitute*
+							    *:SViewSubstitute*
 :SViewSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
-							 *DiffSplitSubstitute*
+							*:DiffSplitSubstitute*
 :DiffSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
 			Replaces all literal occurrences of {text} in the
 			currently edited file with {replacement}, and opens the
