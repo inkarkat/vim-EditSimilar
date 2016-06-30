@@ -434,6 +434,8 @@ HISTORY							 *EditSimilar-history*
 - ENH: Also support optional {text}=?{replacement} that if done don't count
   yet as a successful substitution; another {text2}={replacement2} must still
   happen.
+- FIX: :SaveOverBufferAs and :WriteOverBuffer don't handle files with spaces.
+  Need to define them with -nargs=+ to keep Vim from unescaping the filespec.
   *** You need to update to ingo-library (vimscript #4433) version 1.025! ***
 
 2.41	20-Jun-2014
@@ -591,7 +593,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ==============================================================================
-Copyright: (C) 2009-2015 Ingo Karkat
+Copyright: (C) 2009-2016 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
