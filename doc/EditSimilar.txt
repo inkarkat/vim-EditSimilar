@@ -228,23 +228,23 @@ edited file.
 Next / Previous: In the directory listing of the current file, go to
 succeeding / preceding file entries.
 						   *:EditNext* *:EditPrevious*
-:[N]EditNext [{filelist}]
-:[N]EditPrevious [{filelist}]
+:[N]EditNext[!] [{filelist}]
+:[N]EditPrevious[!] [{filelist}]
 						   *:ViewNext* *:ViewPrevious*
-:[N]ViewNext [{filelist}]
-:[N]ViewPrevious [{filelist}]
+:[N]ViewNext[!] [{filelist}]
+:[N]ViewPrevious[!] [{filelist}]
 						 *:SplitNext* *:SplitPrevious*
-:[N]SplitNext [{filelist}]
-:[N]SplitPrevious [{filelist}]
+:[N]SplitNext[!] [{filelist}]
+:[N]SplitPrevious[!] [{filelist}]
 					       *:VSplitNext* *:VSplitPrevious*
-:[N]VSplitNext [{filelist}]
-:[N]VSplitPrevious [{filelist}]
+:[N]VSplitNext[!] [{filelist}]
+:[N]VSplitPrevious[!] [{filelist}]
 						 *:SViewNext* *:SViewPrevious*
-:[N]SViewNext [{filelist}]
-:[N]SViewPrevious [{filelist}]
+:[N]SViewNext[!] [{filelist}]
+:[N]SViewPrevious[!] [{filelist}]
 					 *:DiffSplitNext* *:DiffSplitPrevious*
-:[N]DiffSplitNext [{filelist}]
-:[N]DiffSplitPrevious [{filelist}]
+:[N]DiffSplitNext[!] [{filelist}]
+:[N]DiffSplitPrevious[!] [{filelist}]
 			From the files in the same directory as the current
 			file, go to a succeeding / preceding one. If
 			{filelist} is specified (typically not via separate
@@ -261,8 +261,8 @@ succeeding / preceding file entries.
 			the commands to work.
 
 					     *:BDeleteNext* *:BDeletePrevious*
-:[N]BDeleteNext [{filelist}]
-:[N]BDeletePrevious [{filelist}]
+:[N]BDeleteNext[!] [{filelist}]
+:[N]BDeletePrevious[!] [{filelist}]
 			Delete a succeeding / preceding buffer.
 
 
