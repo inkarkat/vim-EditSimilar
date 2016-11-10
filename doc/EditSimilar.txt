@@ -47,6 +47,8 @@ RELATED WORKS								     *
   controllers, views, model, tests), and can edit a next file via a mapping.
 - projectile (https://github.com/tpope/vim-projectile) allows you to define
   per-project settings and navigation commands, e.g. :Eplugin and :Edoc.
+- unimpaired.vim (vimscript #1590) has (among many other, largely unrelated)
+  [f / ]f mappings that work like :EditPrevious / :EditNext.
 
 ==============================================================================
 USAGE							   *EditSimilar-usage*
