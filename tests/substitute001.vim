@@ -5,15 +5,15 @@ call vimtest#StartTap()
 call vimtap#Plan(19)
 execute 'cd' expand('<sfile>:p:h') . '/testdata'
 
-" Tests that substitution is performed multiple times (o=X).
+" Tests that substitution is performed multiple times (o=C).
 " Tests that multiple substitutions are performed.
 edit foobar.txt
-EditSubstitute o=X bar=baz
-call vimtap#file#IsFilename('fXXbaz.txt', 'foobar -> EditSubstitute -> fXXbaz')
-call vimtap#file#IsFile('foobar -> EditSubstitute -> fXXbaz')
-EditSubstitute z=r X=o
-call vimtap#file#IsFilename('foobar.txt', 'fXXbaz -> EditSubstitute -> foobar')
-call vimtap#file#IsFile('fXXbaz -> EditSubstitute -> foobar')
+EditSubstitute o=C bar=baz
+call vimtap#file#IsFilename('fCCbaz.txt', 'foobar -> EditSubstitute -> fCCbaz')
+call vimtap#file#IsFile('foobar -> EditSubstitute -> fCCbaz')
+EditSubstitute z=r C=o
+call vimtap#file#IsFilename('foobar.txt', 'fCCbaz -> EditSubstitute -> foobar')
+call vimtap#file#IsFile('fCCbaz -> EditSubstitute -> foobar')
 
 " Tests error that substituted file does not exist.
 call vimtap#err#Errors('Substituted file does not exist (add ! to create): foxbar.txt', 'EditSubstitute foo=fox', 'foxbar.txt does not exist')
@@ -32,11 +32,11 @@ call vimtap#file#IsNoFile('foobar -> EditSubstitute! -> baz')
 
 " Tests that substitutions are done sequentially from left to right.
 edit foobar.txt
-EditSubstitute! o=X X=Y Y=OO
+EditSubstitute! o=C C=Y Y=OO
 call vimtap#file#IsFilename('fOOOObar.txt', 'foobar -> EditSubstitute! -> fOOOObar')
 edit foobar.txt
-EditSubstitute! Y=OO X=Y o=X
-call vimtap#file#IsFilename('fXXbar.txt', 'foobar -> EditSubstitute! H> fXXbar')
+EditSubstitute! Y=OO C=Y o=C
+call vimtap#file#IsFilename('fCCbar.txt', 'foobar -> EditSubstitute! H> fCCbar')
 
 
 " Tests that only the filename is substituted if everything matches there.
