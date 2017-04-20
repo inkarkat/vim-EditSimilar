@@ -1,5 +1,6 @@
 " Test EditSubstitute.
 
+call vimtest#SkipAndQuitIf(! isdirectory($VIM), '$VIM (' . $VIM . ') does not exist')
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
 call vimtap#Plan(19)
