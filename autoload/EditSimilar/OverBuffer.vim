@@ -1,4 +1,4 @@
-" EditSimilar/OverBuffer.vim: summary
+" EditSimilar/OverBuffer.vim: Overwrite existing buffer.
 "
 " DEPENDENCIES:
 "   - ingo/err.vim autoload script
