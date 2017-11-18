@@ -15,7 +15,7 @@ function! EditSimilar#OverBuffer#Save( command, isBang, arguments )
     try
 	execute a:command a:arguments
 	return 1
-    catch /^Vim\%((\a\+)\)\=:E139/ " E139: File is loaded in another buffer
+    catch /^Vim\%((\a\+)\)\=:E139:/ " E139: File is loaded in another buffer
 	if a:isBang
 	    try
 		execute 'bdelete!' a:arguments
