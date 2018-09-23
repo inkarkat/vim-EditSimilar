@@ -1,5 +1,4 @@
-" EditSimilar/Root.vim: Custom completion for EditSimilar root (file extension)
-" commands.
+" EditSimilar/Root.vim: Custom completion for EditSimilar root (file extension) commands.
 "
 " DEPENDENCIES:
 "   - EditSimilar.vim autoload script
@@ -8,34 +7,10 @@
 "   - ingo/fs/path.vim autoload script
 "   - ingo/str.vim autoload script
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.41.009	22-Sep-2014	Use ingo#compat#glob().
-"   2.40.008	23-Mar-2014	Return success status to abort on errors.
-"   2.32.007	23-Dec-2013	Handle dot prefixes (e.g. ".txt") in root
-"				completion.
-"				Also offer multi-extension roots (e.g.
-"				".orig.txt") in root completion, and correctly
-"				handle existing roots (e.g. ".orig.t").
-"   2.31.006	13-Jul-2013	FIX: Non-any completion can yield duplicate
-"				roots, too (e.g. foobar.orig.txt + foobar.txt).
-"				Use (sorted) unique function already in
-"				s:Complete().
-"   2.31.005	01-Jun-2013	Move ingofile.vim into ingo-library.
-"   2.31.004	21-Feb-2013	Move ingocollections.vim to ingo-library.
-"   2.10.003	26-Jul-2012	ENH: Complete file extensions for any files
-"				found in the file's directory for those commands
-"				that most of the time are used to create new
-"				files; the default search for the current
-"				filename's extensions won't yield anything
-"				there. Add EditSimilar#Root#CompleteAny() for
-"				that.
-"   2.00.002	09-Jun-2012	Move EditSimilar#OpenRoot() here.
-"	001	19-Jan-2012	file creation from plugin/EditSimilar.vim.
 let s:save_cpo = &cpo
 set cpo&vim
 

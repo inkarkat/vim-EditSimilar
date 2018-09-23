@@ -6,26 +6,10 @@
 "   - ingo/fs/path.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.41.009	22-Sep-2014	Use ingo#compat#glob().
-"   2.40.008	23-Mar-2014	Return success status to abort on errors.
-"   2.40.007	21-Mar-2014	Escape the dirspec for wildcards.
-"   2.31.006	26-Jun-2013	Replace duplicated functions with
-"				ingo/fs/path.vim.
-"   2.31.005	14-Jun-2013	Replace EditSimilar#ErrorMsg() with
-"				ingo#msg#ErrorMsg().
-"   2.01.003	12-Jun-2012	FIX: To avoid issues with differing forward
-"				slash / backslash path separator components,
-"				canonicalize the glob pattern and filespec. This
-"				avoids a "Cannot locate current file" error when
-"				there is a mismatch.
-"   2.00.002	11-Jun-2012	ENH: Allow passing custom fileargs / globs.
-"   2.00.001	09-Jun-2012	file creation
 let s:save_cpo = &cpo
 set cpo&vim
 

@@ -4,24 +4,10 @@
 "   - EditSimilar.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.41.006	23-May-2014	Use ingo#fs#path#Exists() instead of
-"				filereadable().
-"   2.40.005	23-Mar-2014	Return success status to abort on errors.
-"   2.31.004			Replace EditSimilar#ErrorMsg() with
-"				ingo#msg#ErrorMsg().
-"   2.30.002	08-Dec-2012	CHG: For a:isCreateNew when a [count] but no [!]
-"				is given, try to create an offset one more than
-"				an existing file between the current and the
-"				passed offset. This lets you use a large [N] to
-"				write the file with the next number within [N]
-"				for which no file exists yet.
-"   2.00.001	09-Jun-2012	file creation from autoload/EditSimilar.vim.
 
 " Plus / Minus commands.
 function! s:NumberString( number, digitNum )

@@ -3,13 +3,10 @@
 " DEPENDENCIES:
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2014 Ingo Karkat
+" Copyright: (C) 2014-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.40.001	24-Mar-2014	file creation
 
 function! EditSimilar#OverBuffer#Save( command, isBang, arguments )
     try

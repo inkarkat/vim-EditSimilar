@@ -416,7 +416,7 @@ https://github.com/inkarkat/vim-EditSimilar/issues or email (address below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 2.50    RELEASEME
+##### 2.50    23-Sep-2018
 - ENH: Also support optional {text}=?{replacement} that if done don't count
   yet as a successful substitution; another {text2}={replacement2} must still
   happen.
