@@ -8,30 +8,10 @@
 "   - ingo/regexp/fromwildcard.vim autoload script
 "   - ingo/subst/pairs.vim autoload script
 "
-" Copyright: (C) 2012-2015 Ingo Karkat
+" Copyright: (C) 2012-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.50.010	18-May-2015	Pass new a:isCanonicalizeReplacement argument to
-"				ingo#subst#pairs#Substitute(). Doing this by
-"				default interfered with the use in
-"				PatternsOnText.
-"   2.50.009	01-May-2015	ENH: Also support optional {text}=?{replacement}
-"				that if done don't count yet as a successful
-"				substitution; another {text2}={replacement2}
-"				must still happen.
-"   2.40.008	23-Mar-2014	Return success status to abort on errors.
-"   2.32.007	16-Jan-2014	Move s:Substitute() to
-"				ingo#subst#pairs#Substitute() for reuse.
-"   2.31.006	26-Oct-2013	Factor out
-"				ingo#regexp#fromwildcard#Convert() and
-"				ingo#regexp#fromwildcard#IsWildcardPathPattern()
-"				into ingo-library.
-"   2.31.005	14-Jun-2013	Replace EditSimilar#ErrorMsg() with
-"				ingo#msg#ErrorMsg().
-"   2.00.001	09-Jun-2012	file creation from autoload/EditSimilar.vim.
 
 " Substitute commands.
 function! s:SplitArgumentsIntoPairs( argumentList )

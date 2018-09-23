@@ -7,37 +7,11 @@
 "   - ingo/err.vim autoload script
 "   - ingo/escape/file.vim autoload script
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.40.009	23-Mar-2014	Return success status to abort on errors.
-"   2.33.008	18-Mar-2014	Add a:isSkipVisible flag to
-"				EditSimilar#Pattern#Split() to support the
-"				:BDeletePattern command, which isn't concerned
-"				with _opening_ files, so the check for already
-"				visible buffers shouldn't apply to it.
-"   2.32.007	11-Feb-2014	New
-"				ingo#cmdargs#file#FilterFileOptionsAndCommands()
-"				API returns fileOptionsAndCommands as a List to
-"				handle multiple ones.
-"   2.31.006	08-Aug-2013	Move escapings.vim into ingo-library.
-"   2.31.005	14-Jun-2013	Replace EditSimilar#ErrorMsg() with
-"				ingo#msg#ErrorMsg().
-"   2.31.004	01-Jun-2013	Move ingofileargs.vim into ingo-library.
-"   2.20.003	27-Aug-2012	Do not use <f-args> because of its unescaping
-"				behavior.
-"				Handle optional ++opt +cmd file options and
-"				commands.
-"   2.20.002	26-Aug-2012	Allow passing of multiple file (pattern).
-"				Correctly handle passed file globs (incl.
-"				special cases) though
-"				ingofileargs#ExpandGlobs().
-"   2.00.001	09-Jun-2012	file creation from autoload/EditSimilar.vim.
 
-" Pattern commands.
 function! EditSimilar#Pattern#Split( splitcmd, filePatternsString, isSkipVisible )
     let l:filePatterns = ingo#cmdargs#file#SplitAndUnescape(a:filePatternsString)
 
