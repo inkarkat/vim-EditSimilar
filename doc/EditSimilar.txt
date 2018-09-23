@@ -52,10 +52,11 @@ RELATED WORKS								     *
 
 ==============================================================================
 USAGE							   *EditSimilar-usage*
-						   *EditSimilar-substitutions*
-Substitutions: Change all occurrences via {text}={replacement} in the
-currently edited file (modeled after the Korn shell's "cd {old} {new}"
-command). This can also be achieved with the built-in |filename-modifiers|: >
+
+SUBSTITUTE					   *EditSimilar-substitutions*
+Change all occurrences via {text}={replacement} in the currently edited file
+(modeled after the Korn shell's "cd {old} {new}" command). This can also be
+achieved with the built-in |filename-modifiers|: >
     :edit %:gs?pattern?replacement?
 but the syntax is difficult to memorize (it's subtly different from |:s|) and
 harder to type (because one has to use regular expressions instead of the
@@ -140,10 +141,8 @@ simpler file wildcards).
 			The [!] is needed to delete a changed buffer.
 
 
-------------------------------------------------------------------------------
-							  *EditSimilar-offset*
-Plus / Minus: Add an offset to the last (decimal) number in the currently
-edited file.
+PLUS MINUS						  *EditSimilar-offset*
+Add an offset to the last (decimal) number in the currently edited file.
 						      *:EditPlus* *:EditMinus*
 :[N]EditPlus[!] [N]
 :[N]EditMinus[!] [N]
@@ -225,10 +224,9 @@ edited file.
 			[N] and deletes that buffer.
 
 
-------------------------------------------------------------------------------
-							    *EditSimilar-next*
-Next / Previous: In the directory listing of the current file, go to
-succeeding / preceding file entries.
+NEXT PREVIOUS						    *EditSimilar-next*
+In the directory listing of the current file, go to succeeding / preceding
+file entries.
 						   *:EditNext* *:EditPrevious*
 :[N]EditNext[!] [{filelist}]
 :[N]EditPrevious[!] [{filelist}]
@@ -268,10 +266,9 @@ succeeding / preceding file entries.
 			Delete a succeeding / preceding buffer.
 
 
-------------------------------------------------------------------------------
-							    *EditSimilar-root*
-Root: Change the file extension in the currently edited file.
-This is an enhanced version of the built-in: >
+ROOT							    *EditSimilar-root*
+Change the file extension in the currently edited file. This is an enhanced
+version of the built-in: >
     :edit %:r.{extension}
 <								   *:EditRoot*
 :EditRoot[!] {extension}
@@ -322,10 +319,9 @@ This is an enhanced version of the built-in: >
 			Deletes a buffer with a different file extension.
 
 
-------------------------------------------------------------------------------
-							 *EditSimilar-pattern*
-Pattern: Open all files matching the |file-pattern| (actually a file glob) in
-split windows, similar to how |:argadd|{name} adds all matching files to the
+PATTERN							 *EditSimilar-pattern*
+Open all files matching the |file-pattern| (actually a file glob) in split
+windows, similar to how |:argadd|{name} adds all matching files to the
 argument list.
 
 							       *:SplitPattern*
@@ -347,8 +343,7 @@ argument list.
 :BDeletePattern {file-pattern} [{file-pattern} ...]
 			Delete all buffers matching {file-pattern}.
 
-------------------------------------------------------------------------------
-					     *EditSimilar-supporting-commands*
+SUPPORTING COMMANDS			     *EditSimilar-supporting-commands*
 							   *:SaveOverBufferAs*
 :SaveOverBufferAs[!] [++opt] {file}
 			Like |:saveas|, but with [!] also suppresses the
@@ -369,10 +364,16 @@ argument list.
 ==============================================================================
 INSTALLATION					    *EditSimilar-installation*
 
-This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
-the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
-vimball or via the |:UseVimball| command. >
+The code is hosted in a Git repo at
+    https://github.com/inkarkat/vim-EditSimilar
+You can use your favorite plugin manager, or "git clone" into a directory used
+for Vim |packages|. Releases are on the "stable" branch, the latest unstable
+development snapshot on "master".
+
+This script is also packaged as a |vimball|. If you have the "gunzip"
+decompressor in your PATH, simply edit the *.vmb.gz package in Vim; otherwise,
+decompress the archive first, e.g. using WinZip. Inside Vim, install by
+sourcing the vimball or via the |:UseVimball| command. >
     vim EditSimilar*.vmb.gz
     :so %
 To uninstall, use the |:RmVimball| command.
@@ -429,10 +430,15 @@ IDEAS							    *EditSimilar-ideas*
 - Add :EditRecursiveNext / :EditRecursivePrevious to recurse into and out of
   subdirectories.
 
+CONTRIBUTING			*EditSimilar-contribute*
+
+Report any bugs, send patches, or suggest features via the issue tracker at
+https://github.com/inkarkat/vim-EditSimilar/issues or email (address below).
+
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-2.50	RELEASEME
+2.50	23-Sep-2018
 - ENH: Also support optional {text}=?{replacement} that if done don't count
   yet as a successful substitution; another {text2}={replacement2} must still
   happen.
@@ -595,7 +601,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ==============================================================================
-Copyright: (C) 2009-2016 Ingo Karkat
+Copyright: (C) 2009-2018 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>

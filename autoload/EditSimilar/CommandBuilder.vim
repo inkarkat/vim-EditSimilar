@@ -7,55 +7,10 @@
 "   - EditSimilar/Substitute.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2011-2014 Ingo Karkat
+" Copyright: (C) 2011-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.41.011	20-Jun-2014	BUG: :{range}WritePlus 999 doesn't actually
-"				work, because it executes as
-"				999,999WriteOverBuffer.
-"				Add a:options.isSupportRange and then pass
-"				-range=% -nargs=? instead of -count=0, so that
-"				the <line1>,<line2> are actually filled with the
-"				passed range and not with <count>,<count>.
-"   2.40.010	24-Mar-2014	Drop -count and -count command options passed in
-"				a:commandPrefix for the *Plus, *Minus, *Next,
-"				*Previous commands that use a <count>
-"				themselves. This allows to define the other
-"				commands (e.g. *Substitute) in a way that allows
-"				a range, e.g. for :write.
-"   2.40.009	23-Mar-2014	Abort on errors.
-"   2.30.008	09-Dec-2012	Do not require a:hasBang; instead pass the -bang
-"				only for the *Plus and *Minus commands.
-"   2.30.007	08-Dec-2012	CHG: For *Plus and *Minus commands with
-"				a:options.omitOperationsWorkingOnlyOnExistingFiles,
-"				define a -bang argument and pass
-"				isFindNextNonExisting flag.
-"   2.10.006	26-Jul-2012	Change
-"				a:omitOperationsWorkingOnlyOnExistingFiles
-"				argument to optional a:options for
-"				extensibility.
-"   			    	ENH: Complete file extensions for any files
-"				found in the file's directory for those commands
-"				that most of the time are used to create new
-"				files; the default search for the current
-"				filename's extensions won't yield anything
-"				there. Add a:options.completeAnyRoot for that.
-"   2.00.005	11-Jun-2012	ENH: Allow passing custom fileargs / globs to
-"				*Next / *Previous commands.
-"   2.00.004	09-Jun-2012	Rename the *Next / *Previous commands to *Plus /
-"				*Minus and redefine them to operate on directory
-"				contents instead of numerical offsets.
-"   			    	Move all similarity implementations to separate
-"				modules.
-"				Add argument
-"				a:omitOperationsWorkingOnlyOnExistingFiles.
-"   1.21.003	19-Jan-2012	Create the root commands also in the command
-"				builder.
-"   1.20.002	08-Nov-2011	Add documentation.
-"	001	05-Nov-2011	file creation
 let s:save_cpo = &cpo
 set cpo&vim
 

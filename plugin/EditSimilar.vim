@@ -7,85 +7,10 @@
 "   - EditSimilar/Pattern.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2009-2016 Ingo Karkat
+" Copyright: (C) 2009-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.50.020	26-Apr-2016	FIX: :SaveOverBufferAs and :WriteOverBuffer
-"				don't handle files with spaces. Need to define
-"				them with -nargs=+ to keep Vim from unescaping
-"				the filespec.
-"   2.41.019	20-Jun-2014	BUG: :{range}WritePlus 999 doesn't actually
-"				work, because it executes as
-"				999,999WriteOverBuffer.
-"				Move the -range=% definition for the :Write*
-"				commands from the command prefix to a new
-"				isSupportRange option.
-"   2.40.018	24-Mar-2014	Allow to :write partial buffer contents by
-"				defining -range=% on :Write... commands that do
-"				not yet use the count.
-"				Add :SaveOverBufferAs and :WriteOverBuffer
-"				commands (that with [!] also :bdelete an
-"				existing buffer with the same name) and use
-"				those in the :Save... and :Write... commands.
-"   2.40.017	23-Mar-2014	Abort on errors.
-"   2.33.016	18-Mar-2014	Add :BDelete... commands.
-"				Add :DiffSplit... commands.
-"   2.20.015	27-Aug-2012	Do not use <f-args> because of its unescaping
-"				behavior.
-"   2.20.014	26-Aug-2012	Enable file (pattern) completion for :*Pattern
-"				commands via -nargs=+ workaround and passing of
-"				multiple file (pattern).
-"   2.10.013	26-Jul-2012	Adapt to changed EditSimilar interface.
-"				Now :File*, :Write*, and :Save* complete any
-"				file extensions.
-"   2.00.012	09-Jun-2012	Move all similarity implementations to separate
-"				modules.
-"   1.22.011	10-Feb-2012	ENH: Allow [v]split mode different than
-"				determined by 'splitbelow' / 'splitright' via
-"				configuration.
-"   1.21.010	19-Jan-2012	Move file extension completion to
-"				EditSimilar#Root#Complete() and create the root
-"				commands also in the command builder.
-"   1.20.009	05-Nov-2011	ENH: Omit current buffer's file extension from
-"				the completion for EditSimilar-root commands.
-"				Use
-"				EditSimilar#CommandBuilder#SimilarFileOperations()
-"				to create the :*Substitute, :*Next and
-"				:*Previous commands.
-"				Obsolete the short command forms :Esubst,
-"				:Enext, :Eprev; the starting uppercase letter
-"				makes them still awkward to type, there's more
-"				likely a conflict with other custom commands
-"				(e.g. :En -> :Encode, :Enext), and I now believe
-"				aliasing via cmdalias.vim is the better way to
-"				provide personal shortcuts, instead of polluting
-"				the command namespace with all these duplicates.
-"   1.18.008	22-Jun-2011	ENH: Implement completion of file extensions for
-"				EditSimilar-root commands like :EditRoot.
-"   1.13.007	26-Jun-2009	:EditNext / :EditPrevious without the optional
-"				[count] now skip over gaps in numbering. Changed
-"				the default [count] to 0 to be able to detect a
-"				given count.
-"   1.11.006	11-May-2009	Added commands to open similar files in
-"				read-only mode, a la :ViewSubstitute,
-"				:SViewSubstitute.
-"   1.00.005	18-Feb-2009	Reviewed for publication.
-"	004	04-Feb-2009	Full path '%:p' not needed for root commands.
-"	003	02-Feb-2009	Moved functions from plugin to separate autoload
-"				script.
-"				Moved documentation to separate help file.
-"	002	31-Jan-2009	Moved :Sproot and :Sppattern commands from
-"				ingocommands.vim.
-"				ENH: :Sppattern now notifies when no new windows
-"				have been opened.
-"				Added overloads for :file, :write and :saveas.
-"				For the :edit, :split and :vsplit overloads,
-"				there are now a long (:EditPrevious) and a short
-"				(:Eprev) version.
-"	001	29-Jan-2009	file creation
 
 " Avoid installing twice or when in unsupported Vim version.
 if exists('g:loaded_EditSimilar') || (v:version < 700)
