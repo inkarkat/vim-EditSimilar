@@ -44,15 +44,15 @@ command! -bar -bang -range=% -nargs=+ -complete=file WriteOverBuffer   if ! Edit
 
 " Substitute, Plus / Minus, and Next / Previous commands.
 " Root (i.e. file extension) commands.
-call EditSimilar#CommandBuilder#SimilarFileOperations('Edit',           'edit',                                           1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
-call EditSimilar#CommandBuilder#SimilarFileOperations('View',           'view',                                           1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
-call EditSimilar#CommandBuilder#SimilarFileOperations('Split',          join([g:EditSimilar_splitmode, 'split']),         1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
-call EditSimilar#CommandBuilder#SimilarFileOperations('VSplit',         join([g:EditSimilar_vsplitmode, 'vsplit']),       1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
-call EditSimilar#CommandBuilder#SimilarFileOperations('SView',          join([g:EditSimilar_splitmode, 'sview']),         1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
+call EditSimilar#CommandBuilder#SimilarFileOperations('Edit',           'edit',                                           1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0, 'OptionParser': function('EditSimilar#FileOptionsAndCommandsParser')})
+call EditSimilar#CommandBuilder#SimilarFileOperations('View',           'view',                                           1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0, 'OptionParser': function('EditSimilar#FileOptionsAndCommandsParser')})
+call EditSimilar#CommandBuilder#SimilarFileOperations('Split',          join([g:EditSimilar_splitmode, 'split']),         1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0, 'OptionParser': function('EditSimilar#FileOptionsAndCommandsParser')})
+call EditSimilar#CommandBuilder#SimilarFileOperations('VSplit',         join([g:EditSimilar_vsplitmode, 'vsplit']),       1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0, 'OptionParser': function('EditSimilar#FileOptionsAndCommandsParser')})
+call EditSimilar#CommandBuilder#SimilarFileOperations('SView',          join([g:EditSimilar_splitmode, 'sview']),         1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0, 'OptionParser': function('EditSimilar#FileOptionsAndCommandsParser')})
 call EditSimilar#CommandBuilder#SimilarFileOperations('DiffSplit',      join([g:EditSimilar_diffsplitmode, 'diffsplit']), 1, '<bang>0', {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 call EditSimilar#CommandBuilder#SimilarFileOperations('File',           'file',                                           0, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
-call EditSimilar#CommandBuilder#SimilarFileOperations('Write',          '<line1>,<line2>WriteOverBuffer<bang>',           1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1, 'isSupportRange': 1})
-call EditSimilar#CommandBuilder#SimilarFileOperations('Save',           'SaveOverBufferAs<bang>',                         1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1})
+call EditSimilar#CommandBuilder#SimilarFileOperations('Write',          '<line1>,<line2>WriteOverBuffer<bang>',           1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1, 'OptionParser': function('EditSimilar#OptionParser'), 'isSupportRange': 1})
+call EditSimilar#CommandBuilder#SimilarFileOperations('Save',           'SaveOverBufferAs<bang>',                         1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 1, 'completeAnyRoot': 1, 'OptionParser': function('EditSimilar#OptionParser')})
 call EditSimilar#CommandBuilder#SimilarFileOperations('BDelete',        'bdelete<bang>',                                  1, 1,         {'omitOperationsWorkingOnlyOnExistingFiles': 0, 'completeAnyRoot': 0})
 
 
