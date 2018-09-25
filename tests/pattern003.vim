@@ -10,6 +10,6 @@ edit file100.txt
 
 SplitPattern +setl\ wrap\|echomsg\ 'open'\ expand('\%') foobar*
 call vimtap#window#IsWindows( reverse(['file100.txt', 'foobar.txt', 'foobar.orig.txt', 'foobar.cpp', 'foobar']), 'SplitPattern foobar*')
-call vimtap#Is(&l:wrap, 1, 'asdfasf')
+call vimtap#Is(&l:wrap, 1, 'wrap enabled')
 
 call vimtest#Quit()
