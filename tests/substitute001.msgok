@@ -1,9 +1,0 @@
-Test: foxbar.txt does not exist
-Substituted file does not exist (add ! to create): foxbar.txt
-
-Test: foo123 does not exist
-Substituted file does not exist (add ! to create): foo123.txt
-
-Test: new/fox456 does not exist
-+Substituted file does not exist (add ! to create): .*[/\\]testdata[/\\]001[/\\]new[/\\]fox456.txt+
-+Substituted file does not exist (add ! to create): 001[/\\]new[/\\]fox456.txt+

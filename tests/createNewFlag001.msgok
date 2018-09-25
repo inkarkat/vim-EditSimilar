@@ -1,8 +1,0 @@
-Test: no create new
-Substituted file does not exist (add ! to create)
-
-Test: no create new with message
-Substituted file does not exist (add ! to create): message
-
-Test: no create new without isFilePattern
-Substituted file does not exist (add ! to create)
