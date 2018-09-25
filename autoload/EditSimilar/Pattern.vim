@@ -12,19 +12,19 @@
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 
-function! EditSimilar#Pattern#Split( splitcmd, filePatternsString, isSkipVisible )
+function! EditSimilar#Pattern#Split( splitcmd, OptionParser, filePatternsString, isSkipVisible )
     let l:filePatterns = ingo#cmdargs#file#SplitAndUnescape(a:filePatternsString)
 
     let l:openCnt = 0
-
-    " Strip off the optional ++opt +cmd file options and commands.
-    let [l:filePatterns, l:fileOptionsAndCommands] = ingo#cmdargs#file#FilterFileOptionsAndCommands(l:filePatterns)
+    let l:options = ''
+    if ! empty(a:OptionParser)
+	let [l:filePatterns, l:options] = call(a:OptionParser, [l:filePatterns])
+    endif
     let l:filespecs = ingo#cmdargs#glob#Expand(l:filePatterns)
 
     " Expand all files to their absolute path, because the CWD may change when a
     " file is opened (e.g. due to autocmds or :set autochdir).
     let l:filespecs = map(ingo#cmdargs#glob#Expand(l:filePatterns), "fnamemodify(v:val, ':p')")
-    let l:exFileOptionsAndCommands = join(map(l:fileOptionsAndCommands, "escape(v:val, '\\ ')"))
 
     for l:filespec in map(l:filespecs, 'fnamemodify(v:val, ":p")')
 	if ! a:isSkipVisible || bufwinnr(ingo#escape#file#bufnameescape(l:filespec)) == -1
@@ -36,7 +36,7 @@ function! EditSimilar#Pattern#Split( splitcmd, filePatternsString, isSkipVisible
 	    let l:splitWhere = (l:openCnt == 0 ? '' : 'belowright')
 
 	    try
-		execute l:splitWhere a:splitcmd l:exFileOptionsAndCommands ingo#compat#fnameescape(fnamemodify(l:filespec, ':~:.'))
+		execute l:splitWhere a:splitcmd l:options ingo#compat#fnameescape(fnamemodify(l:filespec, ':~:.'))
 	    catch /^Vim\%((\a\+)\)\=:/
 		call ingo#err#SetVimException()
 		return 0

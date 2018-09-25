@@ -91,4 +91,11 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
     endtry
 endfunction
 
+function! EditSimilar#FileOptionsAndCommandsParser( filePatterns )
+    let [l:filePatterns, l:fileOptionsAndCommands] = ingo#cmdargs#file#FilterFileOptionsAndCommands(a:filePatterns)
+    let l:exFileOptionsAndCommands = join(map(l:fileOptionsAndCommands, "escape(v:val, '\\ ')"))
+
+    return [l:filePatterns, l:exFileOptionsAndCommands]
+endfunction
+
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

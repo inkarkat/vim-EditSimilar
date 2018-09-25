@@ -18,6 +18,9 @@ if exists('g:loaded_EditSimilar') || (v:version < 700)
 endif
 let g:loaded_EditSimilar = 1
 
+if v:version < 702 | runtime autoload/EditSimilar.vim | endif  " The Funcref doesn't trigger the autoload in older Vim versions.
+
+
 "- configuration ---------------------------------------------------------------
 
 if ! exists('g:EditSimilar_splitmode')
@@ -56,10 +59,10 @@ call EditSimilar#CommandBuilder#SimilarFileOperations('BDelete',        'bdelete
 " Pattern commands.
 " Note: Must use + instead of 1; otherwise (due to -complete=file), Vim
 " complains about globs with "E77: Too many file names".
-command! -bar -nargs=+ -complete=file SplitPattern      if ! EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'split']),         <q-args>, 1) | echoerr ingo#err#Get() | endif
-command! -bar -nargs=+ -complete=file VSplitPattern     if ! EditSimilar#Pattern#Split(join([g:EditSimilar_vsplitmode, 'vsplit']),       <q-args>, 1) | echoerr ingo#err#Get() | endif
-command! -bar -nargs=+ -complete=file SViewPattern      if ! EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'sview']),         <q-args>, 1) | echoerr ingo#err#Get() | endif
-command! -bar -nargs=+ -complete=file DiffSplitPattern  if ! EditSimilar#Pattern#Split(join([g:EditSimilar_diffsplitmode, 'diffsplit']), <q-args>, 1) | echoerr ingo#err#Get() | endif
-command! -bar -bang -nargs=+ -complete=file BDeletePattern if ! EditSimilar#Pattern#Split('silent! bdelete<bang>', <q-args>, 0) | echoerr ingo#err#Get() | endif
+command! -bar -nargs=+ -complete=file SplitPattern      if ! EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'split']), function('EditSimilar#FileOptionsAndCommandsParser'),        <q-args>, 1) | echoerr ingo#err#Get() | endif
+command! -bar -nargs=+ -complete=file VSplitPattern     if ! EditSimilar#Pattern#Split(join([g:EditSimilar_vsplitmode, 'vsplit']), function('EditSimilar#FileOptionsAndCommandsParser'),      <q-args>, 1) | echoerr ingo#err#Get() | endif
+command! -bar -nargs=+ -complete=file SViewPattern      if ! EditSimilar#Pattern#Split(join([g:EditSimilar_splitmode, 'sview']), function('EditSimilar#FileOptionsAndCommandsParser'),        <q-args>, 1) | echoerr ingo#err#Get() | endif
+command! -bar -nargs=+ -complete=file DiffSplitPattern  if ! EditSimilar#Pattern#Split(join([g:EditSimilar_diffsplitmode, 'diffsplit']), '',                                                  <q-args>, 1) | echoerr ingo#err#Get() | endif
+command! -bar -bang -nargs=+ -complete=file BDeletePattern if ! EditSimilar#Pattern#Split('silent! bdelete<bang>', '', <q-args>, 0) | echoerr ingo#err#Get() | endif
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
