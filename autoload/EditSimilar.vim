@@ -91,14 +91,4 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
     endtry
 endfunction
 
-function! EditSimilar#OptionParser( filePatterns )
-    let [l:filePatterns, l:fileOptions] = ingo#cmdargs#file#FilterFileOptions(a:filePatterns)
-    return [l:filePatterns, ingo#cmdargs#file#FileOptionsToEscapedExCommandLine(l:fileOptions)]
-endfunction
-
-function! EditSimilar#FileOptionsAndCommandsParser( filePatterns )
-    let [l:filePatterns, l:fileOptionsAndCommands] = ingo#cmdargs#file#FilterFileOptionsAndCommands(a:filePatterns)
-    return [l:filePatterns, ingo#cmdargs#file#FileOptionsAndCommandsToEscapedExCommandLine(l:fileOptionsAndCommands)]
-endfunction
-
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
