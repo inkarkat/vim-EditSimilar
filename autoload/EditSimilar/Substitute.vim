@@ -70,7 +70,7 @@ function! EditSimilar#Substitute#Open( opencmd, OptionParser, isCreateNew, files
 	    endif
 	endif
 
-	return EditSimilar#Open(a:opencmd, a:isCreateNew, 1, l:originalFilespec, l:replacementFilespec, l:replacementMsg)
+	return EditSimilar#Open(a:opencmd, '', a:isCreateNew, 1, l:originalFilespec, l:replacementFilespec, l:replacementMsg)
     catch /^Substitute:/
 	call ingo#err#SetCustomException('Substitute')
 	return 0

@@ -150,7 +150,7 @@ function! EditSimilar#Offset#Open( opencmd, OptionParser, isCreateNew, isFindNex
 	endif
     endif
 
-    return EditSimilar#Open(a:opencmd, a:isCreateNew, 0, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumberString . ')')
+    return EditSimilar#Open(a:opencmd, '', a:isCreateNew, 0, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumberString . ')')
 endfunction
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

@@ -23,7 +23,7 @@ function! EditSimilar#Root#Open( opencmd, OptionParser, isCreateNew, filespec, n
     let l:rootRemovalNum = (strlen(l:dots) > 1 ? strlen(l:dots) : 1)
 
     let l:newFilespec = fnamemodify(a:filespec, repeat(':r', l:rootRemovalNum)) . (! empty(l:newExtension) ? '.' . l:newExtension : '')
-    return EditSimilar#Open( a:opencmd, a:isCreateNew, 1, a:filespec, l:newFilespec, fnamemodify(l:newFilespec, ':t'))
+    return EditSimilar#Open(a:opencmd, '', a:isCreateNew, 1, a:filespec, l:newFilespec, fnamemodify(l:newFilespec, ':t'))
 endfunction
 
 function! s:Complete( dots, argLead, filenameGlob )

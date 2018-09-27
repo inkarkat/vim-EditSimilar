@@ -11,7 +11,7 @@
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 
-function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespec, replacementFilespec, createNewNotAllowedMsg )
+function! EditSimilar#Open( opencmd, cmdOptions, isCreateNew, isFilePattern, originalFilespec, replacementFilespec, createNewNotAllowedMsg )
 "*******************************************************************************
 "* PURPOSE:
 "   Open a substituted filespec via the a:opencmd Ex command.
@@ -21,6 +21,8 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
 "   None.
 "* INPUTS:
 "   a:opencmd	Ex command to open the file (e.g. 'edit', 'split', etc.)
+"   a:cmdOptions    String containing all optional file options and commands;
+"                   can be empty.
 "   a:isCreateNew   Flag whether a non-existing filespec will be opened, thereby
 "		    creating a new file.
 "   a:isFilePattern Flag whether file wildcards will be resolved (if the
@@ -78,7 +80,7 @@ function! EditSimilar#Open( opencmd, isCreateNew, isFilePattern, originalFilespe
 	let l:filespec = fnamemodify(l:filespecToOpen, ':~:.')
     endif
     try
-	execute a:opencmd ingo#compat#fnameescape(l:filespec)
+	execute a:opencmd a:cmdOptions ingo#compat#fnameescape(l:filespec)
 	return 1
     catch /^Vim\%((\a\+)\)\=:E37:/	" E37: No write since last change (add ! to override)
 	" The "(add ! to override)" is wrong here, we use the ! for another
