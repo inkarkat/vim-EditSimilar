@@ -13,12 +13,10 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 
 function! EditSimilar#Pattern#Split( splitcmd, OptionParser, filePatternsString, isSkipVisible )
-    let l:filePatterns = ingo#cmdargs#file#SplitAndUnescape(a:filePatternsString)
+    let [l:filePatterns, l:cmdOptions] = [ingo#cmdargs#file#SplitAndUnescape(a:filePatternsString), '']
 
-    let l:openCnt = 0
-    let l:options = ''
     if ! empty(a:OptionParser)
-	let [l:filePatterns, l:options] = call(a:OptionParser, [l:filePatterns])
+	let [l:filePatterns, l:cmdOptions] = call(a:OptionParser, [l:filePatterns])
     endif
     let l:filespecs = ingo#cmdargs#glob#Expand(l:filePatterns)
 
@@ -26,6 +24,7 @@ function! EditSimilar#Pattern#Split( splitcmd, OptionParser, filePatternsString,
     " file is opened (e.g. due to autocmds or :set autochdir).
     let l:filespecs = map(ingo#cmdargs#glob#Expand(l:filePatterns), "fnamemodify(v:val, ':p')")
 
+    let l:openCnt = 0
     for l:filespec in map(l:filespecs, 'fnamemodify(v:val, ":p")')
 	if ! a:isSkipVisible || bufwinnr(ingo#escape#file#bufnameescape(l:filespec)) == -1
 	    " The glob (usually) returns file names sorted alphabetially, and
@@ -36,7 +35,7 @@ function! EditSimilar#Pattern#Split( splitcmd, OptionParser, filePatternsString,
 	    let l:splitWhere = (l:openCnt == 0 ? '' : 'belowright')
 
 	    try
-		execute l:splitWhere a:splitcmd l:options ingo#compat#fnameescape(fnamemodify(l:filespec, ':~:.'))
+		execute l:splitWhere a:splitcmd l:cmdOptions ingo#compat#fnameescape(fnamemodify(l:filespec, ':~:.'))
 	    catch /^Vim\%((\a\+)\)\=:/
 		call ingo#err#SetVimException()
 		return 0
