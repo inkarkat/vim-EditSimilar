@@ -29,7 +29,7 @@ function! s:SplitArgumentsIntoPairs( argumentList )
     endfor
     return [l:pairs, l:optionalPairs]
 endfunction
-function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
+function! EditSimilar#Substitute#Open( opencmd, OptionParser, isCreateNew, filespec, ... )
     let l:originalPathspec = ingo#fs#path#Combine(fnamemodify(a:filespec, ':p:h'), '')
     let l:originalFilename = fnamemodify(a:filespec, ':t')
     let l:originalFilespec = l:originalPathspec . l:originalFilename

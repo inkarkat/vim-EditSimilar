@@ -56,6 +56,7 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
     let l:bangArg = (a:hasBang ? '-bang' : '')
     let l:options = (a:0 ? a:1 : {})
     let l:omitOperationsWorkingOnlyOnExistingFiles = get(l:options, 'omitOperationsWorkingOnlyOnExistingFiles', 0)
+    let l:OptionParser = get(l:options, 'OptionParser', '')
     let l:completeAnyRoot = get(l:options, 'completeAnyRoot', 0)
     let l:isSupportRange = get(l:options, 'isSupportRange', 0)
     let [l:rangeArg, l:countArg, l:countIdentifier] = (l:isSupportRange ? ['-range=%', '-range=% -nargs=?', '<q-args>'] : ['', '-count=0', '<count>'])
@@ -63,22 +64,22 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
     let l:commandPrefixWithoutRange = substitute(a:commandPrefix, '\%(^\|\s\+\)-\%(count\|range\)\%(=\S\+\)\?', '', '')
 
 
-    execute printf('command! -bar %s %s -nargs=+ %sSubstitute if ! EditSimilar#Substitute#Open(%s, %s, expand("%%:p"), <f-args>) | echoerr ingo#err#Get() | endif',
+    execute printf('command! -bar %s %s -nargs=+ %sSubstitute if ! EditSimilar#Substitute#Open(%s, %s, %s, expand("%%:p"), <f-args>) | echoerr ingo#err#Get() | endif',
     \   l:bangArg,
     \   l:rangeArg,
-    \   a:commandPrefix, string(a:fileCommand), a:createNew
+    \   a:commandPrefix, string(a:fileCommand), string(l:OptionParser), a:createNew
     \)
-    execute printf('command! -bar %s %s %sPlus       if ! EditSimilar#Offset#Open(%s, %s, %s, expand("%%:p"), %s,  1) | echoerr ingo#err#Get() | endif',
+    execute printf('command! -bar %s %s %sPlus       if ! EditSimilar#Offset#Open(%s, %s, %s, %s, expand("%%:p"), %s,  1) | echoerr ingo#err#Get() | endif',
     \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
     \   l:countArg,
-    \   l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew,
+    \   l:commandPrefixWithoutRange, string(a:fileCommand), string(l:OptionParser), a:createNew,
     \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0),
     \   l:countIdentifier
     \)
-    execute printf('command! -bar %s %s %sMinus      if ! EditSimilar#Offset#Open(%s, %s, %s, expand("%%:p"), %s,  -1) | echoerr ingo#err#Get() | endif',
+    execute printf('command! -bar %s %s %sMinus      if ! EditSimilar#Offset#Open(%s, %s, %s, %s, expand("%%:p"), %s,  -1) | echoerr ingo#err#Get() | endif',
     \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
     \   l:countArg,
-    \   l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew,
+    \   l:commandPrefixWithoutRange, string(a:fileCommand), string(l:OptionParser), a:createNew,
     \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0),
     \   l:countIdentifier
     \)
@@ -87,19 +88,20 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 	" to split the <args> into optional count followed by optional
 	" fileGlobsString. As :WriteNext / :WritePrevious aren't defined, leave
 	" this open for now.
-	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
-	\   l:bangArg, l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew)
-	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, expand("%%:p"), <count>,  -1, <q-args>) | echoerr ingo#err#Get() | endif',
-	\   l:bangArg, l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew)
+	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
+	\   l:bangArg, l:commandPrefixWithoutRange,
+	\   string(a:fileCommand), string(l:OptionParser), a:createNew)
+	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  -1, <q-args>) | echoerr ingo#err#Get() | endif',
+	\   l:bangArg, l:commandPrefixWithoutRange,
+	\   string(a:fileCommand), string(l:OptionParser), a:createNew)
     endif
     execute printf('command! -bar %s %s -nargs=1 -complete=customlist,%s ' .
-    \                                        '%sRoot       if ! EditSimilar#Root#Open(%s, %s, expand("%%"), <f-args>) | echoerr ingo#err#Get() | endif',
+    \                                        '%sRoot       if ! EditSimilar#Root#Open(%s, %s, %s, expand("%%"), <f-args>) | echoerr ingo#err#Get() | endif',
     \   l:bangArg,
     \   l:rangeArg,
     \   (l:completeAnyRoot ? 'EditSimilar#Root#CompleteAny' : 'EditSimilar#Root#Complete'),
     \   a:commandPrefix,
-    \   string(a:fileCommand),
-    \   a:createNew
+    \   string(a:fileCommand), string(l:OptionParser), a:createNew
     \)
 endfunction
 

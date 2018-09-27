@@ -15,7 +15,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " Root (i.e. file extension) commands.
-function! EditSimilar#Root#Open( opencmd, isCreateNew, filespec, newExtension )
+function! EditSimilar#Root#Open( opencmd, OptionParser, isCreateNew, filespec, newExtension )
     let [l:fullmatch, l:dots, l:newExtension; l:rest] = matchlist(a:newExtension, '\(^\.*\)\(.*$\)')
 
     " Each leading '.' removes one file extension from the original filename; a

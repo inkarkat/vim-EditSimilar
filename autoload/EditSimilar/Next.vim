@@ -33,7 +33,7 @@ endfunction
 function! s:ErrorMsg( text, fileGlobsString, ... )
     call ingo#err#Set(a:text . (empty(a:fileGlobsString) ? '' : ' matching ' . a:fileGlobsString) . (a:0 ? ': ' . a:1 : ''))
 endfunction
-function! EditSimilar#Next#Open( opencmd, isCreateNew, filespec, difference, direction, fileGlobsString )
+function! EditSimilar#Next#Open( opencmd, OptionParser, isCreateNew, filespec, difference, direction, fileGlobsString )
     " To be able to find the current filespec in the glob results with a simple
     " string compare, canonicalize all path separators to what Vim is internally
     " using, i.e. depending on the 'shellslash' option.

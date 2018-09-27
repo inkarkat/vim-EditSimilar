@@ -78,7 +78,7 @@ function! s:ApplyOffset( filespec, direction, difference )
     let l:replacementMsg = '#' . l:replacementNumberString
     return [l:replacement, l:replacementMsg]
 endfunction
-function! EditSimilar#Offset#Open( opencmd, isCreateNew, isFindNextNonExisting, filespec, difference, direction )
+function! EditSimilar#Offset#Open( opencmd, OptionParser, isCreateNew, isFindNextNonExisting, filespec, difference, direction )
     " A passed difference of 0 means that no [count] was specified and thus
     " skipping over missing numbers is enabled.
     let l:difference = max([a:difference, 1])
