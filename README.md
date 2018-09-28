@@ -54,15 +54,15 @@ USAGE
     harder to type (because one has to use regular expressions instead of the
     simpler file wildcards).
 
-    :EditSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :EditSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :ViewSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :ViewSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :SplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :SplitSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :VSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :VSplitSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :SViewSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :SViewSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
     :DiffSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
                             Replaces all literal occurrences of {text} in the
@@ -116,9 +116,9 @@ USAGE
 
     :FileSubstitute {text}={replacement} [{text}={replacement} [...]]
 
-    :[range]WriteSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :[range]WriteSubstitute[!] [++opt] {text}={replacement} [{text}={replacement} [...]]
 
-    :SaveSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :SaveSubstitute[!] [++opt] {text}={replacement} [{text}={replacement} [...]]
                             Replaces all occurrences of {text} in the currently
                             edited file with {replacement}, and sets / writes the
                             resulting file. Wildcards can be used here, too.
@@ -133,20 +133,20 @@ USAGE
 ### PLUS MINUS
     Add an offset to the last (decimal) number in the currently edited file.
 
-    :[N]EditPlus[!] [N]
-    :[N]EditMinus[!] [N]
+    :[N]EditPlus[!] [++opt] [+cmd] [N]
+    :[N]EditMinus[!] [++opt] [+cmd] [N]
 
-    :[N]ViewPlus[!] [N]
-    :[N]ViewMinus[!] [N]
+    :[N]ViewPlus[!] [++opt] [+cmd] [N]
+    :[N]ViewMinus[!] [++opt] [+cmd] [N]
 
-    :[N]SplitPlus[!] [N]
-    :[N]SplitMinus[!] [N]
+    :[N]SplitPlus[!] [++opt] [+cmd] [N]
+    :[N]SplitMinus[!] [++opt] [+cmd] [N]
 
-    :[N]VSplitPlus[!] [N]
-    :[N]VSplitMinus[!] [N]
+    :[N]VSplitPlus[!] [++opt] [+cmd] [N]
+    :[N]VSplitMinus[!] [++opt] [+cmd] [N]
 
-    :[N]SViewPlus[!] [N]
-    :[N]SViewMinus[!] [N]
+    :[N]SViewPlus[!] [++opt] [+cmd] [N]
+    :[N]SViewMinus[!] [++opt] [+cmd] [N]
 
     :[N]DiffSplitPlus[!] [N]
     :[N]DiffSplitMinus[!] [N]
@@ -180,11 +180,11 @@ USAGE
     :[N]FilePlus[!] [N]
     :[N]FileMinus[!] [N]
 
-    :[range]WritePlus[!] [N]
-    :[range]WriteMinus[!] [N]
+    :[range]WritePlus[!] [++opt] [N]
+    :[range]WriteMinus[!] [++opt] [N]
 
-    :[N]SavePlus[!] [N]
-    :[N]SaveMinus[!] [N]
+    :[N]SavePlus[!] [++opt] [N]
+    :[N]SaveMinus[!] [++opt] [N]
                             Increases / decreases the last number found inside the
                             full absolute filespec of the currently edited file by
                             [N] and sets / writes that file. (A fixed number width
@@ -215,20 +215,20 @@ USAGE
     In the directory listing of the current file, go to succeeding / preceding
     file entries.
 
-    :[N]EditNext[!] [{filelist}]
-    :[N]EditPrevious[!] [{filelist}]
+    :[N]EditNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]EditPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]ViewNext[!] [{filelist}]
-    :[N]ViewPrevious[!] [{filelist}]
+    :[N]ViewNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]ViewPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]SplitNext[!] [{filelist}]
-    :[N]SplitPrevious[!] [{filelist}]
+    :[N]SplitNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]SplitPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]VSplitNext[!] [{filelist}]
-    :[N]VSplitPrevious[!] [{filelist}]
+    :[N]VSplitNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]VSplitPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]SViewNext[!] [{filelist}]
-    :[N]SViewPrevious[!] [{filelist}]
+    :[N]SViewNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]SViewPrevious[!] [++opt] [+cmd] [{filelist}]
 
     :[N]DiffSplitNext[!] [{filelist}]
     :[N]DiffSplitPrevious[!] [{filelist}]
@@ -256,15 +256,15 @@ USAGE
     version of the built-in:
         :edit %:r.{extension}
 
-    :EditRoot[!] {extension}
+    :EditRoot[!] [++opt] [+cmd] {extension}
 
-    :ViewRoot[!] {extension}
+    :ViewRoot[!] [++opt] [+cmd] {extension}
 
-    :SplitRoot[!] {extension}
+    :SplitRoot[!] [++opt] [+cmd] {extension}
 
-    :VSplitRoot[!] {extension}
+    :VSplitRoot[!] [++opt] [+cmd] {extension}
 
-    :SViewRoot[!] {extension}
+    :SViewRoot[!] [++opt] [+cmd] {extension}
 
     :DiffSplitRoot[!] {extension}
                             Switches the current file's extension:
@@ -291,9 +291,9 @@ USAGE
 
     :FileRoot {extension}
 
-    :[range]WriteRoot[!] {extension}
+    :[range]WriteRoot[!] [++opt] {extension}
 
-    :SaveRoot[!] {extension}
+    :SaveRoot[!] [++opt] {extension}
                             Sets / saves a file with the current file's path and
                             name, but replaces the file extension with the passed
                             one.
@@ -313,7 +313,7 @@ USAGE
 
     :SViewPattern [++opt] [+cmd] {file-pattern} [{file-pattern} ...]
 
-    :DiffSplitPattern [++opt] [+cmd] {file-pattern} [{file-pattern} ...]
+    :DiffSplitPattern {file-pattern} [{file-pattern} ...]
                             Open all files matching {file-pattern} in split windows.
                             If one of the files is already open, no second split is
                             generated.
@@ -365,7 +365,7 @@ To uninstall, use the :RmVimball command.
 ### DEPENDENCIES
 
 - Requires Vim 7.0 or higher.
-- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.025 or
+- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.035 or
   higher.
 - Optional, recommended: cmdalias plugin ([vimscript #746](http://www.vim.org/scripts/script.php?script_id=746))
 
@@ -415,6 +415,12 @@ https://github.com/inkarkat/vim-EditSimilar/issues or email (address below).
 
 HISTORY
 ------------------------------------------------------------------------------
+
+##### 2.60    RELEASEME
+- ENH: Support optional [++opt] [+cmd] for :Edit..., :[S]View..., :[V]Split
+  commands and optional [++opt] for :Write... and :Save..., just like the
+  original built-in commands they extend.
+  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.035!__
 
 ##### 2.50    23-Sep-2018
 - ENH: Also support optional {text}=?{replacement} that if done don't count

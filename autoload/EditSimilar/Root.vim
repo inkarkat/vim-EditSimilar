@@ -15,15 +15,20 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " Root (i.e. file extension) commands.
-function! EditSimilar#Root#Open( opencmd, isCreateNew, filespec, newExtension )
-    let [l:fullmatch, l:dots, l:newExtension; l:rest] = matchlist(a:newExtension, '\(^\.*\)\(.*$\)')
+function! EditSimilar#Root#Open( opencmd, OptionParser, isCreateNew, filespec, extensionArguments )
+    let [l:newExtension, l:cmdOptions] = [ingo#cmdargs#file#SplitAndUnescape(a:extensionArguments), '']
+    if ! empty(a:OptionParser)
+	let [l:newExtension, l:cmdOptions] = call(a:OptionParser, [l:newExtension])
+    endif
+
+    let [l:fullmatch, l:dots, l:newExtension; l:rest] = matchlist(l:newExtension, '\(^\.*\)\(.*$\)')
 
     " Each leading '.' removes one file extension from the original filename; a
     " single dot is optional.
     let l:rootRemovalNum = (strlen(l:dots) > 1 ? strlen(l:dots) : 1)
 
     let l:newFilespec = fnamemodify(a:filespec, repeat(':r', l:rootRemovalNum)) . (! empty(l:newExtension) ? '.' . l:newExtension : '')
-    return EditSimilar#Open( a:opencmd, a:isCreateNew, 1, a:filespec, l:newFilespec, fnamemodify(l:newFilespec, ':t'))
+    return EditSimilar#Open(a:opencmd, l:cmdOptions, a:isCreateNew, 1, a:filespec, l:newFilespec, fnamemodify(l:newFilespec, ':t'))
 endfunction
 
 function! s:Complete( dots, argLead, filenameGlob )

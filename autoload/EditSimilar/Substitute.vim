@@ -29,12 +29,17 @@ function! s:SplitArgumentsIntoPairs( argumentList )
     endfor
     return [l:pairs, l:optionalPairs]
 endfunction
-function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
+function! EditSimilar#Substitute#Open( opencmd, OptionParser, isCreateNew, filespec, ... )
     let l:originalPathspec = ingo#fs#path#Combine(fnamemodify(a:filespec, ':p:h'), '')
     let l:originalFilename = fnamemodify(a:filespec, ':t')
     let l:originalFilespec = l:originalPathspec . l:originalFilename
+
+    let [l:splitArguments, l:cmdOptions] = [copy(a:000), '']
+    if ! empty(a:OptionParser)
+	let [l:splitArguments, l:cmdOptions] = call(a:OptionParser, [l:splitArguments])
+    endif
     try
-	let [l:pairs, l:optionalPairs] = s:SplitArgumentsIntoPairs(a:000)
+	let [l:pairs, l:optionalPairs] = s:SplitArgumentsIntoPairs(l:splitArguments)
 
 	" Try replacement in filename first.
 	let [l:replacementFilename, l:failedPairs] = ingo#subst#pairs#Substitute(l:originalFilename, l:pairs, 1)
@@ -70,7 +75,7 @@ function! EditSimilar#Substitute#Open( opencmd, isCreateNew, filespec, ... )
 	    endif
 	endif
 
-	return EditSimilar#Open(a:opencmd, a:isCreateNew, 1, l:originalFilespec, l:replacementFilespec, l:replacementMsg)
+	return EditSimilar#Open(a:opencmd, l:cmdOptions, a:isCreateNew, 1, l:originalFilespec, l:replacementFilespec, l:replacementMsg)
     catch /^Substitute:/
 	call ingo#err#SetCustomException('Substitute')
 	return 0
