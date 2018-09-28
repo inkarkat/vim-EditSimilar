@@ -59,7 +59,17 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
     let l:OptionParser = get(l:options, 'OptionParser', '')
     let l:completeAnyRoot = get(l:options, 'completeAnyRoot', 0)
     let l:isSupportRange = get(l:options, 'isSupportRange', 0)
-    let [l:rangeArg, l:countArg, l:countIdentifier] = (l:isSupportRange ? ['-range=%', '-range=% -nargs=?', '<q-args>'] : ['', '-count=0', '<count>'])
+    if empty(l:OptionParser)
+	let [l:rangeArg, l:countArg, l:countIdentifier] = (l:isSupportRange ?
+	\   ['-range=%', '-range=% -nargs=?', '<q-args>'] :
+	\   ['', '-count=0', '<count>']
+	\)
+    else
+	let [l:rangeArg, l:countArg, l:countIdentifier] = (l:isSupportRange ?
+	\   ['-range=%', '-range=% -nargs=*', '<q-args>'] :
+	\   ['', '-count=0 -nargs=*', '<q-args> . " " . <q-count>']
+	\)
+    endif
 
     let l:commandPrefixWithoutRange = substitute(a:commandPrefix, '\%(^\|\s\+\)-\%(count\|range\)\%(=\S\+\)\?', '', '')
 

@@ -78,11 +78,18 @@ function! s:ApplyOffset( filespec, direction, difference )
     let l:replacementMsg = '#' . l:replacementNumberString
     return [l:replacement, l:replacementMsg]
 endfunction
-function! EditSimilar#Offset#Open( opencmd, OptionParser, isCreateNew, isFindNextNonExisting, filespec, difference, direction )
+function! EditSimilar#Offset#Open( opencmd, OptionParser, isCreateNew, isFindNextNonExisting, filespec, arguments, direction )
+    let [l:cmdDifference, l:cmdOptions] = [ingo#cmdargs#file#SplitAndUnescape(a:arguments), '']
+
+    if ! empty(a:OptionParser)
+	let [l:cmdDifference, l:cmdOptions] = call(a:OptionParser, [l:cmdDifference])
+    endif
+
     " A passed difference of 0 means that no [count] was specified and thus
     " skipping over missing numbers is enabled.
-    let l:difference = max([a:difference, 1])
-    let l:isSkipOverMissingNumbers = (a:difference == 0)
+    let l:givenDifference = str2nr(get(l:cmdDifference, 0, '0'))
+    let l:difference = max([l:givenDifference, 1])
+    let l:isSkipOverMissingNumbers = (l:givenDifference == 0)
 
     if ! EditSimilar#Offset#CanApply(a:filespec)
 	call ingo#err#Set('No number in filespec')
@@ -92,14 +99,14 @@ function! EditSimilar#Offset#Open( opencmd, OptionParser, isCreateNew, isFindNex
     if empty(l:originalNumberString) | throw 'ASSERT: Extracted number.' | endif
 
     let l:replacement = a:filespec
-    if a:isCreateNew && (! a:isFindNextNonExisting || a:difference == 0)
+    if a:isCreateNew && (! a:isFindNextNonExisting || l:givenDifference == 0)
 	let [l:replacement, l:replacementMsg] = s:ApplyOffset(a:filespec, a:direction, l:difference)
     elseif ! a:isCreateNew && l:isSkipOverMissingNumbers
 	let l:replacementMsg = ''
 
 	" The maximum number that is searched for can have one more digit than
 	" the next number.
-	let l:numberLen = strlen(s:Offset(a:filespec, a:difference, 0)[1]) + 1
+	let l:numberLen = strlen(s:Offset(a:filespec, l:givenDifference, 0)[1]) + 1
 	let l:differenceMax = str2nr(repeat(9, l:numberLen))
 
 	while l:difference < l:differenceMax
@@ -133,11 +140,11 @@ function! EditSimilar#Offset#Open( opencmd, OptionParser, isCreateNew, isFindNex
 
 	if a:isCreateNew && a:isFindNextNonExisting
 	    if l:difference <= 0
-		let l:difference = a:difference
+		let l:difference = l:givenDifference
 		" We found no existing file between the current file and the
 		" passed offset. Create a new one with an offset of 1.
 		let [l:replacement, l:replacementMsg] = s:ApplyOffset(a:filespec, a:direction, 1)
-	    elseif l:difference == a:difference
+	    elseif l:difference == l:givenDifference
 		" There's an existing file with the exact offset. (Try to)
 		" overwrite it.
 	    else
@@ -150,7 +157,7 @@ function! EditSimilar#Offset#Open( opencmd, OptionParser, isCreateNew, isFindNex
 	endif
     endif
 
-    return EditSimilar#Open(a:opencmd, '', a:isCreateNew, 0, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumberString . ')')
+    return EditSimilar#Open(a:opencmd, l:cmdOptions, a:isCreateNew, 0, a:filespec, l:replacement, l:replacementMsg . ' (from #' . l:originalNumberString . ')')
 endfunction
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
