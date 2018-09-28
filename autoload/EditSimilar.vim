@@ -57,6 +57,8 @@ function! EditSimilar#Open( opencmd, cmdOptions, isCreateNew, isFilePattern, ori
 		call ingo#err#Set('Nothing substituted')
 		return 0
 	    endif
+	else
+	    let l:filespecToOpen = ingo#escape#Unescape(l:filespecToOpen, '?*[\')
 	endif
     endif
     if ! ingo#fs#path#Exists(l:filespecToOpen)

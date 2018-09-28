@@ -420,6 +420,8 @@ HISTORY
 - ENH: Support optional [++opt] [+cmd] for :Edit..., :[S]View..., :[V]Split
   commands and optional [++opt] for :Write... and :Save..., just like the
   original built-in commands they extend.
+- FIX: :...Root with escaped file glob characters does not remove the
+  backslash on creation.
   __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.035!__
 
 ##### 2.50    23-Sep-2018
