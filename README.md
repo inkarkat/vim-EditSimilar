@@ -41,6 +41,8 @@ To open a set of similar files, it is possible to:
   per-project settings and navigation commands, e.g. :Eplugin and :Edoc.
 - unimpaired.vim ([vimscript #1590](http://www.vim.org/scripts/script.php?script_id=1590)) has (among many other, largely unrelated)
   [f / ]f mappings that work like :EditPrevious / :EditNext.
+- vim-headfirst ([vimscript #5749](http://www.vim.org/scripts/script.php?script_id=5749)) has :Hedit, :Hsplit, etc. commands that
+  quickly edit "sibling" files from the same directory.
 
 USAGE
 ------------------------------------------------------------------------------
