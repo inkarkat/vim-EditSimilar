@@ -1,4 +1,4 @@
-EDIT SIMILAR   
+EDIT SIMILAR
 ===============================================================================
 _by Ingo Karkat_
 
@@ -424,7 +424,10 @@ HISTORY
   original built-in commands they extend.
 - FIX: :...Root with escaped file glob characters does not remove the
   backslash on creation.
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.035!__
+- Compatibility: After Vim 8.1.1241, a :range outside the number of buffers
+  (e.g. :999EditNext) causes an error.
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.035!__
 
 ##### 2.50    23-Sep-2018
 - ENH: Also support optional {text}=?{replacement} that if done don't count
@@ -432,14 +435,16 @@ HISTORY
   happen.
 - FIX: :SaveOverBufferAs and :WriteOverBuffer don't handle files with spaces.
   Need to define them with -nargs=+ to keep Vim from unescaping the filespec.
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.025!__
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.025!__
 
 ##### 2.41    20-Jun-2014
 - BUG: :{range}WritePlus 999 doesn't actually work, because it executes as
   999,999WriteOverBuffer.
 - Refactoring: Use ingo#fs#path#Exists().
 - Use ingo#compat#glob().
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.022!__
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.022!__
 
 ##### 2.40    16-Apr-2014
 - Add :BDelete... comands, which are especially useful for when "E139: File
@@ -453,7 +458,8 @@ HISTORY
   :bdelete an existing buffer with the same name) and use those in the
   :Save... and :Write... commands.
 - All commands now properly abort on error.
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.018!__
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.018!__
 
 ##### 2.32    13-Mar-2014
 - Handle dot prefixes (e.g. ".txt") in root completion.
@@ -462,7 +468,9 @@ HISTORY
 - Add workaround for editing via :pedit, which uses the CWD of existing
   preview window instead of the CWD of the current window; leading to wrong
   not-existing files being opened when :set autochdir. Work around this by
-  always passing a full absolute filespec. __You need to update to
+  always passing a full absolute filespec.
+
+__You need to update to
   ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.017!__
 
 ##### 2.31    19-Nov-2013
@@ -470,7 +478,9 @@ HISTORY
   prepended.
 - FIX: Non-any completion can yield duplicate roots, too (e.g. foobar.orig.txt
   + foobar.txt).
-- Add dependency to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)). __You need to separately
+- Add dependency to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)).
+
+__You need to separately
   install ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.014 (or higher)!__
 
 ##### 2.30    09-Dec-2012
@@ -519,11 +529,11 @@ create the root commands also in the command builder.
   EditSimilar-root commands.
 - Obsolete the short command forms :Esubst, :Enext, :Eprev; the starting
   uppercase letter makes them still awkward to type, there's more likely a
-  conflict with other custom commands (e.g. :En -> :Encode, :Enext), and I now
+  conflict with other custom commands (e.g. :En -&gt; :Encode, :Enext), and I now
   believe aliasing via cmdalias.vim is the better way to provide personal
   shortcuts, instead of polluting the command namespace with all these
   duplicates.
-- Rename :Vsplit... -> :VSplit... and :Sview... -> :SView... as I think this
+- Rename :Vsplit... -&gt; :VSplit... and :Sview... -&gt; :SView... as I think this
   is a more intuitive long form. (And now that the user is encouraged to
   create his own custom short aliases, anyway.) The only other plugin with
   similar commands that I know is bufexplorer with its :VSBufExplorer.
@@ -589,7 +599,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2009-2018 Ingo Karkat -
+Copyright: (C) 2009-2019 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
-Maintainer:     Ingo Karkat <ingo@karkat.de>
+Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;

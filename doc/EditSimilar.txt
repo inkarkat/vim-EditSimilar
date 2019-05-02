@@ -446,6 +446,8 @@ HISTORY							 *EditSimilar-history*
   original built-in commands they extend.
 - FIX: :...Root with escaped file glob characters does not remove the
   backslash on creation.
+- Compatibility: After Vim 8.1.1241, a :range outside the number of buffers
+  (e.g. :999EditNext) causes an error.
   *** You need to update to ingo-library (vimscript #4433) version 1.035! ***
 
 2.50	23-Sep-2018
@@ -611,7 +613,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ==============================================================================
-Copyright: (C) 2009-2018 Ingo Karkat
+Copyright: (C) 2009-2019 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>

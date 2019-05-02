@@ -7,7 +7,7 @@
 "   - EditSimilar/Substitute.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2011-2018 Ingo Karkat
+" Copyright: (C) 2011-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -98,11 +98,12 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 	" to split the <args> into optional count followed by optional
 	" fileGlobsString. As :WriteNext / :WritePrevious aren't defined, leave
 	" this open for now.
-	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
-	\   l:bangArg, l:commandPrefixWithoutRange,
+	let l:addrArg = (v:version == 704 && has('patch530') || v:version > 704 ? '-addr=other' : '')
+	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
+	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
 	\   string(a:fileCommand), string(l:OptionParser), a:createNew)
-	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  -1, <q-args>) | echoerr ingo#err#Get() | endif',
-	\   l:bangArg, l:commandPrefixWithoutRange,
+	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  -1, <q-args>) | echoerr ingo#err#Get() | endif',
+	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
 	\   string(a:fileCommand), string(l:OptionParser), a:createNew)
     endif
     execute printf('command! -bar %s %s -nargs=1 -complete=customlist,%s ' .
