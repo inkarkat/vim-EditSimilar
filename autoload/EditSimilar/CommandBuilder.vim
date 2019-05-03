@@ -1,11 +1,7 @@
 " EditSimilar/CommandBuilder.vim: Utility for creating EditSimilar commands.
 "
 " DEPENDENCIES:
-"   - EditSimilar/Next.vim autoload script
-"   - EditSimilar/Offset.vim autoload script
-"   - EditSimilar/Root.vim autoload script
-"   - EditSimilar/Substitute.vim autoload script
-"   - ingo/err.vim autoload script
+"   - ingo-library.vim plugin
 "
 " Copyright: (C) 2011-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.

@@ -426,6 +426,9 @@ HISTORY
   backslash on creation.
 - Compatibility: After Vim 8.1.1241, a :range outside the number of buffers
   (e.g. :999EditNext) causes an error.
+- ENH: Support optional command modifiers (&lt;mods&gt;) prepended to any plugin
+  command (but most useful on commands that open in window splits with :tab
+  or :botright etc.)
 
 __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.035!__
 

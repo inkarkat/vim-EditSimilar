@@ -1,10 +1,6 @@
 " EditSimilar.vim: Commands to edit files with a similar filename.
 "
 " DEPENDENCIES:
-"   - EditSimilar.vim autoload script
-"   - EditSimilar/CommandBuilder.vim autoload script
-"   - EditSimilar/OverBuffer.vim autoload script
-"   - EditSimilar/Pattern.vim autoload script
 "   - ingo/err.vim autoload script
 "
 " Copyright: (C) 2009-2019 Ingo Karkat
