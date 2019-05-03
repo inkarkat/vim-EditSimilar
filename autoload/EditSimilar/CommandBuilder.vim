@@ -98,7 +98,7 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 	" to split the <args> into optional count followed by optional
 	" fileGlobsString. As :WriteNext / :WritePrevious aren't defined, leave
 	" this open for now.
-	let l:addrArg = (v:version == 704 && has('patch530') || v:version > 704 ? '-addr=other' : '')
+	let l:addrArg = (v:version == 801 && has('patch560') || v:version > 801 ? '-addr=other' : '')
 	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
 	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
 	\   string(a:fileCommand), string(l:OptionParser), a:createNew)
