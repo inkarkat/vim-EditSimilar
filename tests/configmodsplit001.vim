@@ -1,7 +1,7 @@
-" Test vsplit configuration.
+" Test vertical split via mod.
+" Same setup as configsplit002.vim
 
-let g:EditSimilar_splitmode = 'vertical belowright'
-let g:EditSimilar_vsplitmode = 'belowright'
+let g:EditSimilar_splitmode = 'belowright'
 runtime plugin/EditSimilar.vim
 
 call vimtest#StartTap()
@@ -10,11 +10,11 @@ cd testdata
 
 edit file004.txt
 call IsFullHeight()
-VSplitPlus
+vertical SplitPlus
 call IsFullHeight()
-SViewPlus 999
+vertical SViewPlus 999
 call IsFullHeight()
-VSplitMinus! 10
+vertical SplitMinus! 10
 call IsFullHeight()
 
 call vimtap#window#IsWindows(map(['004', '005', '101', '091'], '"file" . v:val . ".txt"'), 'belowright vsplit next files')

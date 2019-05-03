@@ -77,19 +77,19 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
     execute printf('command! -bar %s %s -nargs=+ %sSubstitute if ! EditSimilar#Substitute#Open(%s, %s, %s, expand("%%:p"), <f-args>) | echoerr ingo#err#Get() | endif',
     \   l:bangArg,
     \   l:rangeArg,
-    \   a:commandPrefix, string(a:fileCommand), string(l:OptionParser), a:createNew
+    \   a:commandPrefix, s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew
     \)
     execute printf('command! -bar %s %s %sPlus       if ! EditSimilar#Offset#Open(%s, %s, %s, %s, expand("%%:p"), %s,  1) | echoerr ingo#err#Get() | endif',
     \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
     \   l:countArg,
-    \   l:commandPrefixWithoutRange, string(a:fileCommand), string(l:OptionParser), a:createNew,
+    \   l:commandPrefixWithoutRange, s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew,
     \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0),
     \   l:countIdentifier
     \)
     execute printf('command! -bar %s %s %sMinus      if ! EditSimilar#Offset#Open(%s, %s, %s, %s, expand("%%:p"), %s,  -1) | echoerr ingo#err#Get() | endif',
     \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
     \   l:countArg,
-    \   l:commandPrefixWithoutRange, string(a:fileCommand), string(l:OptionParser), a:createNew,
+    \   l:commandPrefixWithoutRange, s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew,
     \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0),
     \   l:countIdentifier
     \)
@@ -101,10 +101,10 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 	let l:addrArg = (v:version == 801 && has('patch560') || v:version > 801 ? '-addr=other' : '')
 	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
 	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
-	\   string(a:fileCommand), string(l:OptionParser), a:createNew)
+	\   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew)
 	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  -1, <q-args>) | echoerr ingo#err#Get() | endif',
 	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
-	\   string(a:fileCommand), string(l:OptionParser), a:createNew)
+	\   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew)
     endif
     execute printf('command! -bar %s %s -nargs=1 -complete=customlist,%s ' .
     \                                        '%sRoot       if ! EditSimilar#Root#Open(%s, %s, %s, expand("%%"), <f-args>) | echoerr ingo#err#Get() | endif',
@@ -112,8 +112,12 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
     \   l:rangeArg,
     \   (l:completeAnyRoot ? 'EditSimilar#Root#CompleteAny' : 'EditSimilar#Root#Complete'),
     \   a:commandPrefix,
-    \   string(a:fileCommand), string(l:OptionParser), a:createNew
+    \   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew
     \)
+endfunction
+
+function! s:CommandModExpr( command ) abort
+    return "join([ingo#compat#command#Mods('<mods>'), " . string(a:command) . "])"
 endfunction
 
 let &cpo = s:save_cpo

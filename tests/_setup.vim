@@ -16,3 +16,8 @@ if s:actualTestdata !=# s:expectedTestdata
     echomsg '****' string(s:expectedTestdata)
     call vimtest#BailOut('Testdata glob is sorted wrong')
 endif
+
+function! IsFullHeight( ... ) abort
+    let l:isFullHeight = (&lines - &cmdheight - (winnr('$') > 1) == winheight(0))
+    call vimtap#Is((a:0 ? a:1 : 1), l:isFullHeight, 'window is full height')
+endfunction
