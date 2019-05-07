@@ -2,7 +2,7 @@
 
 source helpers/NumAndFile.vim
 call vimtest#StartTap()
-call vimtap#Plan(0)
+call vimtap#Plan(11)
 cd testdata
 
 edit foobar.txt
