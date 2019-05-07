@@ -1,6 +1,8 @@
 " Test vertical split via mod.
 " Same setup as configsplit002.vim
 
+call vimtest#SkipAndQuitIf(v:version < 704 || v:version == 704 && ! has('patch1898'), 'Need support for <mods>')
+
 let g:EditSimilar_splitmode = 'belowright'
 runtime plugin/EditSimilar.vim
 
