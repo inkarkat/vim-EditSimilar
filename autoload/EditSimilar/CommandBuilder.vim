@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - ingo-library.vim plugin
 "
-" Copyright: (C) 2011-2019 Ingo Karkat
+" Copyright: (C) 2011-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -95,10 +95,10 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 	" fileGlobsString. As :WriteNext / :WritePrevious aren't defined, leave
 	" this open for now.
 	let l:addrArg = (v:version == 801 && has('patch560') || v:version > 801 ? '-addr=other' : '')
-	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
+	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, ingo#escape#file#CmdlineSpecialEscape(<q-args>)) | echoerr ingo#err#Get() | endif',
 	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
 	\   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew)
-	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  -1, <q-args>) | echoerr ingo#err#Get() | endif',
+	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  -1, ingo#escape#file#CmdlineSpecialEscape(<q-args>)) | echoerr ingo#err#Get() | endif',
 	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
 	\   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew)
     endif

@@ -367,9 +367,10 @@ To uninstall, use the :RmVimball command.
 ### DEPENDENCIES
 
 - Requires Vim 7.0 or higher.
-- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.035 or
+- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.043 or
   higher.
-- Optional, recommended: cmdalias plugin ([vimscript #746](http://www.vim.org/scripts/script.php?script_id=746))
+- Optional, recommended: cmdalias plugin ([vimscript #746](http://www.vim.org/scripts/script.php?script_id=746), or my fork at
+  https://github.com/inkarkat/cmdalias.vim)
 
 CONFIGURATION
 ------------------------------------------------------------------------------
@@ -383,7 +384,8 @@ short command forms :Esubst, :Enext, etc. are gone in version 1.20. Instead,
 you are encouraged to define your own shortcuts, depending on your preferences
 and needs. A great way to do this (because it allows the definition of pure
 lowercase commands) is defining short aliases through the cmdalias plugin
-([vimscript #746](http://www.vim.org/scripts/script.php?script_id=746)), like this:
+([vimscript #74](http://www.vim.org/scripts/script.php?script_id=74), or my fork at https://github.com/inkarkat/cmdalias.vim), like
+this:
 
     " Shorten the most frequently used commands from EditSimilar.vim.
     Alias es  EditSubstitute
@@ -429,8 +431,11 @@ HISTORY
 - ENH: Support optional command modifiers (&lt;mods&gt;) prepended to any plugin
   command (but most useful on commands that open in window splits with :tab
   or :botright etc.)
+- FIX: Problems when editing or saving files containing a cmdline-special
+  character (e.g. #), in particular in :SaveOverBufferAs. Use new
+  ingo#escape#file#CmdlineSpecialEscape().
 
-__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.035!__
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.043!__
 
 ##### 2.50    23-Sep-2018
 - ENH: Also support optional {text}=?{replacement} that if done don't count
@@ -602,7 +607,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2009-2019 Ingo Karkat -
+Copyright: (C) 2009-2020 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;
