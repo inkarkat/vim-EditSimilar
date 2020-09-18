@@ -434,6 +434,8 @@ HISTORY
 - FIX: Problems when editing or saving files containing a cmdline-special
   character (e.g. #), in particular in :SaveOverBufferAs. Use new
   ingo#escape#file#CmdlineSpecialEscape().
+- ENH: Next / previous commands now try again without 'wildignore' option
+  before issuing "Cannot locate current file".
 
 __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.043!__
 

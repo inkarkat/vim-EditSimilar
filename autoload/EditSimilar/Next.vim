@@ -6,7 +6,7 @@
 "   - ingo/fs/path.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2012-2018 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -14,13 +14,13 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " Next / Previous commands.
-function! EditSimilar#Next#GetDirectoryEntries( dirSpec, fileGlobs )
+function! EditSimilar#Next#GetDirectoryEntries( dirSpec, fileGlobs, isConsiderAllFiles )
     let l:dirSpec = ingo#escape#file#wildcardescape(a:dirSpec)
     let l:files = []
 
     " Get list of files, apply 'wildignore'.
     for l:fileGlob in a:fileGlobs
-	let l:files += ingo#compat#glob(ingo#fs#path#Combine(l:dirSpec, l:fileGlob), 0, 1)
+	let l:files += ingo#compat#glob(ingo#fs#path#Combine(l:dirSpec, l:fileGlob), a:isConsiderAllFiles, 1)
 	" Note: No need to normalize here; glob() always returns results with
 	" the default path separator.
     endfor
@@ -48,9 +48,14 @@ function! EditSimilar#Next#Open( opencmd, OptionParser, isCreateNew, filespec, d
     if empty(l:fileGlobs)
 	let l:fileGlobs = s:defaultFileGlobs
     endif
-    let l:files = filter(EditSimilar#Next#GetDirectoryEntries(l:dirSpec, l:fileGlobs), '! isdirectory(v:val)')
-
+    let l:files = filter(EditSimilar#Next#GetDirectoryEntries(l:dirSpec, l:fileGlobs, 0), '! isdirectory(v:val)')
     let l:currentIndex = index(l:files, ingo#fs#path#Normalize(a:filespec))
+    if l:currentIndex == -1
+	" Try again while ignoring 'wildignore' globs.
+	let l:files = filter(EditSimilar#Next#GetDirectoryEntries(l:dirSpec, l:fileGlobs, 1), '! isdirectory(v:val)')
+	let l:currentIndex = index(l:files, ingo#fs#path#Normalize(a:filespec))
+    endif
+
     if l:currentIndex == -1
 	if len(l:files) == 0
 	    call s:ErrorMsg('No files in this directory', l:fileGlobs)
