@@ -7,7 +7,7 @@
 "   - ingo/fs/path.vim autoload script
 "   - ingo/str.vim autoload script
 "
-" Copyright: (C) 2012-2018 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -16,12 +16,12 @@ set cpo&vim
 
 " Root (i.e. file extension) commands.
 function! EditSimilar#Root#Open( opencmd, OptionParser, isCreateNew, filespec, extensionArguments )
-    let [l:newExtension, l:cmdOptions] = [ingo#cmdargs#file#SplitAndUnescape(a:extensionArguments), '']
+    let [l:newExtensions, l:cmdOptions] = [ingo#cmdargs#file#SplitAndUnescape(a:extensionArguments), '']
     if ! empty(a:OptionParser)
-	let [l:newExtension, l:cmdOptions] = call(a:OptionParser, [l:newExtension])
+	let [l:newExtensions, l:cmdOptions] = call(a:OptionParser, [l:newExtensions])
     endif
 
-    let [l:fullmatch, l:dots, l:newExtension; l:rest] = matchlist(l:newExtension, '\(^\.*\)\(.*$\)')
+    let [l:fullmatch, l:dots, l:newExtension; l:rest] = matchlist(get(l:newExtensions, 0, ''), '\(^\.*\)\(.*$\)')
 
     " Each leading '.' removes one file extension from the original filename; a
     " single dot is optional.
