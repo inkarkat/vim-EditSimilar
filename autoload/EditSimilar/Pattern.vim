@@ -7,7 +7,7 @@
 "   - ingo/err.vim autoload script
 "   - ingo/escape/file.vim autoload script
 "
-" Copyright: (C) 2012-2018 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -18,7 +18,6 @@ function! EditSimilar#Pattern#Split( splitcmd, OptionParser, filePatternsString,
     if ! empty(a:OptionParser)
 	let [l:filePatterns, l:cmdOptions] = call(a:OptionParser, [l:filePatterns])
     endif
-    let l:filespecs = ingo#cmdargs#glob#Expand(l:filePatterns)
 
     " Expand all files to their absolute path, because the CWD may change when a
     " file is opened (e.g. due to autocmds or :set autochdir).
