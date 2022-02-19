@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - ingo-library.vim plugin
 "
-" Copyright: (C) 2011-2020 Ingo Karkat
+" Copyright: (C) 2011-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -31,7 +31,6 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 "   a:hasBang	    Flag whether a:fileCommand supports a bang.
 "   a:createNew	    Expression (e.g. '<bang>0') or flag whether a non-existing
 "		    filespec will be opened, thereby creating a new file.
-"   a:options       Optional Dictionary with configuration:
 "   a:options.omitOperationsWorkingOnlyOnExistingFiles
 "		    Flag that excludes the *Next and *Previous commands, which
 "		    do not make sense for some a:fileCommand, because they
