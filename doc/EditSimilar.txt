@@ -442,7 +442,7 @@ https://github.com/inkarkat/vim-EditSimilar/issues or email (address below).
 ==============================================================================
 HISTORY							 *EditSimilar-history*
 
-2.60	RELEASEME
+2.60	09-Nov-2024
 - ENH: Support optional [++opt] [+cmd] for :Edit..., :[S]View..., :[V]Split
   commands and optional [++opt] for :Write... and :Save..., just like the
   original built-in commands they extend.
@@ -623,7 +623,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ==============================================================================
-Copyright: (C) 2009-2020 Ingo Karkat
+Copyright: (C) 2009-2024 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
