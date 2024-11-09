@@ -1,4 +1,4 @@
-EDIT SIMILAR   
+EDIT SIMILAR
 ===============================================================================
 _by Ingo Karkat_
 
@@ -41,6 +41,8 @@ To open a set of similar files, it is possible to:
   per-project settings and navigation commands, e.g. :Eplugin and :Edoc.
 - unimpaired.vim ([vimscript #1590](http://www.vim.org/scripts/script.php?script_id=1590)) has (among many other, largely unrelated)
   [f / ]f mappings that work like :EditPrevious / :EditNext.
+- vim-headfirst ([vimscript #5749](http://www.vim.org/scripts/script.php?script_id=5749)) has :Hedit, :Hsplit, etc. commands that
+  quickly edit "sibling" files from the same directory.
 
 USAGE
 ------------------------------------------------------------------------------
@@ -54,15 +56,15 @@ USAGE
     harder to type (because one has to use regular expressions instead of the
     simpler file wildcards).
 
-    :EditSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :EditSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :ViewSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :ViewSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :SplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :SplitSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :VSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :VSplitSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
-    :SViewSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :SViewSubstitute[!] [++opt] [+cmd] {text}={replacement} [{text}={replacement} [...]]
 
     :DiffSplitSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
                             Replaces all literal occurrences of {text} in the
@@ -116,9 +118,9 @@ USAGE
 
     :FileSubstitute {text}={replacement} [{text}={replacement} [...]]
 
-    :[range]WriteSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :[range]WriteSubstitute[!] [++opt] {text}={replacement} [{text}={replacement} [...]]
 
-    :SaveSubstitute[!] {text}={replacement} [{text}={replacement} [...]]
+    :SaveSubstitute[!] [++opt] {text}={replacement} [{text}={replacement} [...]]
                             Replaces all occurrences of {text} in the currently
                             edited file with {replacement}, and sets / writes the
                             resulting file. Wildcards can be used here, too.
@@ -133,20 +135,20 @@ USAGE
 ### PLUS MINUS
     Add an offset to the last (decimal) number in the currently edited file.
 
-    :[N]EditPlus[!] [N]
-    :[N]EditMinus[!] [N]
+    :[N]EditPlus[!] [++opt] [+cmd] [N]
+    :[N]EditMinus[!] [++opt] [+cmd] [N]
 
-    :[N]ViewPlus[!] [N]
-    :[N]ViewMinus[!] [N]
+    :[N]ViewPlus[!] [++opt] [+cmd] [N]
+    :[N]ViewMinus[!] [++opt] [+cmd] [N]
 
-    :[N]SplitPlus[!] [N]
-    :[N]SplitMinus[!] [N]
+    :[N]SplitPlus[!] [++opt] [+cmd] [N]
+    :[N]SplitMinus[!] [++opt] [+cmd] [N]
 
-    :[N]VSplitPlus[!] [N]
-    :[N]VSplitMinus[!] [N]
+    :[N]VSplitPlus[!] [++opt] [+cmd] [N]
+    :[N]VSplitMinus[!] [++opt] [+cmd] [N]
 
-    :[N]SViewPlus[!] [N]
-    :[N]SViewMinus[!] [N]
+    :[N]SViewPlus[!] [++opt] [+cmd] [N]
+    :[N]SViewMinus[!] [++opt] [+cmd] [N]
 
     :[N]DiffSplitPlus[!] [N]
     :[N]DiffSplitMinus[!] [N]
@@ -180,11 +182,11 @@ USAGE
     :[N]FilePlus[!] [N]
     :[N]FileMinus[!] [N]
 
-    :[range]WritePlus[!] [N]
-    :[range]WriteMinus[!] [N]
+    :[range]WritePlus[!] [++opt] [N]
+    :[range]WriteMinus[!] [++opt] [N]
 
-    :[N]SavePlus[!] [N]
-    :[N]SaveMinus[!] [N]
+    :[N]SavePlus[!] [++opt] [N]
+    :[N]SaveMinus[!] [++opt] [N]
                             Increases / decreases the last number found inside the
                             full absolute filespec of the currently edited file by
                             [N] and sets / writes that file. (A fixed number width
@@ -215,20 +217,20 @@ USAGE
     In the directory listing of the current file, go to succeeding / preceding
     file entries.
 
-    :[N]EditNext[!] [{filelist}]
-    :[N]EditPrevious[!] [{filelist}]
+    :[N]EditNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]EditPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]ViewNext[!] [{filelist}]
-    :[N]ViewPrevious[!] [{filelist}]
+    :[N]ViewNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]ViewPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]SplitNext[!] [{filelist}]
-    :[N]SplitPrevious[!] [{filelist}]
+    :[N]SplitNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]SplitPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]VSplitNext[!] [{filelist}]
-    :[N]VSplitPrevious[!] [{filelist}]
+    :[N]VSplitNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]VSplitPrevious[!] [++opt] [+cmd] [{filelist}]
 
-    :[N]SViewNext[!] [{filelist}]
-    :[N]SViewPrevious[!] [{filelist}]
+    :[N]SViewNext[!] [++opt] [+cmd] [{filelist}]
+    :[N]SViewPrevious[!] [++opt] [+cmd] [{filelist}]
 
     :[N]DiffSplitNext[!] [{filelist}]
     :[N]DiffSplitPrevious[!] [{filelist}]
@@ -256,15 +258,15 @@ USAGE
     version of the built-in:
         :edit %:r.{extension}
 
-    :EditRoot[!] {extension}
+    :EditRoot[!] [++opt] [+cmd] {extension}
 
-    :ViewRoot[!] {extension}
+    :ViewRoot[!] [++opt] [+cmd] {extension}
 
-    :SplitRoot[!] {extension}
+    :SplitRoot[!] [++opt] [+cmd] {extension}
 
-    :VSplitRoot[!] {extension}
+    :VSplitRoot[!] [++opt] [+cmd] {extension}
 
-    :SViewRoot[!] {extension}
+    :SViewRoot[!] [++opt] [+cmd] {extension}
 
     :DiffSplitRoot[!] {extension}
                             Switches the current file's extension:
@@ -291,9 +293,9 @@ USAGE
 
     :FileRoot {extension}
 
-    :[range]WriteRoot[!] {extension}
+    :[range]WriteRoot[!] [++opt] {extension}
 
-    :SaveRoot[!] {extension}
+    :SaveRoot[!] [++opt] {extension}
                             Sets / saves a file with the current file's path and
                             name, but replaces the file extension with the passed
                             one.
@@ -313,7 +315,7 @@ USAGE
 
     :SViewPattern [++opt] [+cmd] {file-pattern} [{file-pattern} ...]
 
-    :DiffSplitPattern [++opt] [+cmd] {file-pattern} [{file-pattern} ...]
+    :DiffSplitPattern {file-pattern} [{file-pattern} ...]
                             Open all files matching {file-pattern} in split windows.
                             If one of the files is already open, no second split is
                             generated.
@@ -365,9 +367,10 @@ To uninstall, use the :RmVimball command.
 ### DEPENDENCIES
 
 - Requires Vim 7.0 or higher.
-- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.025 or
+- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.043 or
   higher.
-- Optional, recommended: cmdalias plugin ([vimscript #746](http://www.vim.org/scripts/script.php?script_id=746))
+- Optional, recommended: cmdalias plugin ([vimscript #746](http://www.vim.org/scripts/script.php?script_id=746), or my fork at
+  https://github.com/inkarkat/cmdalias.vim)
 
 CONFIGURATION
 ------------------------------------------------------------------------------
@@ -381,7 +384,8 @@ short command forms :Esubst, :Enext, etc. are gone in version 1.20. Instead,
 you are encouraged to define your own shortcuts, depending on your preferences
 and needs. A great way to do this (because it allows the definition of pure
 lowercase commands) is defining short aliases through the cmdalias plugin
-([vimscript #746](http://www.vim.org/scripts/script.php?script_id=746)), like this:
+([vimscript #74](http://www.vim.org/scripts/script.php?script_id=74), or my fork at https://github.com/inkarkat/cmdalias.vim), like
+this:
 
     " Shorten the most frequently used commands from EditSimilar.vim.
     Alias es  EditSubstitute
@@ -416,20 +420,41 @@ https://github.com/inkarkat/vim-EditSimilar/issues or email (address below).
 HISTORY
 ------------------------------------------------------------------------------
 
+##### 2.60    09-Nov-2024
+- ENH: Support optional [++opt] [+cmd] for :Edit..., :[S]View..., :[V]Split
+  commands and optional [++opt] for :Write... and :Save..., just like the
+  original built-in commands they extend.
+- FIX: :...Root with escaped file glob characters does not remove the
+  backslash on creation.
+- Compatibility: After Vim 8.1.1241, a :range outside the number of buffers
+  (e.g. :999EditNext) causes an error.
+- ENH: Support optional command modifiers (&lt;mods&gt;) prepended to any plugin
+  command (but most useful on commands that open in window splits with :tab
+  or :botright etc.)
+- FIX: Problems when editing or saving files containing a cmdline-special
+  character (e.g. #), in particular in :SaveOverBufferAs. Use new
+  ingo#escape#file#CmdlineSpecialEscape().
+- ENH: Next / previous commands now try again without 'wildignore' option
+  before issuing "Cannot locate current file".
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.043!__
+
 ##### 2.50    23-Sep-2018
 - ENH: Also support optional {text}=?{replacement} that if done don't count
   yet as a successful substitution; another {text2}={replacement2} must still
   happen.
 - FIX: :SaveOverBufferAs and :WriteOverBuffer don't handle files with spaces.
   Need to define them with -nargs=+ to keep Vim from unescaping the filespec.
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.025!__
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.025!__
 
 ##### 2.41    20-Jun-2014
 - BUG: :{range}WritePlus 999 doesn't actually work, because it executes as
   999,999WriteOverBuffer.
 - Refactoring: Use ingo#fs#path#Exists().
 - Use ingo#compat#glob().
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.022!__
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.022!__
 
 ##### 2.40    16-Apr-2014
 - Add :BDelete... comands, which are especially useful for when "E139: File
@@ -443,7 +468,8 @@ HISTORY
   :bdelete an existing buffer with the same name) and use those in the
   :Save... and :Write... commands.
 - All commands now properly abort on error.
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.018!__
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.018!__
 
 ##### 2.32    13-Mar-2014
 - Handle dot prefixes (e.g. ".txt") in root completion.
@@ -452,7 +478,9 @@ HISTORY
 - Add workaround for editing via :pedit, which uses the CWD of existing
   preview window instead of the CWD of the current window; leading to wrong
   not-existing files being opened when :set autochdir. Work around this by
-  always passing a full absolute filespec. __You need to update to
+  always passing a full absolute filespec.
+
+__You need to update to
   ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.017!__
 
 ##### 2.31    19-Nov-2013
@@ -460,7 +488,9 @@ HISTORY
   prepended.
 - FIX: Non-any completion can yield duplicate roots, too (e.g. foobar.orig.txt
   + foobar.txt).
-- Add dependency to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)). __You need to separately
+- Add dependency to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)).
+
+__You need to separately
   install ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.014 (or higher)!__
 
 ##### 2.30    09-Dec-2012
@@ -509,11 +539,11 @@ create the root commands also in the command builder.
   EditSimilar-root commands.
 - Obsolete the short command forms :Esubst, :Enext, :Eprev; the starting
   uppercase letter makes them still awkward to type, there's more likely a
-  conflict with other custom commands (e.g. :En -> :Encode, :Enext), and I now
+  conflict with other custom commands (e.g. :En -&gt; :Encode, :Enext), and I now
   believe aliasing via cmdalias.vim is the better way to provide personal
   shortcuts, instead of polluting the command namespace with all these
   duplicates.
-- Rename :Vsplit... -> :VSplit... and :Sview... -> :SView... as I think this
+- Rename :Vsplit... -&gt; :VSplit... and :Sview... -&gt; :SView... as I think this
   is a more intuitive long form. (And now that the user is encouraged to
   create his own custom short aliases, anyway.) The only other plugin with
   similar commands that I know is bufexplorer with its :VSBufExplorer.
@@ -579,7 +609,7 @@ Initial implementation sketch of :Sppat and :Vsppat commands.
 Initial implementation sketch of :Sproot command.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2009-2018 Ingo Karkat -
+Copyright: (C) 2009-2024 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
-Maintainer:     Ingo Karkat <ingo@karkat.de>
+Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;

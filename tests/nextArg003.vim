@@ -12,7 +12,7 @@ call IsNameAndFile('lala.desc', 'EditNext *.cpp *.desc* on foobar.cpp file')
 EditNext *.cpp *.desc*
 call IsNameAndFile('lala.description', 'EditNext *.cpp *.desc* on lala.desc file')
 
-call vimtap#err#Errors('No next file matching *.cpp *.desc*', 'EditNext *.cpp *.desc*', 'No next file matching *.cpp *.desc*')
+call vimtap#err#Errors('No next file matching *.cpp or *.desc*', 'EditNext *.cpp *.desc*', 'No next file matching *.cpp *.desc*')
 call IsNameAndFile('lala.description', 'EditNext *.cpp *.desc* on last matching file')
 
 
@@ -25,7 +25,7 @@ EditPrevious *foo\ bar*
 call IsNameAndFile('#foo bar.txt', 'EditPrevious *foo\ bar* on +foo bar.txt')
 
 " Tests that escaped whitespace is correctly parsed as one glob.
-call vimtap#err#Errors('No previous file matching *foo\ bar*', 'EditPrevious *foo\ bar*', 'No previous *foo\ bar* file')
+call vimtap#err#Errors('No previous file matching *foo bar*', 'EditPrevious *foo\ bar*', 'No previous *foo\ bar* file')
 call IsNameAndFile('#foo bar.txt', 'EditPrevious *foo\ bar* on +foo bar.txt')
 
 " Tests that glob splitting still works together with escaped whitespace.

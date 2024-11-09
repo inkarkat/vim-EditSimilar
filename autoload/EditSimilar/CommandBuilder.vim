@@ -1,13 +1,9 @@
 " EditSimilar/CommandBuilder.vim: Utility for creating EditSimilar commands.
 "
 " DEPENDENCIES:
-"   - EditSimilar/Next.vim autoload script
-"   - EditSimilar/Offset.vim autoload script
-"   - EditSimilar/Root.vim autoload script
-"   - EditSimilar/Substitute.vim autoload script
-"   - ingo/err.vim autoload script
+"   - ingo-library.vim plugin
 "
-" Copyright: (C) 2011-2018 Ingo Karkat
+" Copyright: (C) 2011-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -35,7 +31,6 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 "   a:hasBang	    Flag whether a:fileCommand supports a bang.
 "   a:createNew	    Expression (e.g. '<bang>0') or flag whether a non-existing
 "		    filespec will be opened, thereby creating a new file.
-"   a:options       Optional Dictionary with configuration:
 "   a:options.omitOperationsWorkingOnlyOnExistingFiles
 "		    Flag that excludes the *Next and *Previous commands, which
 "		    do not make sense for some a:fileCommand, because they
@@ -56,29 +51,40 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
     let l:bangArg = (a:hasBang ? '-bang' : '')
     let l:options = (a:0 ? a:1 : {})
     let l:omitOperationsWorkingOnlyOnExistingFiles = get(l:options, 'omitOperationsWorkingOnlyOnExistingFiles', 0)
+    let l:OptionParser = get(l:options, 'OptionParser', '')
     let l:completeAnyRoot = get(l:options, 'completeAnyRoot', 0)
     let l:isSupportRange = get(l:options, 'isSupportRange', 0)
-    let [l:rangeArg, l:countArg, l:countIdentifier] = (l:isSupportRange ? ['-range=%', '-range=% -nargs=?', '<q-args>'] : ['', '-count=0', '<count>'])
+    if empty(l:OptionParser)
+	let [l:rangeArg, l:countArg, l:countIdentifier] = (l:isSupportRange ?
+	\   ['-range=%', '-range=% -nargs=?', '<q-args>'] :
+	\   ['', '-count=0', '<count>']
+	\)
+    else
+	let [l:rangeArg, l:countArg, l:countIdentifier] = (l:isSupportRange ?
+	\   ['-range=%', '-range=% -nargs=*', '<q-args>'] :
+	\   ['', '-count=0 -nargs=*', '<q-args> . " " . <q-count>']
+	\)
+    endif
 
     let l:commandPrefixWithoutRange = substitute(a:commandPrefix, '\%(^\|\s\+\)-\%(count\|range\)\%(=\S\+\)\?', '', '')
 
 
-    execute printf('command! -bar %s %s -nargs=+ %sSubstitute if ! EditSimilar#Substitute#Open(%s, %s, expand("%%:p"), <f-args>) | echoerr ingo#err#Get() | endif',
+    execute printf('command! -bar %s %s -nargs=+ %sSubstitute if ! EditSimilar#Substitute#Open(%s, %s, %s, expand("%%:p"), <f-args>) | echoerr ingo#err#Get() | endif',
     \   l:bangArg,
     \   l:rangeArg,
-    \   a:commandPrefix, string(a:fileCommand), a:createNew
+    \   a:commandPrefix, s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew
     \)
-    execute printf('command! -bar %s %s %sPlus       if ! EditSimilar#Offset#Open(%s, %s, %s, expand("%%:p"), %s,  1) | echoerr ingo#err#Get() | endif',
+    execute printf('command! -bar %s %s %sPlus       if ! EditSimilar#Offset#Open(%s, %s, %s, %s, expand("%%:p"), %s,  1) | echoerr ingo#err#Get() | endif',
     \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
     \   l:countArg,
-    \   l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew,
+    \   l:commandPrefixWithoutRange, s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew,
     \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0),
     \   l:countIdentifier
     \)
-    execute printf('command! -bar %s %s %sMinus      if ! EditSimilar#Offset#Open(%s, %s, %s, expand("%%:p"), %s,  -1) | echoerr ingo#err#Get() | endif',
+    execute printf('command! -bar %s %s %sMinus      if ! EditSimilar#Offset#Open(%s, %s, %s, %s, expand("%%:p"), %s,  -1) | echoerr ingo#err#Get() | endif',
     \   (l:omitOperationsWorkingOnlyOnExistingFiles && ! a:hasBang ? '-bang' : l:bangArg),
     \   l:countArg,
-    \   l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew,
+    \   l:commandPrefixWithoutRange, s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew,
     \   (l:omitOperationsWorkingOnlyOnExistingFiles ? '<bang>1' : 0),
     \   l:countIdentifier
     \)
@@ -87,20 +93,26 @@ function! EditSimilar#CommandBuilder#SimilarFileOperations( commandPrefix, fileC
 	" to split the <args> into optional count followed by optional
 	" fileGlobsString. As :WriteNext / :WritePrevious aren't defined, leave
 	" this open for now.
-	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, expand("%%:p"), <count>,  1, <q-args>) | echoerr ingo#err#Get() | endif',
-	\   l:bangArg, l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew)
-	execute printf('command! -bar %s -range=0 -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, expand("%%:p"), <count>,  -1, <q-args>) | echoerr ingo#err#Get() | endif',
-	\   l:bangArg, l:commandPrefixWithoutRange, string(a:fileCommand), a:createNew)
+	let l:addrArg = (v:version == 801 && has('patch560') || v:version > 801 ? '-addr=other' : '')
+	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sNext       if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  1, ingo#escape#file#CmdlineSpecialEscape(<q-args>)) | echoerr ingo#err#Get() | endif',
+	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
+	\   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew)
+	execute printf('command! -bar %s -range=0 %s -nargs=* -complete=file %sPrevious   if ! EditSimilar#Next#Open(%s, %s, %s, expand("%%:p"), <count>,  -1, ingo#escape#file#CmdlineSpecialEscape(<q-args>)) | echoerr ingo#err#Get() | endif',
+	\   l:bangArg, l:addrArg, l:commandPrefixWithoutRange,
+	\   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew)
     endif
     execute printf('command! -bar %s %s -nargs=1 -complete=customlist,%s ' .
-    \                                        '%sRoot       if ! EditSimilar#Root#Open(%s, %s, expand("%%"), <f-args>) | echoerr ingo#err#Get() | endif',
+    \                                        '%sRoot       if ! EditSimilar#Root#Open(%s, %s, %s, expand("%%"), <f-args>) | echoerr ingo#err#Get() | endif',
     \   l:bangArg,
     \   l:rangeArg,
     \   (l:completeAnyRoot ? 'EditSimilar#Root#CompleteAny' : 'EditSimilar#Root#Complete'),
     \   a:commandPrefix,
-    \   string(a:fileCommand),
-    \   a:createNew
+    \   s:CommandModExpr(a:fileCommand), string(l:OptionParser), a:createNew
     \)
+endfunction
+
+function! s:CommandModExpr( command ) abort
+    return "join([ingo#compat#command#Mods('<mods>'), " . string(a:command) . "])"
 endfunction
 
 let &cpo = s:save_cpo
